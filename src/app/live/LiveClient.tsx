@@ -123,7 +123,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
               transition: "background 700ms ease-out",
             }}
           >
-            <span className="text-mono" style={{ fontSize: 12, color: "var(--text-secondary)" }}>
+            <span style={{ fontSize: 12, color: "var(--text-secondary)", fontVariantNumeric: "tabular-nums" }}>
               {relTime(e.ts, now)}
             </span>
             <span style={{ minWidth: 0 }}>
@@ -134,16 +134,16 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
                 caller: <span className="text-mono">{e.callerId}</span>
               </div>
             </span>
-            <span className="text-mono" style={{ fontSize: 12, color: "var(--text-primary)" }}>
+            <span style={{ fontSize: 12, color: "var(--text-primary)" }}>
               {e.publisherName}
             </span>
             <span
-              className="text-mono"
               style={{
                 fontSize: 13,
                 fontWeight: 700,
                 color: "var(--text-primary)",
                 textAlign: "right",
+                fontVariantNumeric: "tabular-nums",
               }}
             >
               ${e.priceUsd.toFixed(4)}
@@ -175,8 +175,7 @@ function StatCard({ label, value }: { label: string; value: string }) {
         {label}
       </div>
       <div
-        className="text-mono"
-        style={{ fontSize: 22, fontWeight: 700, color: "var(--text-primary)", lineHeight: 1 }}
+        style={{ fontSize: 22, fontWeight: 700, color: "var(--text-primary)", lineHeight: 1, fontVariantNumeric: "tabular-nums", letterSpacing: "-0.01em" }}
       >
         {value}
       </div>

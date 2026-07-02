@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { listTools } from "@/lib/registry/store";
-import { ledgerStats } from "@/lib/ledger";
 import Reveal from "@/components/motion/Reveal";
 import Counter from "@/components/motion/Counter";
 
@@ -17,7 +16,7 @@ const RUNTIMES = [
 ] as const;
 
 export default async function Landing() {
-  const [tools, stats] = await Promise.all([listTools(), ledgerStats()]);
+  const tools = await listTools();
 
   return (
     <>
@@ -216,8 +215,7 @@ export default async function Landing() {
         >
           {[
             { label: "Tools live", value: tools.length, suffix: "" },
-            { label: "Paid calls", value: stats.callCount, suffix: "" },
-            { label: "Publisher take", value: 95, suffix: "%" },
+            { label: "To publishers", value: 95, suffix: "%" },
           ].map((s, i) => (
             <Reveal key={s.label} delay={i * 0.08}>
               <div style={{ textAlign: "center" }}>
@@ -658,7 +656,7 @@ export default async function Landing() {
             <Link href="/whitepaper" style={{ fontSize: 13, color: "var(--text-muted)" }}>Whitepaper</Link>
           </div>
           <span style={{ fontSize: 11, color: "var(--text-faint)" }}>
-            Settles on Arc · MIT
+            Settles on Arc · MIT · Not backed by Ycmobinator
           </span>
         </div>
       </footer>

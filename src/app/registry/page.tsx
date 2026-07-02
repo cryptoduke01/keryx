@@ -111,19 +111,19 @@ export default async function RegistryPage() {
                 >
                   <div>
                     <div className="text-eyebrow" style={{ marginBottom: 2 }}>Price</div>
-                    <div className="text-mono" style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}>
                       ${tool.priceUsd.toFixed(3)}
                     </div>
                   </div>
                   <div>
                     <div className="text-eyebrow" style={{ marginBottom: 2 }}>Latency</div>
-                    <div className="text-mono" style={{ color: "var(--text-primary)" }}>
+                    <div style={{ color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}>
                       ~{tool.latencyMs}ms
                     </div>
                   </div>
                   <div style={{ textAlign: "right" }}>
                     <div className="text-eyebrow" style={{ marginBottom: 2 }}>Publisher</div>
-                    <div className="text-mono" style={{ color: "var(--text-primary)" }}>
+                    <div style={{ color: "var(--text-primary)" }}>
                       {tool.publisherName}
                     </div>
                   </div>
