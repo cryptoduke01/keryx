@@ -22,86 +22,115 @@ export default async function Landing() {
   return (
     <>
       {/* ============================================================
-          HERO — rounded art panel, centered serif headline below it
+          HERO — full-bleed photo, content overlaid directly on it,
+          fading into the page background at the bottom (Kairos-direction)
           ========================================================== */}
-      <section style={{ paddingTop: 108, paddingBottom: 88 }}>
-        <div className="container-page">
-          {/* Art panel — full scene: temple facade, coin-sun, herald's staff */}
-          <Reveal immediate>
+      <section
+        style={{
+          position: "relative",
+          height: "min(92vh, 860px)",
+          minHeight: 560,
+          overflow: "hidden",
+        }}
+      >
+        <Image
+          src="/hero-source.png"
+          alt=""
+          fill
+          priority
+          className="art-photo"
+          sizes="100vw"
+        />
+        <div className="art-photo-tint" />
+        <div className="art-grain" />
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              /* Fixed dark tone, not tied to --bg-primary: the photo stays
+                 dark/moody in both themes (same pattern Vantage itself uses
+                 for its photo panel), so the fade must always resolve to a
+                 dark endpoint rather than the page's own background color. */
+              "linear-gradient(180deg, rgba(11,11,12,0.15) 0%, rgba(11,11,12,0.4) 55%, rgba(11,11,12,0.94) 96%)",
+          }}
+        />
+
+        {/* Live badge, top-left below the nav */}
+        <div
+          style={{
+            position: "absolute",
+            top: 76,
+            left: 0,
+            right: 0,
+            zIndex: 2,
+          }}
+        >
+          <div className="container-page" style={{ padding: "0 20px" }}>
             <div
-              className="art-panel"
               style={{
-                height: "min(68vh, 620px)",
-                minHeight: 420,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "6px 12px",
+                borderRadius: 999,
+                background: "rgba(11,11,12,0.5)",
+                backdropFilter: "blur(6px)",
+                border: "1px solid rgba(255,255,255,0.14)",
+                fontSize: 11,
+                fontWeight: 600,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.85)",
               }}
             >
-              <Image
-                src="/hero-source.png"
-                alt=""
-                fill
-                priority
-                className="art-photo"
-                sizes="(max-width: 1200px) 100vw, 1200px"
+              <span
+                className="animate-gold-pulse"
+                style={{ width: 6, height: 6, borderRadius: "50%", background: "#fff" }}
               />
-              <div className="art-photo-tint" />
-              <div className="art-grain" />
-              <div className="art-vignette" />
-
-              {/* Live badge, floated top-left like Kairos's corner label */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: 20,
-                  left: 20,
-                  zIndex: 2,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "6px 12px",
-                  borderRadius: 999,
-                  background: "rgba(11,11,12,0.55)",
-                  backdropFilter: "blur(6px)",
-                  border: "1px solid rgba(255,255,255,0.14)",
-                  fontSize: 11,
-                  fontWeight: 600,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.85)",
-                }}
-              >
-                <span
-                  className="animate-gold-pulse"
-                  style={{ width: 6, height: 6, borderRadius: "50%", background: "#fff" }}
-                />
-                Live on Arc testnet
-              </div>
+              Live on Arc testnet
             </div>
-          </Reveal>
+          </div>
+        </div>
 
-          {/* Headline + copy, centered below the art */}
-          <Reveal immediate delay={0.15}>
-            <div style={{ textAlign: "center", maxWidth: 720, margin: "56px auto 0" }}>
+        {/* Content, bottom-left on the image */}
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 2,
+            paddingBottom: 56,
+          }}
+        >
+          <div className="container-page">
+            <Reveal immediate>
               <h1
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "clamp(2.6rem, 6vw, 4.2rem)",
+                  fontSize: "clamp(2.4rem, 5.5vw, 3.8rem)",
                   fontWeight: 500,
-                  lineHeight: 1.04,
+                  lineHeight: 1.05,
                   letterSpacing: "-0.025em",
-                  color: "var(--text-primary)",
-                  marginBottom: 22,
+                  color: "#f5f4f0",
+                  marginBottom: 18,
+                  maxWidth: 640,
                 }}
               >
                 A herald for the age of agents.
               </h1>
+            </Reveal>
+            <Reveal immediate delay={0.12}>
               <p
                 style={{
                   fontFamily: "var(--font-sans)",
-                  fontSize: 16.5,
-                  color: "var(--text-secondary)",
+                  fontSize: 16,
+                  color: "rgba(245,244,240,0.78)",
                   lineHeight: 1.6,
-                  maxWidth: 560,
-                  margin: "0 auto 36px",
+                  maxWidth: 520,
+                  marginBottom: 30,
                 }}
               >
                 Kēryx is the registry where developers publish paid tools and
@@ -109,16 +138,28 @@ export default async function Landing() {
                 under half a second — no subscriptions, no API keys, no human
                 in the loop.
               </p>
-              <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+            </Reveal>
+            <Reveal immediate delay={0.22}>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                 <Link href="/ask" style={{ textDecoration: "none" }}>
                   <button className="btn btn-primary btn-lg">Ask Kēryx</button>
                 </Link>
                 <Link href="/publish" style={{ textDecoration: "none" }}>
-                  <button className="btn btn-outline btn-lg">Publish a tool</button>
+                  <button
+                    className="btn btn-lg"
+                    style={{
+                      background: "rgba(255,255,255,0.08)",
+                      border: "1px solid rgba(255,255,255,0.28)",
+                      color: "#f5f4f0",
+                      backdropFilter: "blur(4px)",
+                    }}
+                  >
+                    Publish a tool
+                  </button>
                 </Link>
               </div>
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
         </div>
       </section>
 
@@ -255,41 +296,82 @@ export default async function Landing() {
                 title: "Publish a tool",
                 desc:
                   "Wrap any HTTP handler with @keryx/middleware. Set a price per call. Point it at an Arc wallet. Your tool is instantly discoverable.",
+                icon: (
+                  <path d="M14.7 6.3a1 1 0 010 1.4L8.4 14a1 1 0 01-1.4 0L4 11a1 1 0 011.4-1.4L7 11.2l5.3-5.3a1 1 0 011.4 0zM4 16h12" strokeLinecap="round" strokeLinejoin="round" />
+                ),
               },
               {
                 n: "02",
                 title: "Agents discover it",
                 desc:
                   "Every listing carries a machine-readable manifest. Claude Code, Cursor, custom agents — they find your tool by capability and know its price before they call it.",
+                icon: (
+                  <>
+                    <circle cx="8.5" cy="8.5" r="5" strokeLinecap="round" />
+                    <path d="M17 17l-4.3-4.3" strokeLinecap="round" />
+                  </>
+                ),
               },
               {
                 n: "03",
                 title: "USDC arrives",
                 desc:
                   "Every call triggers a nanopayment through Circle Gateway. Your wallet updates in real time. Kēryx never holds a balance.",
+                icon: (
+                  <>
+                    <circle cx="10" cy="10" r="7" strokeLinecap="round" />
+                    <path d="M10 6v8M12.5 8a2 2 0 00-2-1.5h-.8a1.7 1.7 0 000 3.4h1.6a1.7 1.7 0 010 3.4h-.8a2 2 0 01-2-1.5" strokeLinecap="round" />
+                  </>
+                ),
               },
             ].map((step, i) => (
               <Reveal key={step.n} delay={i * 0.1} y={14}>
                 <div
-                  className="hover-lift"
+                  className="hover-lift step-card"
                   style={{
                     padding: 32,
                     background: "var(--surface-1)",
                     height: "100%",
                     border: "1px solid transparent",
+                    position: "relative",
                   }}
                 >
                   <div
-                    className="text-mono"
                     style={{
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: "var(--text-muted)",
-                      letterSpacing: "0.05em",
-                      marginBottom: 20,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      marginBottom: 22,
                     }}
                   >
-                    {step.n}
+                    <div
+                      style={{
+                        width: 38,
+                        height: 38,
+                        borderRadius: 9,
+                        background: "var(--surface-2)",
+                        border: "1px solid var(--border)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "var(--text-primary)",
+                      }}
+                    >
+                      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6">
+                        {step.icon}
+                      </svg>
+                    </div>
+                    <div
+                      className="text-mono"
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: "var(--text-faint)",
+                        letterSpacing: "0.05em",
+                      }}
+                    >
+                      {step.n}
+                    </div>
                   </div>
                   <h3
                     style={{
@@ -448,46 +530,86 @@ export default async function Landing() {
       </section>
 
       {/* ============================================================
-          CTA — clean, centered, serif headline only
+          CTA — bookends the hero: same photo, tighter crop, closing beat
           ========================================================== */}
-      <section style={{ paddingTop: 110, paddingBottom: 110, textAlign: "center" }}>
-        <Reveal>
-          <div className="container-narrow">
-            <h2
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(2.2rem, 4.5vw, 3.2rem)",
-                fontWeight: 500,
-                letterSpacing: "-0.025em",
-                lineHeight: 1.05,
-                marginBottom: 20,
-              }}
+      <section style={{ paddingTop: 88, paddingBottom: 88 }}>
+        <div className="container-page">
+          <Reveal>
+            <div
+              className="art-panel"
+              style={{ height: "min(48vh, 420px)", minHeight: 320 }}
             >
-              Make something agents want.
-            </h2>
-            <p
-              style={{
-                fontSize: 15.5,
-                color: "var(--text-secondary)",
-                lineHeight: 1.6,
-                marginBottom: 34,
-                maxWidth: 480,
-                margin: "0 auto 34px",
-              }}
-            >
-              The next trillion users on the internet are AI agents. Kēryx is
-              where they pay for the tools they use.
-            </p>
-            <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-              <Link href="/publish" style={{ textDecoration: "none" }}>
-                <button className="btn btn-primary btn-lg">Publish a tool</button>
-              </Link>
-              <Link href="/live" style={{ textDecoration: "none" }}>
-                <button className="btn btn-outline btn-lg">See it live</button>
-              </Link>
+              <Image
+                src="/hero-source.png"
+                alt=""
+                fill
+                className="art-photo"
+                style={{ objectPosition: "50% 75%" }}
+                sizes="(max-width: 1200px) 100vw, 1200px"
+              />
+              <div className="art-photo-tint" />
+              <div className="art-grain" />
+              <div className="art-vignette" />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  padding: 32,
+                  zIndex: 1,
+                }}
+              >
+                <h2
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(2.1rem, 4.2vw, 3rem)",
+                    fontWeight: 500,
+                    letterSpacing: "-0.025em",
+                    lineHeight: 1.05,
+                    marginBottom: 18,
+                    color: "#f5f4f0",
+                  }}
+                >
+                  Make something agents want.
+                </h2>
+                <p
+                  style={{
+                    fontSize: 15.5,
+                    color: "rgba(245,244,240,0.78)",
+                    lineHeight: 1.6,
+                    marginBottom: 30,
+                    maxWidth: 460,
+                  }}
+                >
+                  The next trillion users on the internet are AI agents. Kēryx
+                  is where they pay for the tools they use.
+                </p>
+                <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+                  <Link href="/publish" style={{ textDecoration: "none" }}>
+                    <button className="btn btn-primary btn-lg">Publish a tool</button>
+                  </Link>
+                  <Link href="/live" style={{ textDecoration: "none" }}>
+                    <button
+                      className="btn btn-lg"
+                      style={{
+                        background: "rgba(255,255,255,0.08)",
+                        border: "1px solid rgba(255,255,255,0.28)",
+                        color: "#f5f4f0",
+                        backdropFilter: "blur(4px)",
+                      }}
+                    >
+                      See it live
+                    </button>
+                  </Link>
+                </div>
+              </div>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </section>
 
       {/* ============================================================

@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Fraunces, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Fraunces, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import ClientProviders from "@/providers/ClientProviders";
 import Header from "@/components/Header";
 import "./globals.css";
 
-const geist = Geist({
+/** Body / nav / labels — the sans half of Obscura's actual pairing
+ *  (Plus Jakarta Sans + Dirtyline 36 Days of Type). Free on Google Fonts. */
+const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -56,14 +59,30 @@ export const metadata: Metadata = {
   },
 };
 
+/** Runs before hydration to set data-theme without a flash of the wrong
+ *  theme. Reads localStorage first, falls back to system preference. */
+const THEME_INIT_SCRIPT = `
+(function () {
+  try {
+    var stored = localStorage.getItem("keryx-theme");
+    var theme = stored || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+    document.documentElement.setAttribute("data-theme", theme);
+  } catch (e) {}
+})();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${fraunces.variable} ${instrumentSerif.variable} ${jetbrains.variable}`}
+      suppressHydrationWarning
+      className={`${plusJakarta.variable} ${fraunces.variable} ${instrumentSerif.variable} ${jetbrains.variable}`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body style={{ minHeight: "100vh" }}>
         <ClientProviders>
           <Header />

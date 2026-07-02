@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import Wordmark from "@/components/Wordmark";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const NAV = [
   { href: "/ask", label: "Ask" },
@@ -18,6 +20,7 @@ function isActive(path: string, href: string): boolean {
 
 export default function Header() {
   const path = usePathname();
+  const [open, setOpen] = useState(false);
 
   return (
     <header
@@ -27,7 +30,7 @@ export default function Header() {
         left: 0,
         right: 0,
         zIndex: 50,
-        background: "rgba(11, 11, 12, 0.72)",
+        background: "var(--surface-glass)",
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
         borderBottom: "1px solid var(--border)",
@@ -58,8 +61,8 @@ export default function Header() {
         </Link>
 
         <nav
+          className="hidden md:flex"
           style={{
-            display: "flex",
             alignItems: "center",
             gap: 28,
             minWidth: 0,
@@ -85,12 +88,83 @@ export default function Header() {
           })}
         </nav>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div
+          className="hidden md:flex"
+          style={{ alignItems: "center", gap: 10 }}
+        >
+          <ThemeToggle />
           <Link href="/ask" style={{ textDecoration: "none" }}>
             <button className="btn btn-primary btn-sm">Get started</button>
           </Link>
         </div>
+
+        {/* Mobile: theme toggle + hamburger */}
+        <div className="flex md:hidden" style={{ alignItems: "center", gap: 8 }}>
+          <ThemeToggle />
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            style={{
+              width: 34,
+              height: 34,
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 8,
+              border: "1px solid var(--border)",
+              background: "var(--surface-2)",
+              color: "var(--text-primary)",
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden>
+              {open ? (
+                <path d="M4 4L16 16M16 4L4 16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              ) : (
+                <path d="M3 5H17M3 10H17M3 15H17" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
+
+      {open && (
+        <div
+          className="md:hidden"
+          style={{
+            borderTop: "1px solid var(--border)",
+            background: "var(--surface-0)",
+            padding: "8px 20px 20px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          {NAV.map(({ href, label }) => {
+            const active = isActive(path, href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setOpen(false)}
+                style={{
+                  padding: "12px 4px",
+                  fontSize: 15,
+                  fontWeight: 500,
+                  color: active ? "var(--text-primary)" : "var(--text-muted)",
+                  borderBottom: "1px solid var(--border)",
+                }}
+              >
+                {label}
+              </Link>
+            );
+          })}
+          <Link href="/ask" onClick={() => setOpen(false)} style={{ textDecoration: "none", marginTop: 14 }}>
+            <button className="btn btn-primary btn-block">Get started</button>
+          </Link>
+        </div>
+      )}
     </header>
   );
 }

@@ -58,7 +58,7 @@
   /* --- Typography ------------------------------------------------------
      Serif (Fraunces) is reserved for ONE big headline per page. Everything
      else — nav, labels, body, buttons — is clean Geist sans. */
-  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Geist', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-display: 'Fraunces', 'Cormorant Garamond', 'EB Garamond', ui-serif, Georgia, serif;
   --font-wordmark: 'Instrument Serif', 'Fraunces', ui-serif, Georgia, serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
@@ -105,6 +105,49 @@
   --dur-base: 220ms;
   --dur-slow: 380ms;
   --dur-slower: 600ms;
+}
+
+/* ============================================================================
+   LIGHT MODE — Vantage direction: warm off-white, ink text, same chrome
+   rules (neutral surfaces, one quiet accent). The hero art panel keeps its
+   own dark duotone regardless of page theme — same pattern Vantage itself
+   uses (photo stays true-color against a light page).
+   ========================================================================= */
+[data-theme="light"] {
+  --surface-0: #faf9f5;
+  --surface-1: #ffffff;
+  --surface-2: #f1efe8;
+  --surface-3: #e8e5db;
+  --surface-glass: rgba(250, 249, 245, 0.82);
+
+  --text-primary: #14140f;
+  --text-secondary: #55534a;
+  --text-muted: #8b887c;
+  --text-faint: #c7c3b5;
+
+  --border: #e5e2d8;
+  --border-hover-solid: #cfcbbb;
+  --border-strong: #d8d4c6;
+
+  --accent-glow: rgba(156, 128, 85, 0.18);
+  --accent-tint: rgba(156, 128, 85, 0.08);
+
+  --shadow-sm: 0 1px 2px rgba(20, 20, 15, 0.06);
+  --shadow-md: 0 4px 12px -2px rgba(20, 20, 15, 0.08);
+  --shadow-lg: 0 12px 30px -6px rgba(20, 20, 15, 0.1);
+  --shadow-xl: 0 24px 60px -12px rgba(20, 20, 15, 0.12);
+  --shadow-inset: inset 0 1px 0 rgba(0, 0, 0, 0.02);
+}
+
+/* Primary button flips to ink-on-cream in light mode (was white-on-ink). */
+[data-theme="light"] .btn-primary {
+  background: var(--text-primary);
+  color: var(--surface-1);
+  border-color: var(--text-primary);
+}
+[data-theme="light"] .btn-primary:hover:not(:disabled) {
+  background: #2a2a22;
+  border-color: #2a2a22;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -341,6 +384,15 @@ h1, .display {
   box-shadow: var(--shadow-lg);
 }
 
+.step-card > div:first-child > div:first-child {
+  transition: border-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+}
+.step-card:hover > div:first-child > div:first-child {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: rotate(-4deg) scale(1.05);
+}
+
 @keyframes marqueeScroll {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
@@ -468,7 +520,9 @@ h1, .display {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(11,11,12,0.35) 0%, rgba(11,11,12,0.88) 78%, var(--bg-primary) 100%);
+  /* Fixed dark endpoint, not tied to --bg-primary — see the identical note
+     on the hero gradient in page.tsx. Art panels stay dark in both themes. */
+  background: linear-gradient(180deg, rgba(11,11,12,0.35) 0%, rgba(11,11,12,0.88) 78%, rgba(11,11,12,0.98) 100%);
   pointer-events: none;
 }
 
