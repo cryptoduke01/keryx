@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Fraunces, JetBrains_Mono } from "next/font/google";
+import { Geist, Fraunces, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import ClientProviders from "@/providers/ClientProviders";
 import Header from "@/components/Header";
 import "./globals.css";
@@ -10,11 +10,22 @@ const geist = Geist({
   display: "swap",
 });
 
+/** Headlines — one confident serif per page, non-italic, Vantage-direction. */
 const fraunces = Fraunces({
   variable: "--font-display",
   subsets: ["latin"],
   style: ["normal", "italic"],
   axes: ["SOFT", "opsz"],
+  display: "swap",
+});
+
+/** Wordmark only — the swashy editorial italic seen in the Obscura lockup.
+ *  Reserved for the logotype and rare single-word emphasis, never body text. */
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-wordmark",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -51,7 +62,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${fraunces.variable} ${jetbrains.variable}`}
+      className={`${geist.variable} ${fraunces.variable} ${instrumentSerif.variable} ${jetbrains.variable}`}
     >
       <body style={{ minHeight: "100vh" }}>
         <ClientProviders>

@@ -8,10 +8,10 @@ interface WordmarkProps {
 }
 
 /**
- * Kēryx wordmark. Rendered as text so it stays crisp at every size and
- * inherits color. Italic Fraunces with the SOFT axis softened, small caps
- * off, ligatures on. The macron on the ē is a real Unicode glyph so it
- * copies cleanly.
+ * Kēryx wordmark. Instrument Serif italic — the swashy editorial lockup
+ * font, reserved for exactly this use (see brand notes: Obscura uses the
+ * same family of face for its "Obscura®" logotype). Never used for body
+ * headlines, which stay on Fraunces.
  */
 export default function Wordmark({
   size = 22,
@@ -23,17 +23,15 @@ export default function Wordmark({
     <span
       className={className}
       style={{
-        fontFamily: "var(--font-display)",
+        fontFamily: "var(--font-wordmark)",
         fontStyle: "italic",
-        fontWeight: 500,
-        fontOpticalSizing: "auto",
-        fontSize: size,
-        letterSpacing: "-0.015em",
+        fontWeight: 400,
+        fontSize: size * 1.15,
+        letterSpacing: "0.002em",
         lineHeight: 1,
         display: "inline-flex",
         alignItems: "baseline",
         color: "inherit",
-        fontFeatureSettings: '"ss01", "swsh", "salt"',
         ...style,
       }}
     >
@@ -41,12 +39,12 @@ export default function Wordmark({
       {showR && (
         <sup
           style={{
-            fontSize: "0.42em",
-            marginLeft: "0.08em",
-            top: "-0.85em",
+            fontSize: "0.4em",
+            marginLeft: "0.1em",
+            top: "-0.9em",
             fontStyle: "normal",
-            opacity: 0.75,
-            fontFamily: "var(--font-display)",
+            fontFamily: "var(--font-sans)",
+            opacity: 0.7,
           }}
         >
           ®

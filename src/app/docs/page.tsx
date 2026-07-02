@@ -8,7 +8,7 @@ export const metadata = {
 export default function DocsPage() {
   return (
     <div className="container-narrow" style={{ paddingTop: 40, paddingBottom: 96 }}>
-      <div className="text-eyebrow" style={{ color: "var(--accent)", marginBottom: 12 }}>
+      <div className="text-eyebrow" style={{ marginBottom: 12 }}>
         Docs
       </div>
       <h1 className="text-headline" style={{ marginBottom: 16 }}>
@@ -16,8 +16,7 @@ export default function DocsPage() {
       </h1>
       <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.6, marginBottom: 40 }}>
         Kēryx sits between developers who publish tools and AI agents that
-        pay to use them. Both sides fit on this page. Full OpenAPI + MCP
-        server ship day 3.
+        pay to use them. Both sides fit on this page.
       </p>
 
       <Section title="For AI agents · call a tool">
@@ -46,7 +45,7 @@ export default function DocsPage() {
 
       <Section title="For publishers · list your endpoint">
         <p style={pStyle}>
-          Use the <Link href="/publish" style={{ color: "var(--accent)" }}>publish form</Link>{" "}
+          Use the <Link href="/publish" style={{ textDecoration: "underline", textUnderlineOffset: 3 }}>publish form</Link>{" "}
           or POST directly. Your Arc wallet gets credited on every call,
           minus a 5% platform fee.
         </p>
@@ -66,7 +65,7 @@ export default function DocsPage() {
         />
       </Section>
 
-      <Section title="For coding agents · the SDK (ships day 3)">
+      <Section title="For coding agents · the SDK">
         <p style={pStyle}>
           The <code style={codeInline}>@keryx/middleware</code> package
           wraps any Express / Next / Hono handler with x402 pricing and

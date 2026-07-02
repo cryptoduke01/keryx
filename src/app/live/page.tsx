@@ -13,7 +13,7 @@ export default async function LivePage() {
   return (
     <div className="container-page" style={{ paddingTop: 40, paddingBottom: 80 }}>
       <div style={{ marginBottom: 24, maxWidth: 720 }}>
-        <div className="text-eyebrow" style={{ color: "var(--accent)", marginBottom: 12 }}>
+        <div className="text-eyebrow" style={{ marginBottom: 12 }}>
           Public ledger
         </div>
         <h1 className="text-headline" style={{ marginBottom: 12 }}>

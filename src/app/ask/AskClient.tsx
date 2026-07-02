@@ -243,7 +243,7 @@ export default function AskClient() {
       >
         {messages.length === 0 && (
           <div style={{ margin: "auto", textAlign: "center", maxWidth: 460 }}>
-            <div className="text-eyebrow" style={{ color: "var(--accent)", marginBottom: 10 }}>
+            <div className="text-eyebrow" style={{ marginBottom: 10 }}>
               Try one
             </div>
             <div
@@ -272,10 +272,12 @@ export default function AskClient() {
                     transition: "border-color 140ms",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = "var(--accent)";
+                    e.currentTarget.style.borderColor = "var(--border-hover-solid)";
+                    e.currentTarget.style.background = "var(--surface-3)";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = "var(--border)";
+                    e.currentTarget.style.background = "var(--surface-2)";
                   }}
                 >
                   {s}
@@ -350,9 +352,9 @@ function MessageBubble({ msg }: { msg: UiMessage }) {
           maxWidth: "90%",
           padding: "12px 14px",
           borderRadius: 10,
-          background: isUser ? "var(--gold-tint)" : "var(--surface-2)",
+          background: isUser ? "var(--surface-3)" : "var(--surface-2)",
           border: isUser
-            ? "1px solid rgba(226, 197, 110, 0.3)"
+            ? "1px solid var(--border-strong)"
             : "1px solid var(--border)",
           fontSize: 14,
           lineHeight: 1.55,

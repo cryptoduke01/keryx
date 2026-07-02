@@ -23,7 +23,7 @@ export default async function RegistryPage() {
   return (
     <div className="container-page" style={{ paddingTop: 40, paddingBottom: 80 }}>
       <div style={{ marginBottom: 32, maxWidth: 720 }}>
-        <div className="text-eyebrow" style={{ color: "var(--accent)", marginBottom: 12 }}>
+        <div className="text-eyebrow" style={{ marginBottom: 12 }}>
           Registry
         </div>
         <h1 className="text-headline" style={{ marginBottom: 12 }}>
@@ -88,9 +88,10 @@ export default async function RegistryPage() {
                 </div>
                 <h3
                   style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 17,
+                    fontFamily: "var(--font-sans)",
+                    fontSize: 16,
                     fontWeight: 700,
+                    letterSpacing: "-0.005em",
                     marginBottom: 6,
                   }}
                 >
@@ -110,7 +111,7 @@ export default async function RegistryPage() {
                 >
                   <div>
                     <div className="text-eyebrow" style={{ marginBottom: 2 }}>Price</div>
-                    <div className="text-mono" style={{ fontSize: 14, fontWeight: 700, color: "var(--accent)" }}>
+                    <div className="text-mono" style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>
                       ${tool.priceUsd.toFixed(3)}
                     </div>
                   </div>

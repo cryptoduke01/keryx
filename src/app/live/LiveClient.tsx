@@ -100,7 +100,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
             }}
           >
             No calls yet. Head to{" "}
-            <a href="/ask" style={{ color: "var(--accent)" }}>
+            <a href="/ask" style={{ textDecoration: "underline", textUnderlineOffset: 3 }}>
               /ask
             </a>{" "}
             and ask Kēryx a question.
@@ -119,7 +119,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
               gap: 12,
               alignItems: "center",
               background:
-                flashId === e.id ? "var(--gold-tint)" : "transparent",
+                flashId === e.id ? "rgba(255,255,255,0.06)" : "transparent",
               transition: "background 700ms ease-out",
             }}
           >
@@ -142,7 +142,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
               style={{
                 fontSize: 13,
                 fontWeight: 700,
-                color: "var(--accent)",
+                color: "var(--text-primary)",
                 textAlign: "right",
               }}
             >
@@ -176,7 +176,7 @@ function StatCard({ label, value }: { label: string; value: string }) {
       </div>
       <div
         className="text-mono"
-        style={{ fontSize: 22, fontWeight: 700, color: "var(--accent)", lineHeight: 1 }}
+        style={{ fontSize: 22, fontWeight: 700, color: "var(--text-primary)", lineHeight: 1 }}
       >
         {value}
       </div>
