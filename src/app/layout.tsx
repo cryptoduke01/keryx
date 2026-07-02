@@ -43,17 +43,19 @@ export const metadata: Metadata = {
   title: "Kēryx · The toll booth for the agent economy",
   description:
     "Any developer publishes a tool. Any AI agent pays to use it. Sub-cent USDC settles on Arc in under half a second. Kēryx is the toll booth for the agent economy.",
-  metadataBase: new URL("https://keryx.io"),
+  metadataBase: new URL("https://keryxhq.xyz"),
   openGraph: {
     title: "Kēryx · The toll booth for the agent economy",
     description:
       "Any developer publishes a tool. Any AI agent pays to use it. Sub-cent USDC on Arc.",
-    url: "https://keryx.io",
+    url: "https://keryxhq.xyz",
     siteName: "Kēryx",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
+    site: "@keryxhq",
+    creator: "@keryxhq",
     title: "Kēryx",
     description: "The paid tool registry for AI agents.",
   },

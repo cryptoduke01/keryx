@@ -623,6 +623,8 @@ export default async function Landing() {
             <Link href="/live" style={{ fontSize: 13, color: "var(--text-muted)" }}>Live</Link>
             <Link href="/docs" style={{ fontSize: 13, color: "var(--text-muted)" }}>Docs</Link>
             <Link href="/whitepaper" style={{ fontSize: 13, color: "var(--text-muted)" }}>Whitepaper</Link>
+            <a href="https://x.com/keryxhq" target="_blank" rel="noreferrer" style={{ fontSize: 13, color: "var(--text-muted)" }}>@keryxhq</a>
+            <a href="https://github.com/cryptoduke01/keryx" target="_blank" rel="noreferrer" style={{ fontSize: 13, color: "var(--text-muted)" }}>GitHub</a>
           </div>
           <span style={{ fontSize: 11, color: "var(--text-faint)" }}>
             Settles on Arc · MIT · Not backed by Ycmobinator

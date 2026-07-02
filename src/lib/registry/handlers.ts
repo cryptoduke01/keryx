@@ -39,7 +39,7 @@ async function fetchJson<T>(url: string, timeoutMs = 8000): Promise<T> {
   try {
     const res = await fetch(url, {
       signal: ctrl.signal,
-      headers: { "user-agent": "keryx.io (+https://keryx.io)" },
+      headers: { "user-agent": "keryxhq.xyz (+https://keryxhq.xyz)" },
     });
     if (!res.ok) {
       throw new Error(`upstream_${res.status}`);

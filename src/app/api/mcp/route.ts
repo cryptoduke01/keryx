@@ -116,7 +116,7 @@ export function GET() {
     name: SERVER_NAME,
     protocolVersion: PROTOCOL_VERSION,
     transport: "streamable-http",
-    docs: "https://keryx.io/docs#mcp",
+    docs: "https://keryxhq.xyz/docs#mcp",
     message:
       "Kēryx MCP endpoint. POST JSON-RPC 2.0 messages here. See /docs for the config snippet Claude Code and Cursor expect.",
   });

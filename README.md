@@ -6,9 +6,9 @@ Kēryx is a paid-tool registry for AI agents. Any developer publishes a tool. An
 
 Built for the Lepton Agents Hackathon (Canteen × Circle × Arc).
 
-- **Live:** [keryx-ashy.vercel.app](https://keryx-ashy.vercel.app)
-- **Docs:** [/docs](https://keryx-ashy.vercel.app/docs)
-- **Ledger:** [/live](https://keryx-ashy.vercel.app/live)
+- **Live:** [keryxhq.xyz](https://keryxhq.xyz)
+- **Docs:** [/docs](https://keryxhq.xyz/docs)
+- **Ledger:** [/live](https://keryxhq.xyz/live)
 
 ## Why
 
@@ -22,7 +22,7 @@ Kēryx removes the account. A publisher lists a tool with a price. An agent call
 2. **Discover.** Any agent hits `GET /api/tools` to see every available tool, its price, its argument schema, and a sample call, no docs page required.
 3. **Call and pay.** The agent calls `POST /api/call` with the tool id and its arguments. Kēryx quotes the price, executes the tool, splits the payment (95% to the publisher, 5% platform fee), and returns the result plus a ledger entry in one response.
 
-Every call, successful or failed, is written to a public ledger visible at [/live](https://keryx-ashy.vercel.app/live), so the flow of money between agents and publishers is auditable in real time.
+Every call, successful or failed, is written to a public ledger visible at [/live](https://keryxhq.xyz/live), so the flow of money between agents and publishers is auditable in real time.
 
 ## Architecture
 
@@ -61,7 +61,7 @@ src/
 **As an agent, call a tool directly:**
 
 ```bash
-curl -X POST https://keryx-ashy.vercel.app/api/call \
+curl -X POST https://keryxhq.xyz/api/call \
   -H "content-type: application/json" \
   -H "x-keryx-agent: my-agent" \
   -d '{
@@ -76,13 +76,13 @@ curl -X POST https://keryx-ashy.vercel.app/api/call \
 **Discover what's available first:**
 
 ```bash
-curl https://keryx-ashy.vercel.app/api/tools
+curl https://keryxhq.xyz/api/tools
 ```
 
 **As a publisher, list your own endpoint:**
 
 ```bash
-curl -X POST https://keryx-ashy.vercel.app/api/publishers/tools \
+curl -X POST https://keryxhq.xyz/api/publishers/tools \
   -H "content-type: application/json" \
   -d '{
     "id": "search.web",
@@ -95,7 +95,7 @@ curl -X POST https://keryx-ashy.vercel.app/api/publishers/tools \
   }'
 ```
 
-Full request/response shapes, argument schemas, and the coding-agent SDK snippet are on the [docs page](https://keryx-ashy.vercel.app/docs).
+Full request/response shapes, argument schemas, and the coding-agent SDK snippet are on the [docs page](https://keryxhq.xyz/docs).
 
 ## Seeded tools
 
@@ -133,7 +133,7 @@ This is a hackathon build, but the x402 protocol path is real. `POST /api/call` 
 - **`gateway`** — set `CIRCLE_GATEWAY_API_URL` (defaults to Circle's testnet endpoint) and Kēryx routes verify/settle through Circle Gateway. Real onchain USDC on Arc, batched.
 - **`demo`** — the default when no facilitator is configured. Accepts well-formed `X-PAYMENT` payloads, records a synthetic tx hash, and labels the ledger entry `demo` so `/live` never misrepresents onchain state.
 
-Publisher wallet signature verification (EIP-191) is not yet enforced, so treat community-submitted tools as unverified until that ships. The full protocol design and the settlement roadmap live in the [whitepaper](https://keryx-ashy.vercel.app/whitepaper).
+Publisher wallet signature verification (EIP-191) is not yet enforced, so treat community-submitted tools as unverified until that ships. The full protocol design and the settlement roadmap live in the [whitepaper](https://keryxhq.xyz/whitepaper).
 
 ## License
 

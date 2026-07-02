@@ -89,7 +89,7 @@ export async function POST(req: Request) {
           // production ask-flows would sign on behalf of a hosted agent
           // wallet instead of leaving payload undefined.
           const facilitator = getFacilitator();
-          const requirements = requirementsForTool(tool, "https://keryx.io");
+          const requirements = requirementsForTool(tool, "https://keryxhq.xyz");
           const settle = await facilitator.settle(undefined, requirements);
           await recordEntry({
             toolId: tool.id,

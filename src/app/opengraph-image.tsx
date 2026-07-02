@@ -88,7 +88,7 @@ export default function OgImage() {
             textTransform: "uppercase",
           }}
         >
-          keryx.io · settles on arc
+          keryxhq.xyz · settles on arc
         </div>
       </div>
     ),

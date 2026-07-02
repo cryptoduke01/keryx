@@ -32,7 +32,7 @@ export default function DocsPage() {
         </p>
         <CodeBlock
           lang="bash"
-          code={`curl -X POST https://keryx.io/api/call \\
+          code={`curl -X POST https://keryxhq.xyz/api/call \\
   -H "content-type: application/json" \\
   -H "x-keryx-agent: my-agent" \\
   -d '{
@@ -64,7 +64,7 @@ export default function DocsPage() {
         </p>
         <CodeBlock
           lang="bash"
-          code={`curl -X POST https://keryx.io/api/call \\
+          code={`curl -X POST https://keryxhq.xyz/api/call \\
   -H "content-type: application/json" \\
   -H "x-keryx-agent: my-agent" \\
   -H "x-payment: $SIGNED_PAYLOAD_BASE64" \\
@@ -88,7 +88,7 @@ export default function DocsPage() {
         </p>
         <CodeBlock
           lang="bash"
-          code={`curl -X POST https://keryx.io/api/publishers/tools \\
+          code={`curl -X POST https://keryxhq.xyz/api/publishers/tools \\
   -H "content-type: application/json" \\
   -d '{
     "id": "search.web",
@@ -105,7 +105,7 @@ export default function DocsPage() {
       <Section title="For Claude Code, Cursor, and any MCP client" id="mcp">
         <p style={pStyle}>
           Kēryx runs a Model Context Protocol server at{" "}
-          <code style={codeInline}>https://keryx.io/api/mcp</code>. Add it to
+          <code style={codeInline}>https://keryxhq.xyz/api/mcp</code>. Add it to
           your client's config and every tool in the registry shows up
           natively as a callable tool — no per-tool wiring, no wallet setup.
           Payment is sponsored in demo mode; the /live ledger records each
@@ -117,7 +117,7 @@ export default function DocsPage() {
   "mcpServers": {
     "keryx": {
       "type": "http",
-      "url": "https://keryx.io/api/mcp"
+      "url": "https://keryxhq.xyz/api/mcp"
     }
   }
 }`}
