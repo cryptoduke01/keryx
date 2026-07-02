@@ -102,6 +102,34 @@ export default function DocsPage() {
         />
       </Section>
 
+      <Section title="For Claude Code, Cursor, and any MCP client" id="mcp">
+        <p style={pStyle}>
+          Kēryx runs a Model Context Protocol server at{" "}
+          <code style={codeInline}>https://keryx.io/api/mcp</code>. Add it to
+          your client's config and every tool in the registry shows up
+          natively as a callable tool — no per-tool wiring, no wallet setup.
+          Payment is sponsored in demo mode; the /live ledger records each
+          call as it happens.
+        </p>
+        <CodeBlock
+          lang="json"
+          code={`{
+  "mcpServers": {
+    "keryx": {
+      "type": "http",
+      "url": "https://keryx.io/api/mcp"
+    }
+  }
+}`}
+        />
+        <p style={pStyle}>
+          Drop that into{" "}
+          <code style={codeInline}>~/.claude/mcp.json</code> (Claude Code) or
+          your client's equivalent. Restart, and try:{" "}
+          <i>&ldquo;use keryx to find the top BONK whales.&rdquo;</i>
+        </p>
+      </Section>
+
       <Section title="For coding agents · the SDK">
         <p style={pStyle}>
           The <code style={codeInline}>@keryx/middleware</code> package
@@ -167,9 +195,9 @@ const codeInline: React.CSSProperties = {
   color: "var(--text-primary)",
 };
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children, id }: { title: string; children: React.ReactNode; id?: string }) {
   return (
-    <section style={{ marginBottom: 40 }}>
+    <section id={id} style={{ marginBottom: 40, scrollMarginTop: 80 }}>
       <h2 className="text-subtitle" style={{ color: "var(--text-primary)", marginBottom: 12 }}>
         {title}
       </h2>

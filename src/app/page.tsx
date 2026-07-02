@@ -163,6 +163,35 @@ export default async function Landing() {
                 </Link>
               </div>
             </Reveal>
+            <Reveal immediate delay={0.32}>
+              <Link
+                href="/docs#mcp"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginTop: 18,
+                  fontSize: 13,
+                  color: "rgba(245,244,240,0.75)",
+                  textDecoration: "none",
+                  textShadow: "0 1px 4px rgba(0,0,0,0.6)",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: 9,
+                    padding: "2px 7px",
+                    borderRadius: 4,
+                    border: "1px solid rgba(255,255,255,0.28)",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  MCP
+                </span>
+                <span>Or drop into Claude Code and Cursor <span aria-hidden>→</span></span>
+              </Link>
+            </Reveal>
           </div>
         </div>
       </section>
