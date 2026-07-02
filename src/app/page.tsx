@@ -1,7 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { listTools } from "@/lib/registry/store";
 import { ledgerStats } from "@/lib/ledger";
-import HeraldScene from "@/components/HeraldScene";
 import Reveal from "@/components/motion/Reveal";
 import Counter from "@/components/motion/Counter";
 
@@ -35,9 +35,15 @@ export default async function Landing() {
                 minHeight: 420,
               }}
             >
-              <div className="art-duotone art-duotone-live" style={{ position: "absolute", inset: 0 }} />
-              <HeraldScene />
-              <div className="art-halftone" />
+              <Image
+                src="/hero-source.png"
+                alt=""
+                fill
+                priority
+                className="art-photo"
+                sizes="(max-width: 1200px) 100vw, 1200px"
+              />
+              <div className="art-photo-tint" />
               <div className="art-grain" />
               <div className="art-vignette" />
 
