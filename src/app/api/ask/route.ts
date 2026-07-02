@@ -28,6 +28,7 @@ import { quoteCall } from "@/lib/x402-price";
 import { recordEntry } from "@/lib/ledger";
 import { getTool } from "@/lib/registry/store";
 import { getFacilitator } from "@/lib/x402/facilitator";
+import { signSelfAuthorization } from "@/lib/x402/local-facilitator";
 import { requirementsForTool } from "@/lib/x402/requirements";
 
 export const runtime = "nodejs";
@@ -95,14 +96,22 @@ export async function POST(req: Request) {
         try {
           const result = await executeTool(tool, rawArgs as Record<string, unknown>);
           // Route the playground call through the same facilitator the real
-          // x402 route uses, so /live shows the same DEMO / GATEWAY badge for
-          // ask-driven activity as it does for direct API callers. Kēryx
-          // sponsors the payment in demo mode; when Gateway is configured
-          // production ask-flows would sign on behalf of a hosted agent
-          // wallet instead of leaving payload undefined.
+          // x402 route uses, so /live shows the same badge for ask-driven
+          // activity as for direct API callers. In `local` mode Kēryx signs
+          // a self-authorization from its facilitator wallet so the payment
+          // moves onchain — real tx hash on Arc lands on the ledger row.
+          // In `demo` mode we leave payload undefined and get a synthetic
+          // hash; in `gateway` mode Circle handles both.
           const facilitator = getFacilitator();
           const requirements = requirementsForTool(tool, "https://keryxhq.xyz");
-          const settle = await facilitator.settle(undefined, requirements);
+          const payload =
+            facilitator.mode === "local"
+              ? await signSelfAuthorization({
+                  payTo: tool.publisherWallet,
+                  atomicUsdc: BigInt(Math.round(tool.priceUsd * 1_000_000)),
+                })
+              : undefined;
+          const settle = await facilitator.settle(payload, requirements);
           await recordEntry({
             toolId: tool.id,
             toolName: tool.name,

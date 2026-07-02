@@ -23,6 +23,7 @@
  */
 
 import { BatchFacilitatorClient } from "@circle-fin/x402-batching/server";
+import { tryBuildLocalFacilitator } from "@/lib/x402/local-facilitator";
 
 export type FacilitatorMode = "gateway" | "local" | "demo";
 
@@ -56,8 +57,11 @@ export function getFacilitator(): KeryxFacilitator {
     return cached;
   }
 
-  // Local mode would go here once we have a funded facilitator wallet.
-  // For now, fall through to demo.
+  const local = tryBuildLocalFacilitator();
+  if (local) {
+    cached = local;
+    return cached;
+  }
 
   cached = buildDemoFacilitator();
   return cached;

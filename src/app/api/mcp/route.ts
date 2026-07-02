@@ -23,6 +23,10 @@ import { executeTool } from "@/lib/registry/handlers";
 import { quoteCall } from "@/lib/x402-price";
 import { recordEntry } from "@/lib/ledger";
 import type { ToolDefinition } from "@/lib/registry/seed";
+import { getFacilitator } from "@/lib/x402/facilitator";
+import { signSelfAuthorization } from "@/lib/x402/local-facilitator";
+import { requirementsForTool } from "@/lib/x402/requirements";
+import type { Address } from "viem";
 
 export const runtime = "nodejs";
 
@@ -212,6 +216,22 @@ async function callTool(
   }
 
   const quote = quoteCall(tool.priceUsd);
+
+  // Settlement mirrors /api/call and /api/ask: in `local` mode Kēryx signs
+  // a self-authorization from its facilitator wallet so USDC actually moves
+  // onchain per MCP call; in `demo` mode we still record a ledger entry but
+  // with a synthetic tx hash.
+  const facilitator = getFacilitator();
+  const requirements = requirementsForTool(tool, "https://keryxhq.xyz");
+  const payload =
+    facilitator.mode === "local"
+      ? await signSelfAuthorization({
+          payTo: tool.publisherWallet as Address,
+          atomicUsdc: BigInt(Math.round(tool.priceUsd * 1_000_000)),
+        })
+      : undefined;
+  const settle = await facilitator.settle(payload, requirements);
+
   await recordEntry({
     toolId: tool.id,
     toolName: tool.name,
@@ -221,8 +241,9 @@ async function callTool(
     priceUsd: quote.priceUsd,
     platformFeeUsd: quote.platformFeeUsd,
     netToPublisherUsd: quote.netToPublisherUsd,
-    status: "paid",
-    settlementMode: "demo",
+    status: settle.success ? "paid" : "failed",
+    txHash: settle.txHash,
+    settlementMode: facilitator.mode,
   });
 
   return {
