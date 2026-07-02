@@ -77,7 +77,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
             padding: "12px 20px",
             borderBottom: "1px solid var(--border)",
             display: "grid",
-            gridTemplateColumns: "1fr 1.4fr 0.8fr 0.8fr 0.9fr",
+            gridTemplateColumns: "0.8fr 1.3fr 0.8fr 0.7fr 1.1fr 0.7fr",
             gap: 12,
             alignItems: "center",
           }}
@@ -87,6 +87,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
           <span>Tool</span>
           <span>Publisher</span>
           <span style={{ textAlign: "right" }}>Paid</span>
+          <span>Settlement</span>
           <span style={{ textAlign: "right" }}>Status</span>
         </div>
 
@@ -115,7 +116,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
               borderBottom:
                 i < entries.length - 1 ? "1px solid var(--border)" : "none",
               display: "grid",
-              gridTemplateColumns: "1fr 1.4fr 0.8fr 0.8fr 0.9fr",
+              gridTemplateColumns: "0.8fr 1.3fr 0.8fr 0.7fr 1.1fr 0.7fr",
               gap: 12,
               alignItems: "center",
               background:
@@ -148,6 +149,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
             >
               ${e.priceUsd.toFixed(4)}
             </span>
+            <SettlementCell mode={e.settlementMode} txHash={e.txHash} />
             <span style={{ textAlign: "right" }}>
               <span
                 className={
@@ -165,6 +167,75 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
         ))}
       </div>
     </>
+  );
+}
+
+function SettlementCell({
+  mode,
+  txHash,
+}: {
+  mode?: "gateway" | "local" | "demo";
+  txHash?: string;
+}) {
+  if (!txHash) {
+    return <span style={{ fontSize: 12, color: "var(--text-muted)" }}>—</span>;
+  }
+  const isDemo = mode === "demo" || txHash.startsWith("demo_");
+  const clean = txHash.replace(/^demo_/, "");
+  const short = `${clean.slice(0, 6)}…${clean.slice(-4)}`;
+  if (isDemo) {
+    return (
+      <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+        <span className="text-mono" style={{ fontSize: 12, color: "var(--text-muted)" }}>
+          {short}
+        </span>
+        <span
+          style={{
+            fontSize: 9,
+            padding: "1px 6px",
+            borderRadius: 4,
+            border: "1px solid var(--border)",
+            color: "var(--text-muted)",
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+          }}
+        >
+          demo
+        </span>
+      </span>
+    );
+  }
+  const label = mode === "gateway" ? "gateway" : "arc";
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+      <a
+        href={`https://testnet.arcscan.app/tx/${clean}`}
+        target="_blank"
+        rel="noreferrer"
+        className="text-mono"
+        style={{
+          fontSize: 12,
+          color: "var(--text-primary)",
+          textDecoration: "underline",
+          textUnderlineOffset: 3,
+        }}
+      >
+        {short}
+      </a>
+      <span
+        style={{
+          fontSize: 9,
+          padding: "1px 6px",
+          borderRadius: 4,
+          border: "1px solid var(--border)",
+          color: "var(--text-secondary)",
+          letterSpacing: "0.06em",
+          textTransform: "uppercase",
+        }}
+      >
+        {label}
+      </span>
+    </span>
   );
 }
 

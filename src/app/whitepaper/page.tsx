@@ -17,10 +17,10 @@ export default function WhitepaperPage() {
       </h1>
       <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.65, marginBottom: 40 }}>
         This document describes the problem Kēryx solves, how the registry
-        prices and executes a call, and how settlement moves from a
-        simulated ledger to real onchain USDC on Arc. It is a living
-        specification, not a funding pitch. Where a mechanism is not yet
-        live, that is stated plainly.
+        prices and executes a call, and how the x402 protocol layer settles
+        USDC on Arc via Circle Gateway. It is a living specification, not
+        a funding pitch. Where a mechanism is not yet live, that is stated
+        plainly.
       </p>
 
       <nav style={{ marginBottom: 48, padding: 16, border: "1px solid var(--border)", borderRadius: 10, background: "var(--surface-2)" }}>
@@ -30,7 +30,7 @@ export default function WhitepaperPage() {
           <li><a href="#problem">The problem: software built for humans, not callers</a></li>
           <li><a href="#design">Design principle: pay per call, not per account</a></li>
           <li><a href="#mechanics">Protocol mechanics</a></li>
-          <li><a href="#settlement">Settlement: from simulated ledger to Arc</a></li>
+          <li><a href="#settlement">Settlement: x402 on Arc, batched through Circle Gateway</a></li>
           <li><a href="#trust">Trust and verification</a></li>
           <li><a href="#economics">Economics</a></li>
           <li><a href="#roadmap">Roadmap</a></li>
@@ -153,7 +153,7 @@ export default function WhitepaperPage() {
         </P>
       </Section>
 
-      <Section id="settlement" title="Settlement: from simulated ledger to Arc">
+      <Section id="settlement" title="Settlement: x402 on Arc, batched through Circle Gateway">
         <P>
           Kēryx settles on{" "}
           <a href="https://www.arc.network" style={linkStyle}>Arc</a>,
@@ -165,18 +165,30 @@ export default function WhitepaperPage() {
           cannot settle it on a chain where gas costs ten times that.
         </P>
         <P>
-          Today, every call computes a real quote and records a real
-          ledger entry, visible live at{" "}
-          <a href="/live" style={linkStyle}>/live</a>, but the USDC
-          transfer itself is simulated at the quoted price rather than
-          broadcast onchain per call. The{" "}
-          <a href="https://github.com/coinbase/x402" style={linkStyle}>x402</a>{" "}
-          payment protocol and Circle Gateway batching packages are wired
-          into the codebase (<code style={codeInline}>@x402/next</code>,{" "}
-          <code style={codeInline}>@circle-fin/x402-batching</code>) and
-          the integration work to move from simulated to broadcast
-          settlement is active, tracked on the{" "}
-          <a href="/docs" style={linkStyle}>docs page</a>.
+          <code style={codeInline}>POST /api/call</code> speaks the real
+          x402 protocol. A first hit without an{" "}
+          <code style={codeInline}>X-PAYMENT</code> header returns HTTP
+          402 with a machine-readable{" "}
+          <code style={codeInline}>accepts</code> array carrying the
+          exact amount, USDC asset address, seller wallet, and Arc
+          network id. The caller signs an EIP-3009 USDC authorization
+          against those requirements and retries with the base64-encoded
+          signature in the header. The server decodes, verifies, executes
+          the tool, and settles &mdash; all inside a single request.
+        </P>
+        <P>
+          Verification and settlement route through a swappable
+          facilitator. When{" "}
+          <code style={codeInline}>CIRCLE_GATEWAY_API_URL</code> is set,
+          Kēryx uses{" "}
+          <code style={codeInline}>@circle-fin/x402-batching</code>'s
+          Gateway client &mdash; verify happens against Circle's endpoint
+          and settlement is batched onchain. Without that variable, Kēryx
+          falls back to a demo facilitator that accepts well-formed
+          payloads and records a synthetic tx hash; the{" "}
+          <a href="/live" style={linkStyle}>/live</a> ledger tags those
+          entries as <b>demo</b> so nothing on the page misrepresents
+          onchain state.
         </P>
         <P>
           The reason to batch through Circle Gateway rather than settle
@@ -233,7 +245,7 @@ export default function WhitepaperPage() {
       <Section id="roadmap" title="Roadmap">
         <Ul items={[
           <>Publisher wallet signature verification (EIP-191) before externally-hosted handler execution.</>,
-          <>Live x402 quote endpoint with Circle Gateway batching, replacing simulated settlement.</>,
+          <>Provisioning a Circle Gateway account and flipping the default facilitator from demo to gateway in production.</>,
           <>An MCP server so agent tools like Claude Code and Cursor can discover Kēryx tools natively, without a separate integration.</>,
           <>OpenAPI spec and first-party SDKs for Node and Python.</>,
         ]} />
@@ -242,14 +254,19 @@ export default function WhitepaperPage() {
       <Section id="risks" title="Known limitations">
         <P>
           This is a hackathon-stage build, and this document is written to
-          be honest about that rather than to oversell it. Settlement is
-          simulated, not yet broadcast onchain per call. Persistence falls
-          back to in-memory storage when Redis is not configured, meaning
-          registry and ledger state can reset on a cold start in that
-          mode. Publisher-submitted tools are not signature-verified and
-          their handlers are not yet externally hosted. All three are
-          scoped, understood, and listed above under Roadmap rather than
-          hidden.
+          be honest about that rather than to oversell it. The x402
+          protocol path is real end to end &mdash; a 402 response, a
+          machine-readable price tag, a signed retry, verify, execute,
+          settle &mdash; but the default facilitator in the deployed demo
+          is the local <b>demo</b> mode, which records synthetic tx hashes
+          rather than broadcasting onchain. Flipping to Circle Gateway is
+          a single environment variable, gated on our Gateway credentials
+          landing. Persistence falls back to in-memory storage when Redis
+          is not configured, meaning registry and ledger state can reset
+          on a cold start in that mode. Publisher-submitted tools are not
+          signature-verified and their handlers are not yet externally
+          hosted. All three are scoped, understood, and listed above under
+          Roadmap rather than hidden.
         </P>
       </Section>
 

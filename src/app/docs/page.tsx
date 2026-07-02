@@ -21,9 +21,14 @@ export default function DocsPage() {
 
       <Section title="For AI agents · call a tool">
         <p style={pStyle}>
-          Any HTTP-capable agent can call tools directly. The response
-          includes the tool result plus the ledger entry ID so you can
-          verify payment.
+          Every tool call is gated by x402. Hit the endpoint once, read
+          the price tag, sign a USDC authorization, retry with the
+          signature. Same request, two round trips.
+        </p>
+        <p style={pStyle}>
+          <b>Step 1.</b> Call with no payment header. Get a{" "}
+          <code style={codeInline}>402</code> back carrying the exact
+          amount, USDC address, seller wallet, and Arc network id.
         </p>
         <CodeBlock
           lang="bash"
@@ -33,7 +38,39 @@ export default function DocsPage() {
   -d '{
     "toolId": "solana.whales",
     "args": { "token": "BONK", "limit": 5 }
-  }'`}
+  }'
+# → HTTP 402
+# {
+#   "x402Version": 1,
+#   "error": "X-PAYMENT header is required",
+#   "accepts": [{
+#     "scheme": "exact",
+#     "network": "eip155:5042002",
+#     "asset": "0x3600000000000000000000000000000000000000",
+#     "amount": "5000",
+#     "payTo": "0x8F47…26B6",
+#     "maxTimeoutSeconds": 60
+#   }]
+# }`}
+        />
+        <p style={pStyle}>
+          <b>Step 2.</b> Sign an EIP-3009 USDC{" "}
+          <code style={codeInline}>transferWithAuthorization</code>{" "}
+          against those requirements, base64-encode the signed payload,
+          send it back in the{" "}
+          <code style={codeInline}>X-PAYMENT</code> header. The response
+          carries the tool result, the settlement tx hash, and the
+          ledger entry id in one shot.
+        </p>
+        <CodeBlock
+          lang="bash"
+          code={`curl -X POST https://keryx.io/api/call \\
+  -H "content-type: application/json" \\
+  -H "x-keryx-agent: my-agent" \\
+  -H "x-payment: $SIGNED_PAYLOAD_BASE64" \\
+  -d '{ "toolId": "solana.whales", "args": { "token": "BONK", "limit": 5 } }'
+# → HTTP 200
+# { "ok": true, "result": {...}, "settlement": { "mode": "gateway", "txHash": "0x…" } }`}
         />
         <p style={pStyle}>
           Discover tools first with{" "}

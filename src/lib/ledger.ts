@@ -19,7 +19,10 @@ export interface LedgerEntry {
   platformFeeUsd: number;
   netToPublisherUsd: number;
   status: "paid" | "pending" | "failed";
+  /** Onchain tx hash if a real facilitator settled the payment. */
   txHash?: string;
+  /** Which facilitator settled this — surfaces on /live as a badge. */
+  settlementMode?: "gateway" | "local" | "demo";
 }
 
 const HAS_REDIS =

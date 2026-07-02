@@ -125,7 +125,12 @@ pnpm typecheck    # tsc --noEmit
 
 ## Status
 
-This is a hackathon build. The fee split and ledger are real and running; payment is currently simulated at the quoted price rather than settled onchain per call. The x402 and Circle Gateway packages are wired in and the batched-settlement path is active integration work, tracked openly on the [docs page](https://keryx-ashy.vercel.app/docs) under "coming this week." Publisher wallet signature verification (EIP-191) is not yet enforced, so treat community-submitted tools as unverified until that ships.
+This is a hackathon build, but the x402 protocol path is real. `POST /api/call` returns a genuine `402 Payment Required` with a machine-readable `accepts` array when the `X-PAYMENT` header is missing, and executes only after a signed payload verifies. Which facilitator runs the verify + settle is picked by env:
+
+- **`gateway`** — set `CIRCLE_GATEWAY_API_URL` (defaults to Circle's testnet endpoint) and Kēryx routes verify/settle through Circle Gateway. Real onchain USDC on Arc, batched.
+- **`demo`** — the default when no facilitator is configured. Accepts well-formed `X-PAYMENT` payloads, records a synthetic tx hash, and labels the ledger entry `demo` so `/live` never misrepresents onchain state.
+
+Publisher wallet signature verification (EIP-191) is not yet enforced, so treat community-submitted tools as unverified until that ships. The full protocol design and the settlement roadmap live in the [whitepaper](https://keryx-ashy.vercel.app/whitepaper).
 
 ## License
 
