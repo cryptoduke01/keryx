@@ -1,9 +1,17 @@
 /**
- * Handler implementations for seeded Kēryx tools. Day 1 uses mocked-but-
- * realistic payloads so the demo works end-to-end even without upstream
- * API keys. Day 2 swaps in live upstreams (Birdeye, Helius, SerpAPI, etc).
+ * Real handlers for Kēryx tools. Each one hits a live public API — no
+ * hardcoded mocks. If an upstream is down, we surface the error to the
+ * caller rather than making something up.
  *
- * Every handler returns JSON that an LLM can reason about directly.
+ * Upstreams:
+ *   - solana.token-activity → DexScreener (Solana pair data)
+ *   - solana.launches       → DexScreener latest token profiles
+ *   - solana.rug-check      → RugCheck.xyz
+ *   - search.web            → Wikipedia REST + MediaWiki search
+ *   - crypto.trending       → CoinGecko trending
+ *
+ * Each fetch runs with a hard timeout so a slow upstream can't stall
+ * a paid call for the whole 60-second x402 window.
  */
 
 import type { ToolDefinition } from "./seed";
@@ -15,151 +23,290 @@ interface CallContext {
 
 function pickStr(args: Record<string, unknown>, key: string, fallback = ""): string {
   const v = args[key];
-  return typeof v === "string" ? v : fallback;
+  return typeof v === "string" && v.length > 0 ? v : fallback;
 }
+
 function pickNum(args: Record<string, unknown>, key: string, fallback: number): number {
   const v = args[key];
-  return typeof v === "number" && Number.isFinite(v) ? v : fallback;
+  if (typeof v === "number" && Number.isFinite(v)) return v;
+  if (typeof v === "string" && !Number.isNaN(Number(v))) return Number(v);
+  return fallback;
 }
 
-const MOCK_WHALES: Record<string, Array<{ wallet: string; volumeUsd: number; txCount: number }>> = {
-  BONK: [
-    { wallet: "7xKXt...W3Zf", volumeUsd: 482_310, txCount: 214 },
-    { wallet: "3JmQe...aLpP", volumeUsd: 391_400, txCount: 178 },
-    { wallet: "9BfR2...QcNq", volumeUsd: 227_650, txCount: 92 },
-    { wallet: "GkR7Y...vT2s", volumeUsd: 198_412, txCount: 154 },
-    { wallet: "2ZmAF...bBnc", volumeUsd: 154_002, txCount: 66 },
-  ],
-  SOL: [
-    { wallet: "BinanceHot", volumeUsd: 42_310_000, txCount: 8210 },
-    { wallet: "JupiterAgg", volumeUsd: 18_450_000, txCount: 5104 },
-    { wallet: "DriftFund", volumeUsd: 6_720_000, txCount: 2891 },
-  ],
-};
+async function fetchJson<T>(url: string, timeoutMs = 8000): Promise<T> {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, {
+      signal: ctrl.signal,
+      headers: { "user-agent": "keryx.io (+https://keryx.io)" },
+    });
+    if (!res.ok) {
+      throw new Error(`upstream_${res.status}`);
+    }
+    return (await res.json()) as T;
+  } finally {
+    clearTimeout(t);
+  }
+}
 
-async function handleWhales(ctx: CallContext) {
-  const token = pickStr(ctx.args, "token", "BONK").toUpperCase();
-  const limit = pickNum(ctx.args, "limit", 10);
-  const rows = (MOCK_WHALES[token] ?? MOCK_WHALES.BONK).slice(0, limit);
+// ---------------------------------------------------------------------------
+// solana.token-activity
+// ---------------------------------------------------------------------------
+
+interface DexScreenerPair {
+  chainId: string;
+  dexId: string;
+  pairAddress: string;
+  baseToken: { address: string; name: string; symbol: string };
+  priceUsd?: string;
+  volume?: { h24?: number; h6?: number; h1?: number };
+  txns?: { h24?: { buys: number; sells: number } };
+  liquidity?: { usd?: number };
+  marketCap?: number;
+  fdv?: number;
+  url?: string;
+}
+
+async function handleTokenActivity(ctx: CallContext) {
+  const query = pickStr(ctx.args, "mintOrSymbol") || pickStr(ctx.args, "token");
+  if (!query) {
+    throw new Error("Missing required arg: mintOrSymbol");
+  }
+  const raw = await fetchJson<{ pairs: DexScreenerPair[] }>(
+    `https://api.dexscreener.com/latest/dex/search?q=${encodeURIComponent(query)}`,
+  );
+  const solPairs = (raw.pairs ?? []).filter((p) => p.chainId === "solana");
+  if (solPairs.length === 0) {
+    return { query, chain: "solana", found: false, pairs: [] };
+  }
+  const top = solPairs
+    .sort((a, b) => (b.volume?.h24 ?? 0) - (a.volume?.h24 ?? 0))
+    .slice(0, 5)
+    .map((p) => ({
+      pairAddress: p.pairAddress,
+      dex: p.dexId,
+      symbol: p.baseToken.symbol,
+      priceUsd: p.priceUsd,
+      volume24hUsd: p.volume?.h24 ?? 0,
+      txns24h: p.txns?.h24 ?? { buys: 0, sells: 0 },
+      liquidityUsd: p.liquidity?.usd ?? 0,
+      marketCapUsd: p.marketCap ?? p.fdv ?? null,
+      dexscreenerUrl: p.url,
+    }));
   return {
-    token,
-    windowHours: 24,
-    whales: rows,
+    query,
+    chain: "solana",
+    found: true,
+    topPairs: top,
     generatedAt: new Date().toISOString(),
+    source: "dexscreener",
   };
+}
+
+// ---------------------------------------------------------------------------
+// solana.launches
+// ---------------------------------------------------------------------------
+
+interface DexScreenerProfile {
+  chainId: string;
+  tokenAddress: string;
+  description?: string;
+  links?: Array<{ label?: string; type?: string; url: string }>;
+  icon?: string;
+  header?: string;
+  openGraph?: string;
+  url?: string;
 }
 
 async function handleLaunches(ctx: CallContext) {
-  const windowMinutes = pickNum(ctx.args, "windowMinutes", 60);
-  const minVolumeUsd = pickNum(ctx.args, "minVolumeUsd", 10_000);
+  const limit = Math.min(Math.max(pickNum(ctx.args, "limit", 5), 1), 20);
+  const raw = await fetchJson<DexScreenerProfile[]>(
+    "https://api.dexscreener.com/token-profiles/latest/v1",
+  );
+  const solanaProfiles = (Array.isArray(raw) ? raw : []).filter(
+    (p) => p.chainId === "solana",
+  );
+  const items = solanaProfiles.slice(0, limit).map((p) => ({
+    mint: p.tokenAddress,
+    description: p.description ?? null,
+    icon: p.icon ?? null,
+    links: (p.links ?? []).map((l) => ({ label: l.label ?? l.type, url: l.url })),
+    dexscreenerUrl: p.url ?? `https://dexscreener.com/solana/${p.tokenAddress}`,
+  }));
   return {
-    windowMinutes,
-    minVolumeUsd,
-    tokens: [
-      {
-        ticker: "$KHRUX",
-        mint: "KerY9x2...4tYp",
-        launchedMinutesAgo: 12,
-        volumeUsd: 78_400,
-        priceUsd: 0.00042,
-        holders: 421,
-      },
-      {
-        ticker: "$LEPTON",
-        mint: "LepT8n2...1kQq",
-        launchedMinutesAgo: 34,
-        volumeUsd: 132_900,
-        priceUsd: 0.0018,
-        holders: 892,
-      },
-      {
-        ticker: "$OBOL",
-        mint: "obL7Rx4...9mNm",
-        launchedMinutesAgo: 48,
-        volumeUsd: 47_620,
-        priceUsd: 0.000091,
-        holders: 214,
-      },
-    ],
+    count: items.length,
+    tokens: items,
     generatedAt: new Date().toISOString(),
+    source: "dexscreener",
   };
+}
+
+// ---------------------------------------------------------------------------
+// solana.rug-check
+// ---------------------------------------------------------------------------
+
+interface RugCheckSummary {
+  score?: number;
+  score_normalised?: number;
+  risks?: Array<{ name: string; description: string; level: string; score?: number }>;
+  lpLockedPct?: number;
+  tokenProgram?: string;
+  tokenType?: string;
 }
 
 async function handleRugCheck(ctx: CallContext) {
-  const mint = pickStr(ctx.args, "mint", "");
+  const mint = pickStr(ctx.args, "mint");
+  if (!mint) {
+    throw new Error("Missing required arg: mint");
+  }
+  const raw = await fetchJson<RugCheckSummary>(
+    `https://api.rugcheck.xyz/v1/tokens/${encodeURIComponent(mint)}/report/summary`,
+  );
   return {
     mint,
-    score: 27,
-    verdict: "moderate risk",
-    signals: {
-      mintAuthorityActive: false,
-      lpLocked: true,
-      lpLockDays: 180,
-      top10HolderPct: 41.2,
-      devWalletBalancePct: 3.4,
-      liquidityUsd: 68_400,
-    },
+    score: raw.score ?? null,
+    scoreNormalised: raw.score_normalised ?? null,
+    lpLockedPct: raw.lpLockedPct ?? null,
+    tokenType: raw.tokenType ?? null,
+    tokenProgram: raw.tokenProgram ?? null,
+    risks: (raw.risks ?? []).map((r) => ({
+      name: r.name,
+      level: r.level,
+      description: r.description,
+      score: r.score,
+    })),
     generatedAt: new Date().toISOString(),
+    source: "rugcheck.xyz",
   };
+}
+
+// ---------------------------------------------------------------------------
+// search.web
+// ---------------------------------------------------------------------------
+
+interface WikiSearchHit {
+  title: string;
+  snippet: string;
+  pageid: number;
+}
+
+interface WikiSummary {
+  title: string;
+  extract?: string;
+  content_urls?: { desktop?: { page?: string } };
+  thumbnail?: { source?: string };
 }
 
 async function handleWebSearch(ctx: CallContext) {
-  const query = pickStr(ctx.args, "query", "");
-  const limit = pickNum(ctx.args, "limit", 5);
+  const query = pickStr(ctx.args, "query");
+  if (!query) {
+    throw new Error("Missing required arg: query");
+  }
+  const limit = Math.min(Math.max(pickNum(ctx.args, "limit", 3), 1), 5);
+
+  const searchRes = await fetchJson<{ query?: { search?: WikiSearchHit[] } }>(
+    `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(
+      query,
+    )}&srlimit=${limit}&format=json&origin=*`,
+  );
+  const hits = searchRes.query?.search ?? [];
+  if (hits.length === 0) {
+    return { query, results: [], source: "wikipedia" };
+  }
+
+  const summaries = await Promise.all(
+    hits.map(async (h) => {
+      try {
+        const s = await fetchJson<WikiSummary>(
+          `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(
+            h.title.replace(/ /g, "_"),
+          )}`,
+        );
+        return {
+          title: s.title,
+          snippet: (s.extract ?? h.snippet.replace(/<[^>]+>/g, "")).slice(0, 320),
+          url: s.content_urls?.desktop?.page ?? null,
+          thumbnail: s.thumbnail?.source ?? null,
+        };
+      } catch {
+        return {
+          title: h.title,
+          snippet: h.snippet.replace(/<[^>]+>/g, "").slice(0, 320),
+          url: `https://en.wikipedia.org/wiki/${encodeURIComponent(h.title.replace(/ /g, "_"))}`,
+          thumbnail: null,
+        };
+      }
+    }),
+  );
+
   return {
     query,
-    results: [
-      {
-        title: "Arc Testnet Launches with Sub-Second Stablecoin Finality",
-        url: "https://circle.com/blog/arc-testnet-launch",
-        snippet:
-          "Arc, Circle's stablecoin-native L1, moves USDC in under half a second with gasless batching for nanopayments.",
-      },
-      {
-        title: "x402: The HTTP 402 Payment Standard Revived",
-        url: "https://developers.circle.com/x402",
-        snippet:
-          "x402 lets any HTTP endpoint quote a price, verify a payment, and settle to a wallet without an API key handshake.",
-      },
-      {
-        title: "Nanopayments Explained",
-        url: "https://thecanteenapp.com/lepton",
-        snippet:
-          "Value as small as $0.000001, batched and settled in under half a second. The smallest coin, reborn for machines.",
-      },
-    ].slice(0, limit),
+    results: summaries,
+    source: "wikipedia",
     generatedAt: new Date().toISOString(),
   };
 }
 
-async function handleTweetTrends(ctx: CallContext) {
-  const target = pickStr(ctx.args, "target", "trending");
-  const limit = pickNum(ctx.args, "limit", 10);
-  const trending = [
-    { topic: "$KHRUX", volume: 42_100, sentiment: 0.72 },
-    { topic: "Arc mainnet", volume: 18_300, sentiment: 0.61 },
-    { topic: "Kēryx", volume: 9_400, sentiment: 0.83 },
-    { topic: "Lepton hackathon", volume: 6_120, sentiment: 0.55 },
-    { topic: "x402", volume: 4_890, sentiment: 0.44 },
-  ].slice(0, limit);
-  return {
-    target,
-    items: trending,
-    generatedAt: new Date().toISOString(),
+// ---------------------------------------------------------------------------
+// crypto.trending
+// ---------------------------------------------------------------------------
+
+interface CoinGeckoTrendingCoin {
+  item: {
+    id: string;
+    name: string;
+    symbol: string;
+    market_cap_rank?: number;
+    thumb?: string;
+    score?: number;
+    data?: {
+      price?: number;
+      price_change_percentage_24h?: { usd?: number };
+      market_cap?: string;
+      total_volume?: string;
+    };
   };
 }
+
+async function handleTrending(ctx: CallContext) {
+  const limit = Math.min(Math.max(pickNum(ctx.args, "limit", 7), 1), 15);
+  const raw = await fetchJson<{ coins?: CoinGeckoTrendingCoin[] }>(
+    "https://api.coingecko.com/api/v3/search/trending",
+  );
+  const coins = (raw.coins ?? []).slice(0, limit).map((c) => ({
+    symbol: c.item.symbol.toUpperCase(),
+    name: c.item.name,
+    marketCapRank: c.item.market_cap_rank ?? null,
+    priceUsd: c.item.data?.price ?? null,
+    change24hPct: c.item.data?.price_change_percentage_24h?.usd ?? null,
+    marketCap: c.item.data?.market_cap ?? null,
+    volume24h: c.item.data?.total_volume ?? null,
+    trendingRank: c.item.score ?? null,
+  }));
+  return {
+    count: coins.length,
+    coins,
+    generatedAt: new Date().toISOString(),
+    source: "coingecko",
+  };
+}
+
+// ---------------------------------------------------------------------------
+// dispatcher
+// ---------------------------------------------------------------------------
 
 const HANDLERS: Record<string, (ctx: CallContext) => Promise<unknown>> = {
-  "solana.whales": handleWhales,
+  "solana.token-activity": handleTokenActivity,
   "solana.launches": handleLaunches,
   "solana.rug-check": handleRugCheck,
   "search.web": handleWebSearch,
-  "scrape.tweet-trends": handleTweetTrends,
+  "crypto.trending": handleTrending,
 };
 
 export async function executeTool(
   tool: ToolDefinition,
-  args: Record<string, unknown>
+  args: Record<string, unknown>,
 ): Promise<unknown> {
   const handler = HANDLERS[tool.id];
   if (!handler) {

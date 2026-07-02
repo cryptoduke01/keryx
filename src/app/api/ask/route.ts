@@ -16,6 +16,8 @@ import { executeTool } from "@/lib/registry/handlers";
 import { quoteCall } from "@/lib/x402-price";
 import { recordEntry } from "@/lib/ledger";
 import { getTool } from "@/lib/registry/store";
+import { getFacilitator } from "@/lib/x402/facilitator";
+import { requirementsForTool } from "@/lib/x402/requirements";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -29,7 +31,7 @@ const SYSTEM_PROMPT = `You are Kēryx, a Greek herald reborn as an AI agent that
 
 Rules:
 - Every tool call costs USDC and settles onchain to the tool's publisher. Only call a tool if the question genuinely needs it. Say what you're about to call and why, in one short line, before you call it.
-- When results come back, weave them into a plain-language answer for the user. Cite each tool you used and what it cost, in a short trailing line like: "Sources: solana.whales (Kēryx, $0.005), search.web (Kēryx, $0.004)".
+- When results come back, weave them into a plain-language answer for the user. Cite each tool you used and what it cost, in a short trailing line like: "Sources: solana.token-activity (Kēryx, $0.005), search.web (Kēryx, $0.004)".
 - If a tool errors or returns nothing useful, say so plainly. Never make up data.
 - Keep answers tight. This is a chat surface, not an essay.
 - If the user is just chatting (hi, what are you), respond briefly without calling any tools.`;
@@ -63,8 +65,8 @@ export async function POST(req: Request) {
   const registryTools = await listTools();
 
   /** Build the tool map the AI SDK expects. Each tool id is normalized
-   *  from dotted (solana.whales) to underscored (solana_whales) because
-   *  OpenAI's function names disallow dots.
+   *  from dotted (solana.token-activity) to underscored (solana_token_activity)
+   *  because OpenAI's function names disallow dots.
    *  Typed as `any` because the AI SDK's tool<>execute generic doesn't
    *  narrow cleanly across a heterogeneous record. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -80,6 +82,15 @@ export async function POST(req: Request) {
         const quote = quoteCall(tool.priceUsd);
         try {
           const result = await executeTool(tool, rawArgs as Record<string, unknown>);
+          // Route the playground call through the same facilitator the real
+          // x402 route uses, so /live shows the same DEMO / GATEWAY badge for
+          // ask-driven activity as it does for direct API callers. Kēryx
+          // sponsors the payment in demo mode; when Gateway is configured
+          // production ask-flows would sign on behalf of a hosted agent
+          // wallet instead of leaving payload undefined.
+          const facilitator = getFacilitator();
+          const requirements = requirementsForTool(tool, "https://keryx.io");
+          const settle = await facilitator.settle(undefined, requirements);
           await recordEntry({
             toolId: tool.id,
             toolName: tool.name,
@@ -90,6 +101,8 @@ export async function POST(req: Request) {
             platformFeeUsd: quote.platformFeeUsd,
             netToPublisherUsd: quote.netToPublisherUsd,
             status: "paid",
+            txHash: settle.txHash,
+            settlementMode: facilitator.mode,
           });
           return {
             toolId: tool.id,
@@ -107,6 +120,7 @@ export async function POST(req: Request) {
             platformFeeUsd: quote.platformFeeUsd,
             netToPublisherUsd: quote.netToPublisherUsd,
             status: "failed",
+            settlementMode: getFacilitator().mode,
           });
           return {
             error: "handler_failed",

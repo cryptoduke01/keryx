@@ -1,12 +1,10 @@
 /**
- * Day-1 in-memory registry. Every tool listed here is a real, callable
- * endpoint. Publishers can add their own via POST /api/publishers/tools;
- * those persist to Redis on day 2.
+ * Kēryx seed registry. Every entry here maps to a real handler in
+ * src/lib/registry/handlers.ts that hits a live public API — no mocked
+ * data. Community publishers can add their own via POST /api/publishers/tools.
  *
- * Design intent: seed with tools an agent actually WANTS. Solana-native
- * signals (whale trades, token launches), premium web scraping (X, LinkedIn),
- * and search-with-provenance. Publishers here are we (Kēryx team) so demo
- * revenue flows to the treasury wallet.
+ * The publishers for the seed lineup are the Kēryx treasury so demo revenue
+ * flows to a wallet we control while the platform is bootstrapping.
  */
 
 import { KERYX_TREASURY_ADDRESS } from "@/lib/chains";
@@ -20,7 +18,7 @@ export type ToolCategory =
   | "social";
 
 export interface ToolDefinition {
-  /** URL-safe id: e.g. "solana.whales", "search.web". Also the API slug. */
+  /** URL-safe id: e.g. "solana.token-activity", "search.web". Also the API slug. */
   id: string;
   /** Publisher-facing display name. */
   name: string;
@@ -49,57 +47,50 @@ export interface ToolDefinition {
 
 export const SEEDED_TOOLS: ToolDefinition[] = [
   {
-    id: "solana.whales",
-    name: "Whale Wallet Tracker",
+    id: "solana.token-activity",
+    name: "Solana Token Activity",
     summary:
-      "Returns the top Solana wallets that transacted in a given token in the last 24h, ranked by USD volume.",
+      "Live trading data for a Solana token: top DEX pairs, 24h volume, buy/sell counts, liquidity, and market cap.",
     category: "solana",
     priceUsd: 0.005,
     publisherWallet: KERYX_TREASURY_ADDRESS,
     publisherName: "Kēryx",
     args: {
-      token: {
+      mintOrSymbol: {
         type: "string",
         required: true,
-        description: "Solana token mint address or ticker (e.g. 'SOL', 'BONK').",
-      },
-      limit: {
-        type: "number",
-        description: "How many top wallets to return. Default 10.",
+        description:
+          "Solana token mint address, symbol, or name (e.g. 'BONK', 'DezXAZ8z...263').",
       },
     },
-    sampleArgs: { token: "BONK", limit: 5 },
+    sampleArgs: { mintOrSymbol: "BONK" },
     verified: true,
     latencyMs: 850,
   },
   {
     id: "solana.launches",
-    name: "New Token Launches",
+    name: "New Solana Token Launches",
     summary:
-      "Returns Solana tokens launched in the last N minutes with 24h volume > threshold, sorted by momentum.",
+      "Freshly-boosted Solana token profiles from DexScreener with descriptions, links, and dex URLs.",
     category: "solana",
     priceUsd: 0.003,
     publisherWallet: KERYX_TREASURY_ADDRESS,
     publisherName: "Kēryx",
     args: {
-      windowMinutes: {
+      limit: {
         type: "number",
-        description: "Look-back window. Default 60.",
-      },
-      minVolumeUsd: {
-        type: "number",
-        description: "Minimum 24h volume. Default 10000.",
+        description: "How many recent launches to return. Default 5, max 20.",
       },
     },
-    sampleArgs: { windowMinutes: 60, minVolumeUsd: 25000 },
+    sampleArgs: { limit: 5 },
     verified: true,
     latencyMs: 720,
   },
   {
     id: "solana.rug-check",
-    name: "Rug Risk Score",
+    name: "Solana Rug Risk Score",
     summary:
-      "Heuristic risk score (0-100) for a Solana token: mint authority, LP lock, holder concentration, dev wallet.",
+      "Live risk assessment from rugcheck.xyz: numeric score, normalised score, LP lock percentage, and every flagged risk.",
     category: "solana",
     priceUsd: 0.002,
     publisherWallet: KERYX_TREASURY_ADDRESS,
@@ -108,10 +99,10 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
       mint: {
         type: "string",
         required: true,
-        description: "Solana token mint address to score.",
+        description: "Solana token mint address to check.",
       },
     },
-    sampleArgs: { mint: "So11111111111111111111111111111111111111112" },
+    sampleArgs: { mint: "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263" },
     verified: true,
     latencyMs: 950,
   },
@@ -119,7 +110,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     id: "search.web",
     name: "Grounded Web Search",
     summary:
-      "Web search that returns clean snippets + source URLs. Optimized for LLM grounding.",
+      "Query-to-summary search backed by Wikipedia. Returns page titles, extracts, and canonical URLs. Optimised for LLM grounding.",
     category: "search",
     priceUsd: 0.004,
     publisherWallet: KERYX_TREASURY_ADDRESS,
@@ -132,36 +123,31 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
       },
       limit: {
         type: "number",
-        description: "How many results. Default 5.",
+        description: "How many results to return. Default 3, max 5.",
       },
     },
-    sampleArgs: { query: "latest arc network stablecoin news", limit: 5 },
+    sampleArgs: { query: "Circle Arc stablecoin network", limit: 3 },
     verified: true,
     latencyMs: 620,
   },
   {
-    id: "scrape.tweet-trends",
-    name: "X / Twitter Trend Scraper",
+    id: "crypto.trending",
+    name: "Trending Cryptos",
     summary:
-      "Returns trending topics or a specific user's recent posts, without an X API subscription.",
-    category: "scrape",
-    priceUsd: 0.006,
+      "The most-searched coins on CoinGecko right now, with price, 24h change, market cap, and rank.",
+    category: "social",
+    priceUsd: 0.001,
     publisherWallet: KERYX_TREASURY_ADDRESS,
     publisherName: "Kēryx",
     args: {
-      target: {
-        type: "string",
-        required: true,
-        description: "'trending' or an X username (without @).",
-      },
       limit: {
         type: "number",
-        description: "How many items. Default 10.",
+        description: "How many trending coins to return. Default 7, max 15.",
       },
     },
-    sampleArgs: { target: "trending", limit: 10 },
+    sampleArgs: { limit: 7 },
     verified: true,
-    latencyMs: 1400,
+    latencyMs: 500,
   },
 ];
 

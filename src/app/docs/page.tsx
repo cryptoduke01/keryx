@@ -36,8 +36,8 @@ export default function DocsPage() {
   -H "content-type: application/json" \\
   -H "x-keryx-agent: my-agent" \\
   -d '{
-    "toolId": "solana.whales",
-    "args": { "token": "BONK", "limit": 5 }
+    "toolId": "solana.token-activity",
+    "args": { "mintOrSymbol": "BONK" }
   }'
 # → HTTP 402
 # {
@@ -68,7 +68,7 @@ export default function DocsPage() {
   -H "content-type: application/json" \\
   -H "x-keryx-agent: my-agent" \\
   -H "x-payment: $SIGNED_PAYLOAD_BASE64" \\
-  -d '{ "toolId": "solana.whales", "args": { "token": "BONK", "limit": 5 } }'
+  -d '{ "toolId": "solana.token-activity", "args": { "mintOrSymbol": "BONK" } }'
 # → HTTP 200
 # { "ok": true, "result": {...}, "settlement": { "mode": "gateway", "txHash": "0x…" } }`}
         />

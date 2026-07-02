@@ -65,9 +65,12 @@ curl -X POST https://keryx-ashy.vercel.app/api/call \
   -H "content-type: application/json" \
   -H "x-keryx-agent: my-agent" \
   -d '{
-    "toolId": "solana.whales",
-    "args": { "token": "BONK", "limit": 5 }
+    "toolId": "solana.token-activity",
+    "args": { "mintOrSymbol": "BONK" }
   }'
+# → HTTP 402 with a machine-readable price tag.
+# Sign an EIP-3009 USDC authorization against the returned
+# `accepts` block, base64-encode it, retry with X-PAYMENT.
 ```
 
 **Discover what's available first:**
@@ -96,15 +99,15 @@ Full request/response shapes, argument schemas, and the coding-agent SDK snippet
 
 ## Seeded tools
 
-The registry ships with five verified tools to demo against, no publisher setup required:
+The registry ships with five verified tools, every one backed by a real public API — no mocked data:
 
-| id | summary | price |
+| id | upstream | price |
 |---|---|---|
-| `solana.whales` | Top Solana wallets trading a token in the last 24h | $0.005 |
-| `solana.launches` | Recently launched Solana tokens above a volume threshold | $0.003 |
-| `solana.rug-check` | Heuristic risk score for a Solana token mint | $0.002 |
-| `search.web` | Web search with clean snippets and source URLs | $0.004 |
-| `scrape.tweet-trends` | Trending topics or a user's recent posts on X | $0.006 |
+| `solana.token-activity` | DexScreener — top DEX pairs, 24h volume, buy/sell counts, liquidity | $0.005 |
+| `solana.launches` | DexScreener — newly boosted Solana token profiles | $0.003 |
+| `solana.rug-check` | rugcheck.xyz — live risk score + flagged risks | $0.002 |
+| `search.web` | Wikipedia REST + MediaWiki search — grounded page summaries | $0.004 |
+| `crypto.trending` | CoinGecko — trending coins with price, 24h change, rank | $0.001 |
 
 ## Running locally
 
