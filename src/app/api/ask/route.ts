@@ -8,11 +8,19 @@
  * Day 2 uses OpenAI directly; day 3 can swap in Anthropic / any provider.
  */
 
-import { openai } from "@ai-sdk/openai";
-import { groq } from "@ai-sdk/groq";
+import { openai, createOpenAI } from "@ai-sdk/openai";
 import { streamText, tool } from "ai";
 
 type StreamModel = Parameters<typeof streamText>[0]["model"];
+
+/** Groq exposes an OpenAI-compatible endpoint, so we reuse the openai
+ *  provider with a swapped base URL and pick a Groq-hosted model. Saves
+ *  us fighting the AI-SDK/@ai-sdk-groq version matrix. */
+const groqClient = createOpenAI({
+  baseURL: "https://api.groq.com/openai/v1",
+  apiKey: process.env.GROQ_API_KEY ?? "",
+  compatibility: "compatible",
+});
 import { z } from "zod";
 import { listTools } from "@/lib/registry/store";
 import { executeTool } from "@/lib/registry/handlers";
@@ -152,7 +160,7 @@ export async function POST(req: Request) {
  *  handles tool calls cleanly at very low latency; OpenAI is the fallback
  *  if only OPENAI_API_KEY is set. */
 function pickModel(): StreamModel | null {
-  if (process.env.GROQ_API_KEY) return groq("llama-3.3-70b-versatile") as unknown as StreamModel;
+  if (process.env.GROQ_API_KEY) return groqClient("llama-3.3-70b-versatile") as StreamModel;
   if (process.env.OPENAI_API_KEY) return openai("gpt-4o-mini") as StreamModel;
   return null;
 }
