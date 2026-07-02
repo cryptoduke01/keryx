@@ -237,6 +237,19 @@ export default function WhitepaperPage() {
           yet point at a publisher's own server and have Kēryx call it
           directly. That's the next unlock on top of wallet verification.
         </P>
+        <P>
+          A companion contract,{" "}
+          <code style={codeInline}>KeryxRegistry.sol</code>, mirrors the
+          offchain registry on Arc. Publishing a tool onchain records the
+          publisher wallet, price, and metadata URI in permanent storage
+          keyed by <code style={codeInline}>keccak256(id)</code>. Only the
+          wallet that first publishes an id can update its price, edit
+          metadata, or transfer the listing. Kēryx as owner can pause the
+          registry or mark a listing verified; it cannot rewrite a
+          publisher's state. The <code style={codeInline}>/registry</code>{" "}
+          page renders an <b>On Arc</b> badge for every tool whose id
+          hash resolves to a live record.
+        </P>
       </Section>
 
       <Section id="economics" title="Economics">

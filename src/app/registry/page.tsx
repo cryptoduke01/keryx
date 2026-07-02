@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { listTools } from "@/lib/registry/store";
 import type { ToolCategory } from "@/lib/registry/seed";
+import {
+  arcscanAddressUrl,
+  getOnchainTool,
+  isConfigured as onchainConfigured,
+  registryAddress,
+} from "@/lib/onchain/registry";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +26,18 @@ export default async function RegistryPage() {
     (byCategory[t.category] ??= []).push(t);
   }
 
+  // Enrich with onchain state when the KeryxRegistry contract is configured.
+  // Requests run in parallel; each one has its own try/catch so a single
+  // downed RPC can't break the whole page.
+  const onchainByToolId: Record<string, Awaited<ReturnType<typeof getOnchainTool>>> = {};
+  if (onchainConfigured()) {
+    const entries = await Promise.all(
+      tools.map(async (t) => [t.id, await getOnchainTool(t.id)] as const),
+    );
+    for (const [id, state] of entries) onchainByToolId[id] = state;
+  }
+  const contractAddress = registryAddress();
+
   return (
     <div className="container-page" style={{ paddingTop: 40, paddingBottom: 80 }}>
       <div style={{ marginBottom: 32, maxWidth: 720 }}>
@@ -33,7 +51,7 @@ export default async function RegistryPage() {
           Every tool is a real HTTP endpoint. Every call pays the publisher in
           USDC. Discover by capability, call by id.
         </p>
-        <div style={{ display: "flex", gap: 8, marginTop: 20 }}>
+        <div style={{ display: "flex", gap: 8, marginTop: 20, flexWrap: "wrap" }}>
           <Link href="/publish" style={{ textDecoration: "none" }}>
             <button className="btn btn-primary btn-sm">Publish yours →</button>
           </Link>
@@ -41,6 +59,24 @@ export default async function RegistryPage() {
             <button className="btn btn-outline btn-sm">API docs</button>
           </Link>
         </div>
+        {contractAddress && (
+          <div style={{ marginTop: 16, fontSize: 12, color: "var(--text-muted)" }}>
+            Registry contract on Arc testnet:{" "}
+            <a
+              href={arcscanAddressUrl(contractAddress)}
+              target="_blank"
+              rel="noreferrer"
+              className="text-mono"
+              style={{
+                color: "var(--text-secondary)",
+                textDecoration: "underline",
+                textUnderlineOffset: 3,
+              }}
+            >
+              {contractAddress.slice(0, 6)}…{contractAddress.slice(-4)}
+            </a>
+          </div>
+        )}
       </div>
 
       {(Object.keys(byCategory) as ToolCategory[]).map((cat) => (
@@ -75,16 +111,35 @@ export default async function RegistryPage() {
                     alignItems: "center",
                     justifyContent: "space-between",
                     marginBottom: 12,
+                    gap: 8,
                   }}
                 >
                   <span className="text-mono" style={{ fontSize: 12, color: "var(--text-muted)" }}>
                     {tool.id}
                   </span>
-                  {tool.verified && (
-                    <span className="badge badge-gold" style={{ fontSize: 9 }}>
-                      Verified
-                    </span>
-                  )}
+                  <div style={{ display: "flex", gap: 6 }}>
+                    {onchainByToolId[tool.id] && (
+                      <span
+                        style={{
+                          fontSize: 9,
+                          padding: "2px 7px",
+                          borderRadius: 4,
+                          border: "1px solid var(--border)",
+                          color: "var(--text-secondary)",
+                          letterSpacing: "0.06em",
+                          textTransform: "uppercase",
+                        }}
+                        title="Listed onchain on Arc testnet"
+                      >
+                        On Arc
+                      </span>
+                    )}
+                    {tool.verified && (
+                      <span className="badge badge-gold" style={{ fontSize: 9 }}>
+                        Verified
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <h3
                   style={{

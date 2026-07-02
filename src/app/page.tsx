@@ -137,10 +137,10 @@ export default async function Landing() {
                   textShadow: "0 2px 16px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.6)",
                 }}
               >
-                Kēryx is the registry where developers publish paid tools and
-                AI agents pay to use them. Sub-cent USDC settles on Arc in
-                under half a second. No subscriptions, no API keys, no human
-                in the loop.
+                Every API on the internet was built for a person. Kēryx is
+                built for the moment the caller stops being human. Developers
+                publish paid tools. AI agents discover, pay, and use them.
+                One call, one payment, in USDC on Arc.
               </p>
             </Reveal>
             <Reveal immediate delay={0.22}>
@@ -247,7 +247,7 @@ export default async function Landing() {
                   lineHeight: 1.08,
                 }}
               >
-                Two sides. One rail.
+                The unit of access is the call, not the account.
               </h2>
             </div>
           </Reveal>
