@@ -1,10 +1,18 @@
 import Link from "next/link";
 import { listTools } from "@/lib/registry/store";
 import { ledgerStats } from "@/lib/ledger";
-import Wordmark from "@/components/Wordmark";
 import Kerykeion from "@/components/Kerykeion";
 
 export const dynamic = "force-dynamic";
+
+const RUNTIMES = [
+  "Claude Code",
+  "Cursor",
+  "OpenAI",
+  "LangChain",
+  "AutoGPT",
+  "Anthropic MCP",
+] as const;
 
 export default async function Landing() {
   const [tools, stats] = await Promise.all([listTools(), ledgerStats()]);
@@ -12,280 +20,258 @@ export default async function Landing() {
   return (
     <>
       {/* ============================================================
-          HERO — kērykeion motif, italic serif headline, dual glow
+          HERO — rounded art panel, centered serif headline below it
           ========================================================== */}
-      <section
-        style={{
-          position: "relative",
-          overflow: "hidden",
-          paddingTop: 130,
-          paddingBottom: 110,
-          borderBottom: "1px solid var(--border)",
-        }}
-      >
-        {/* Layer 1 · dual radial glow (gold left, cobalt right) */}
-        <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none" }} className="hero-glow" />
-        {/* Layer 2 · halftone dot field, faded at edges */}
-        <div
-          aria-hidden
-          style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.7 }}
-          className="halftone halftone-fade"
-        />
-        {/* Layer 3 · engraved crosshatch (very faint) */}
-        <div
-          aria-hidden
-          style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.5 }}
-          className="engraved"
-        />
-        {/* Layer 4 · centered kērykeion motif, low opacity, behind copy */}
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            top: "10%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            color: "var(--gold)",
-            opacity: 0.09,
-            pointerEvents: "none",
-          }}
-        >
-          <Kerykeion size={420} />
-        </div>
-        {/* Layer 5 · chiaroscuro vignette */}
-        <div aria-hidden style={{ position: "absolute", inset: 0 }} className="chiaroscuro" />
-
-        <div className="container-page" style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ textAlign: "center", maxWidth: 880, margin: "0 auto" }}>
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 10,
-                marginBottom: 32,
-                padding: "6px 14px",
-                borderRadius: 999,
-                border: "1px solid rgba(212,169,74,0.35)",
-                background: "rgba(212,169,74,0.06)",
-                color: "var(--gold-ink)",
-                fontFamily: "var(--font-mono)",
-                fontSize: 11,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-              }}
-            >
-              <span
-                aria-hidden
-                className="animate-gold-pulse"
-                style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--gold-ink)" }}
-              />
-              A herald · for the age of agents
-            </div>
-
-            <h1
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(3rem, 8.5vw, 5.6rem)",
-                fontWeight: 400,
-                lineHeight: 0.98,
-                letterSpacing: "-0.03em",
-                marginBottom: 26,
-              }}
-            >
-              The paid tool registry
-              <br />
-              <span
-                className="text-italic"
-                style={{
-                  color: "var(--gold-ink)",
-                  fontWeight: 400,
-                  fontStyle: "italic",
-                }}
-              >
-                for AI agents.
-              </span>
-            </h1>
-
-            <p
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontSize: 17,
-                color: "var(--text-secondary)",
-                lineHeight: 1.6,
-                maxWidth: 640,
-                margin: "0 auto 38px",
-              }}
-            >
-              Any developer publishes a tool. Any AI agent pays to use it.
-              Sub-cent USDC clears on Arc in under half a second — carried,
-              like every message worth sending, by a herald.
-            </p>
-
-            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-              <Link href="/ask" style={{ textDecoration: "none" }}>
-                <button className="btn btn-primary btn-lg">Ask Kēryx →</button>
-              </Link>
-              <Link href="/publish" style={{ textDecoration: "none" }}>
-                <button className="btn btn-ghost btn-lg">Publish a tool</button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Ornament: two thin gold horizontals framing the stats */}
+      <section style={{ paddingTop: 108, paddingBottom: 88 }}>
+        <div className="container-page">
+          {/* Art panel */}
           <div
+            className="art-panel"
             style={{
+              height: "min(56vh, 480px)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: 24,
-              marginTop: 84,
             }}
           >
-            <span style={{ flex: 1, height: 1, background: "linear-gradient(90deg, transparent, var(--border-strong), transparent)", maxWidth: 260 }} />
-            <span className="text-eyebrow" style={{ color: "var(--gold-warm)" }}>
-              At a glance
-            </span>
-            <span style={{ flex: 1, height: 1, background: "linear-gradient(90deg, transparent, var(--border-strong), transparent)", maxWidth: 260 }} />
+            <div className="art-duotone" style={{ position: "absolute", inset: 0 }} />
+            <div className="art-halftone" />
+            <div className="art-grain" />
+            <div
+              style={{
+                position: "relative",
+                zIndex: 1,
+                color: "rgba(11,11,12,0.9)",
+                mixBlendMode: "overlay",
+                opacity: 0.9,
+              }}
+            >
+              <Kerykeion size={220} />
+            </div>
+            <div className="art-vignette" />
+
+            {/* Live badge, floated top-left like Kairos's corner label */}
+            <div
+              style={{
+                position: "absolute",
+                top: 20,
+                left: 20,
+                zIndex: 2,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "6px 12px",
+                borderRadius: 999,
+                background: "rgba(11,11,12,0.55)",
+                backdropFilter: "blur(6px)",
+                border: "1px solid rgba(255,255,255,0.14)",
+                fontSize: 11,
+                fontWeight: 600,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.85)",
+              }}
+            >
+              <span
+                className="animate-gold-pulse"
+                style={{ width: 6, height: 6, borderRadius: "50%", background: "#fff" }}
+              />
+              Live on Arc testnet
+            </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              flexWrap: "wrap",
-              gap: 60,
-              marginTop: 32,
-            }}
-          >
-            {[
-              { label: "Tools live", value: String(tools.length) },
-              { label: "Paid calls", value: String(stats.callCount) },
-              { label: "Publisher take", value: "95%" },
-              { label: "Settlement", value: "<2s" },
-            ].map((s) => (
-              <div key={s.label} style={{ textAlign: "center" }}>
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 34,
-                    fontWeight: 500,
-                    fontStyle: "italic",
-                    color: "var(--gold-ink)",
-                    lineHeight: 1,
-                    letterSpacing: "-0.015em",
-                  }}
-                >
-                  {s.value}
-                </div>
-                <div className="text-eyebrow" style={{ marginTop: 10 }}>
-                  {s.label}
-                </div>
-              </div>
-            ))}
+          {/* Headline + copy, centered below the art */}
+          <div style={{ textAlign: "center", maxWidth: 720, margin: "56px auto 0" }}>
+            <h1
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(2.6rem, 6vw, 4.2rem)",
+                fontWeight: 500,
+                lineHeight: 1.04,
+                letterSpacing: "-0.025em",
+                color: "var(--text-primary)",
+                marginBottom: 22,
+              }}
+            >
+              A herald for the age of agents.
+            </h1>
+            <p
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: 16.5,
+                color: "var(--text-secondary)",
+                lineHeight: 1.6,
+                maxWidth: 560,
+                margin: "0 auto 36px",
+              }}
+            >
+              Kēryx is the registry where developers publish paid tools and
+              AI agents pay to use them. Sub-cent USDC settles on Arc in
+              under half a second — no subscriptions, no API keys, no human
+              in the loop.
+            </p>
+            <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+              <Link href="/ask" style={{ textDecoration: "none" }}>
+                <button className="btn btn-primary btn-lg">Ask Kēryx</button>
+              </Link>
+              <Link href="/publish" style={{ textDecoration: "none" }}>
+                <button className="btn btn-outline btn-lg">Publish a tool</button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ============================================================
-          HOW IT WORKS — cobalt full bleed. The storytelling beat.
+          RUNTIME COMPATIBILITY ROW — neutral, text-only, factual
           ========================================================== */}
-      <section
-        className="section-cobalt"
-        style={{
-          paddingTop: 100,
-          paddingBottom: 100,
-        }}
-      >
-        <div className="container-page" style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ textAlign: "center", marginBottom: 64, maxWidth: 720, margin: "0 auto 64px" }}>
-            <div className="text-eyebrow" style={{ color: "var(--cobalt-ink)", marginBottom: 14 }}>
-              The rite
+      <section style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "28px 0" }}>
+        <div
+          className="container-page"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 40,
+            flexWrap: "wrap",
+          }}
+        >
+          <span className="text-eyebrow" style={{ marginRight: 8 }}>
+            Works wherever agents run
+          </span>
+          {RUNTIMES.map((r) => (
+            <span
+              key={r}
+              style={{
+                fontSize: 13.5,
+                fontWeight: 600,
+                color: "var(--text-muted)",
+                letterSpacing: "-0.005em",
+              }}
+            >
+              {r}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {/* ============================================================
+          STATS
+          ========================================================== */}
+      <section style={{ paddingTop: 72, paddingBottom: 40 }}>
+        <div
+          className="container-page"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: 64,
+          }}
+        >
+          {[
+            { label: "Tools live", value: String(tools.length) },
+            { label: "Paid calls", value: String(stats.callCount) },
+            { label: "Publisher take", value: "95%" },
+            { label: "Settlement", value: "<2s" },
+          ].map((s) => (
+            <div key={s.label} style={{ textAlign: "center" }}>
+              <div
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: 30,
+                  fontWeight: 700,
+                  color: "var(--text-primary)",
+                  lineHeight: 1,
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                {s.value}
+              </div>
+              <div className="text-eyebrow" style={{ marginTop: 10 }}>
+                {s.label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ============================================================
+          HOW IT WORKS — neutral cards, no color chrome
+          ========================================================== */}
+      <section style={{ paddingTop: 56, paddingBottom: 96 }}>
+        <div className="container-page">
+          <div style={{ textAlign: "center", marginBottom: 56, maxWidth: 620, margin: "0 auto 56px" }}>
+            <div className="text-eyebrow" style={{ marginBottom: 14 }}>
+              How it works
             </div>
             <h2
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "clamp(2.4rem, 5vw, 3.4rem)",
-                fontWeight: 400,
-                lineHeight: 1.02,
+                fontSize: "clamp(2rem, 4vw, 2.75rem)",
+                fontWeight: 500,
                 letterSpacing: "-0.02em",
-                color: "var(--text-primary)",
-                marginBottom: 14,
+                lineHeight: 1.08,
               }}
             >
-              Two sides.{" "}
-              <span className="text-italic" style={{ color: "var(--gold-ink)" }}>
-                One rail.
-              </span>
+              Two sides. One rail.
             </h2>
-            <p
-              style={{
-                fontSize: 16,
-                color: "rgba(242, 235, 216, 0.72)",
-                lineHeight: 1.6,
-                maxWidth: 560,
-                margin: "0 auto",
-              }}
-            >
-              Developers publish. Agents pay. Kēryx carries the coin between
-              them, without asking anyone to sign up for a subscription.
-            </p>
           </div>
 
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-              gap: 20,
+              gap: 1,
+              background: "var(--border)",
+              border: "1px solid var(--border)",
+              borderRadius: 16,
+              overflow: "hidden",
             }}
           >
             {[
               {
-                n: "I",
+                n: "01",
                 title: "Publish a tool",
                 desc:
-                  "Wrap any HTTP handler with @keryx/middleware. Set a price per call. Point it at an Arc wallet. Your tool is instantly discoverable to every agent runtime.",
+                  "Wrap any HTTP handler with @keryx/middleware. Set a price per call. Point it at an Arc wallet. Your tool is instantly discoverable.",
               },
               {
-                n: "II",
+                n: "02",
                 title: "Agents discover it",
                 desc:
                   "Every listing carries a machine-readable manifest. Claude Code, Cursor, custom agents — they find your tool by capability and know its price before they call it.",
               },
               {
-                n: "III",
+                n: "03",
                 title: "USDC arrives",
                 desc:
-                  "Every call triggers a nanopayment through Circle Gateway. Your Arc wallet ticks up in real time. Kēryx never holds a cent longer than a heartbeat.",
+                  "Every call triggers a nanopayment through Circle Gateway. Your wallet updates in real time. Kēryx never holds a balance.",
               },
             ].map((step) => (
               <div
                 key={step.n}
                 style={{
-                  padding: 26,
-                  borderRadius: 12,
-                  background: "rgba(15, 37, 96, 0.55)",
-                  border: "1px solid rgba(109, 140, 232, 0.35)",
-                  backdropFilter: "blur(4px)",
+                  padding: 32,
+                  background: "var(--surface-1)",
                 }}
               >
                 <div
+                  className="text-mono"
                   style={{
-                    fontFamily: "var(--font-display)",
-                    fontStyle: "italic",
-                    fontSize: 30,
-                    fontWeight: 500,
-                    color: "var(--gold-ink)",
-                    lineHeight: 1,
-                    marginBottom: 18,
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "var(--text-muted)",
+                    letterSpacing: "0.05em",
+                    marginBottom: 20,
                   }}
                 >
                   {step.n}
                 </div>
                 <h3
                   style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 22,
-                    fontWeight: 500,
+                    fontFamily: "var(--font-sans)",
+                    fontSize: 18,
+                    fontWeight: 700,
                     color: "var(--text-primary)",
                     marginBottom: 10,
                     letterSpacing: "-0.01em",
@@ -293,14 +279,7 @@ export default async function Landing() {
                 >
                   {step.title}
                 </h3>
-                <p
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: 14,
-                    color: "rgba(242, 235, 216, 0.72)",
-                    lineHeight: 1.65,
-                  }}
-                >
+                <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65 }}>
                   {step.desc}
                 </p>
               </div>
@@ -314,19 +293,14 @@ export default async function Landing() {
           ========================================================== */}
       <section
         style={{
-          position: "relative",
-          background: "var(--surface-0)",
-          paddingTop: 96,
-          paddingBottom: 96,
+          background: "var(--surface-1)",
+          borderTop: "1px solid var(--border)",
           borderBottom: "1px solid var(--border)",
+          paddingTop: 88,
+          paddingBottom: 88,
         }}
       >
-        <div
-          aria-hidden
-          style={{ position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.45 }}
-          className="engraved"
-        />
-        <div className="container-page" style={{ position: "relative", zIndex: 1 }}>
+        <div className="container-page">
           <div
             style={{
               display: "flex",
@@ -334,26 +308,26 @@ export default async function Landing() {
               justifyContent: "space-between",
               flexWrap: "wrap",
               gap: 16,
-              marginBottom: 40,
+              marginBottom: 36,
             }}
           >
             <div>
-              <div className="text-eyebrow" style={{ color: "var(--gold-warm)", marginBottom: 12 }}>
-                Registry · live now
+              <div className="text-eyebrow" style={{ marginBottom: 12 }}>
+                Registry
               </div>
               <h2
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "clamp(2rem, 3.5vw, 2.75rem)",
-                  fontWeight: 400,
+                  fontSize: "clamp(1.9rem, 3.2vw, 2.5rem)",
+                  fontWeight: 500,
                   letterSpacing: "-0.02em",
                 }}
               >
-                Tools <span className="text-italic" style={{ color: "var(--gold-ink)" }}>the herald</span> carries
+                Tools live right now
               </h2>
             </div>
             <Link href="/registry" style={{ textDecoration: "none" }}>
-              <button className="btn btn-outline btn-sm">Browse all →</button>
+              <button className="btn btn-outline btn-sm">Browse all</button>
             </Link>
           </div>
 
@@ -361,7 +335,7 @@ export default async function Landing() {
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-              gap: 16,
+              gap: 14,
             }}
           >
             {tools.slice(0, 6).map((tool) => (
@@ -369,29 +343,11 @@ export default async function Landing() {
                 key={tool.id}
                 style={{
                   padding: 22,
-                  background: "var(--surface-1)",
+                  background: "var(--surface-0)",
                   border: "1px solid var(--border)",
-                  borderRadius: 12,
-                  position: "relative",
-                  overflow: "hidden",
+                  borderRadius: 14,
                 }}
               >
-                {/* subtle corner accent */}
-                <div
-                  aria-hidden
-                  style={{
-                    position: "absolute",
-                    top: -30,
-                    right: -30,
-                    width: 90,
-                    height: 90,
-                    borderRadius: "50%",
-                    background: "var(--gold-tint)",
-                    filter: "blur(24px)",
-                    pointerEvents: "none",
-                  }}
-                />
-
                 <div
                   style={{
                     display: "flex",
@@ -399,24 +355,18 @@ export default async function Landing() {
                     justifyContent: "space-between",
                     gap: 8,
                     marginBottom: 14,
-                    position: "relative",
                   }}
                 >
-                  <span className="badge badge-cobalt">{tool.category}</span>
-                  {tool.verified && (
-                    <span className="badge badge-gold" style={{ fontSize: 9 }}>
-                      Verified
-                    </span>
-                  )}
+                  <span className="badge">{tool.category}</span>
+                  {tool.verified && <span className="badge">Verified</span>}
                 </div>
                 <h3
                   style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 20,
-                    fontWeight: 500,
+                    fontFamily: "var(--font-sans)",
+                    fontSize: 17,
+                    fontWeight: 700,
                     marginBottom: 8,
-                    letterSpacing: "-0.01em",
-                    position: "relative",
+                    letterSpacing: "-0.005em",
                   }}
                 >
                   {tool.name}
@@ -428,7 +378,6 @@ export default async function Landing() {
                     lineHeight: 1.6,
                     marginBottom: 18,
                     minHeight: 42,
-                    position: "relative",
                   }}
                 >
                   {tool.summary}
@@ -440,7 +389,6 @@ export default async function Landing() {
                     justifyContent: "space-between",
                     borderTop: "1px solid var(--border)",
                     paddingTop: 14,
-                    position: "relative",
                   }}
                 >
                   <div>
@@ -449,7 +397,7 @@ export default async function Landing() {
                     </div>
                     <div
                       className="text-mono"
-                      style={{ fontSize: 16, fontWeight: 700, color: "var(--gold-ink)" }}
+                      style={{ fontSize: 15, fontWeight: 700, color: "var(--text-primary)" }}
                     >
                       ${tool.priceUsd.toFixed(3)}
                     </div>
@@ -470,51 +418,38 @@ export default async function Landing() {
       </section>
 
       {/* ============================================================
-          CTA — italic serif closing beat
+          CTA — clean, centered, serif headline only
           ========================================================== */}
-      <section
-        style={{
-          position: "relative",
-          overflow: "hidden",
-          paddingTop: 120,
-          paddingBottom: 120,
-          textAlign: "center",
-          borderBottom: "1px solid var(--border)",
-        }}
-      >
-        <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none" }} className="halftone halftone-fade" />
-        <div className="container-narrow" style={{ position: "relative", zIndex: 1 }}>
+      <section style={{ paddingTop: 110, paddingBottom: 110, textAlign: "center" }}>
+        <div className="container-narrow">
           <h2
             style={{
               fontFamily: "var(--font-display)",
-              fontSize: "clamp(2.4rem, 5vw, 3.6rem)",
-              fontWeight: 400,
+              fontSize: "clamp(2.2rem, 4.5vw, 3.2rem)",
+              fontWeight: 500,
               letterSpacing: "-0.025em",
-              lineHeight: 1.02,
+              lineHeight: 1.05,
               marginBottom: 20,
             }}
           >
-            Make something{" "}
-            <span className="text-italic" style={{ color: "var(--gold-ink)" }}>
-              agents want.
-            </span>
+            Make something agents want.
           </h2>
           <p
             style={{
-              fontSize: 16,
+              fontSize: 15.5,
               color: "var(--text-secondary)",
               lineHeight: 1.6,
-              marginBottom: 36,
-              maxWidth: 540,
-              margin: "0 auto 36px",
+              marginBottom: 34,
+              maxWidth: 480,
+              margin: "0 auto 34px",
             }}
           >
             The next trillion users on the internet are AI agents. Kēryx is
             where they pay for the tools they use.
           </p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
             <Link href="/publish" style={{ textDecoration: "none" }}>
-              <button className="btn btn-primary btn-lg">Publish a tool →</button>
+              <button className="btn btn-primary btn-lg">Publish a tool</button>
             </Link>
             <Link href="/live" style={{ textDecoration: "none" }}>
               <button className="btn btn-outline btn-lg">See it live</button>
@@ -526,7 +461,7 @@ export default async function Landing() {
       {/* ============================================================
           FOOTER
           ========================================================== */}
-      <footer style={{ padding: "32px 0" }}>
+      <footer style={{ borderTop: "1px solid var(--border)", padding: "32px 0" }}>
         <div
           className="container-page"
           style={{
@@ -537,11 +472,8 @@ export default async function Landing() {
             gap: 16,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <Wordmark size={20} />
-            <span className="badge badge-gold" style={{ fontSize: 9 }}>
-              Lepton
-            </span>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 700, fontSize: 15 }}>
+            Kēryx
           </div>
           <div style={{ display: "flex", gap: 22, flexWrap: "wrap" }}>
             <Link href="/ask" style={{ fontSize: 13, color: "var(--text-muted)" }}>Ask</Link>

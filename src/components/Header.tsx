@@ -27,9 +27,9 @@ export default function Header() {
         left: 0,
         right: 0,
         zIndex: 50,
-        background: "rgba(5, 5, 5, 0.85)",
-        backdropFilter: "blur(14px)",
-        WebkitBackdropFilter: "blur(14px)",
+        background: "rgba(11, 11, 12, 0.72)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
         borderBottom: "1px solid var(--border)",
       }}
     >
@@ -61,7 +61,7 @@ export default function Header() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 4,
+            gap: 28,
             minWidth: 0,
           }}
         >
@@ -74,10 +74,8 @@ export default function Header() {
                 style={{
                   fontSize: 13,
                   fontWeight: 500,
-                  padding: "6px 12px",
-                  borderRadius: 6,
+                  letterSpacing: "0.01em",
                   color: active ? "var(--text-primary)" : "var(--text-muted)",
-                  background: active ? "var(--bg-tertiary)" : "transparent",
                   whiteSpace: "nowrap",
                 }}
               >
@@ -89,7 +87,7 @@ export default function Header() {
 
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <Link href="/ask" style={{ textDecoration: "none" }}>
-            <button className="btn btn-primary btn-sm">Ask Kēryx</button>
+            <button className="btn btn-primary btn-sm">Get started</button>
           </Link>
         </div>
       </div>
