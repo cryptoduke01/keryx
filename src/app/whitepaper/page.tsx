@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ArtPanel from "@/components/ArtPanel";
 
 export const metadata = {
   title: "Whitepaper · Kēryx",
@@ -9,6 +10,16 @@ export const metadata = {
 export default function WhitepaperPage() {
   return (
     <div className="container-narrow" style={{ paddingTop: 40, paddingBottom: 96 }}>
+      <div style={{ marginBottom: 32 }}>
+        <ArtPanel
+          src="/inspo/whitepaper-hero.png"
+          alt="A classical loggia opening onto a reflecting pool"
+          aspectRatio="16 / 6"
+          position="50% 55%"
+          variant="raw"
+          overlayText="A LIVING SPECIFICATION FOR A REGISTRY BUILT FOR AGENTS, NOT ACCOUNTS."
+        />
+      </div>
       <div className="text-eyebrow" style={{ marginBottom: 12 }}>
         Whitepaper · v0.1, July 2026
       </div>

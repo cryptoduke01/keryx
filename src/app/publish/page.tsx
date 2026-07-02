@@ -1,4 +1,5 @@
 import PublishClient from "./PublishClient";
+import ArtPanel from "@/components/ArtPanel";
 
 export const metadata = {
   title: "Publish a tool · Kēryx",
@@ -22,7 +23,37 @@ export default function PublishPage() {
           routes agent calls straight to it. Your revenue lands on-chain.
         </p>
       </div>
-      <PublishClient />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 640px) minmax(0, 1fr)",
+          gap: 32,
+          alignItems: "start",
+        }}
+        className="publish-grid"
+      >
+        <PublishClient />
+        <div className="publish-art">
+          <ArtPanel
+            src="/inspo/publish-hero.jpg"
+            alt="A palace of publishers watched over by heralds"
+            aspectRatio="3 / 4"
+            position="50% 40%"
+            variant="raw"
+            overlayText="EVERY TOOL YOU PUBLISH BECOMES ANOTHER MESSENGER IN THE REGISTRY."
+          />
+        </div>
+      </div>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @media (max-width: 900px) {
+              .publish-grid { grid-template-columns: 1fr !important; }
+              .publish-art { display: none; }
+            }
+          `,
+        }}
+      />
     </div>
   );
 }

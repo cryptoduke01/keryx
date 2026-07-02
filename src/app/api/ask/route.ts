@@ -9,7 +9,10 @@
  */
 
 import { openai } from "@ai-sdk/openai";
+import { groq } from "@ai-sdk/groq";
 import { streamText, tool } from "ai";
+
+type StreamModel = Parameters<typeof streamText>[0]["model"];
 import { z } from "zod";
 import { listTools } from "@/lib/registry/store";
 import { executeTool } from "@/lib/registry/handlers";
@@ -52,13 +55,14 @@ export async function POST(req: Request) {
     ? body.agent.slice(0, 32)
     : `web-${Math.random().toString(36).slice(2, 8)}`;
 
-  if (!process.env.OPENAI_API_KEY) {
+  const model = pickModel();
+  if (!model) {
     return new Response(
       JSON.stringify({
-        error: "openai_key_missing",
-        hint: "Set OPENAI_API_KEY in .env.local. The /ask playground needs it to route tool calls.",
+        error: "llm_key_missing",
+        hint: "Set GROQ_API_KEY (free at console.groq.com) or OPENAI_API_KEY in your environment. /ask picks whichever is available.",
       }),
-      { status: 500, headers: { "content-type": "application/json" } }
+      { status: 500, headers: { "content-type": "application/json" } },
     );
   }
 
@@ -132,7 +136,7 @@ export async function POST(req: Request) {
   }
 
   const result = await streamText({
-    model: openai("gpt-4o-mini"),
+    model,
     system: SYSTEM_PROMPT,
     messages: messages.map((m) => ({ role: m.role, content: m.content })),
     tools,
@@ -141,6 +145,16 @@ export async function POST(req: Request) {
   });
 
   return result.toDataStreamResponse();
+}
+
+/** Pick whichever LLM provider the environment has a key for. Groq is
+ *  preferred because it's free-tier friendly and its Llama 3.3 70B model
+ *  handles tool calls cleanly at very low latency; OpenAI is the fallback
+ *  if only OPENAI_API_KEY is set. */
+function pickModel(): StreamModel | null {
+  if (process.env.GROQ_API_KEY) return groq("llama-3.3-70b-versatile") as unknown as StreamModel;
+  if (process.env.OPENAI_API_KEY) return openai("gpt-4o-mini") as StreamModel;
+  return null;
 }
 
 /** Convert a Kēryx arg spec to a zod schema so the AI SDK can validate
