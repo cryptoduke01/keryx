@@ -157,9 +157,9 @@ export const POST = withKeryxPrice({
           Coming this week
         </div>
         <ul style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.8, paddingLeft: 20 }}>
-          <li>MCP server so Claude Code / Cursor discover Kēryx tools natively</li>
-          <li>Publisher signature verification (EIP-191)</li>
-          <li>Live x402 quote endpoint with Circle Gateway batching</li>
+          <li>Externally-hosted publisher handlers (call the publisher's own server on paid hit)</li>
+          <li>Circle Gateway credentials landing → real batched onchain USDC settlement</li>
+          <li>Upstash Redis in prod so the /live ledger persists across cold starts</li>
           <li>OpenAPI spec + SDKs (Node, Python)</li>
         </ul>
       </div>

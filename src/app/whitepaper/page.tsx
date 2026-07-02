@@ -204,23 +204,27 @@ export default function WhitepaperPage() {
 
       <Section id="trust" title="Trust and verification">
         <P>
-          Kēryx currently distinguishes tools by a single{" "}
-          <code style={codeInline}>verified</code> flag. Tools seeded by
-          the Kēryx team are marked verified; tools submitted through the
-          open <code style={codeInline}>POST /api/publishers/tools</code>{" "}
-          endpoint are not, and their execution is currently
-          Kēryx-controlled rather than delegated to arbitrary
-          externally-hosted handlers. This is an intentional, temporary
-          constraint: it means a submitted listing cannot yet point at a
-          publisher's own server and have Kēryx call it directly.
+          Publisher wallet ownership is enforced via EIP-191 signatures.
+          Before a new tool can be registered, the client requests a
+          nonce from{" "}
+          <code style={codeInline}>POST /api/publishers/nonce</code>,
+          signs a canonical message with the wallet it claims to own, and
+          submits the signature alongside the tool payload. The server
+          rebuilds the exact message and verifies it via viem's{" "}
+          <code style={codeInline}>verifyMessage</code>. Nonces are
+          consumed on first successful verification and expire after five
+          minutes, so a signature cannot be replayed for a different tool
+          or a different registration attempt.
         </P>
         <P>
-          The planned fix is publisher wallet verification via EIP-191
-          signed messages, so that a listing can only be modified by the
-          wallet that created it, and execution can move to genuinely
-          externally-hosted handlers without opening the registry to
-          spoofed listings. This is not live yet; treat any
-          community-submitted, unverified tool accordingly until it ships.
+          Kēryx distinguishes tools by a{" "}
+          <code style={codeInline}>verified</code> flag: tools seeded by
+          the Kēryx team are marked verified; community-submitted tools
+          are not, until the team promotes them. Handler execution is
+          currently Kēryx-controlled rather than delegated to arbitrary
+          externally-hosted handlers &mdash; a submitted listing cannot
+          yet point at a publisher's own server and have Kēryx call it
+          directly. That's the next unlock on top of wallet verification.
         </P>
       </Section>
 
@@ -244,9 +248,8 @@ export default function WhitepaperPage() {
 
       <Section id="roadmap" title="Roadmap">
         <Ul items={[
-          <>Publisher wallet signature verification (EIP-191) before externally-hosted handler execution.</>,
+          <>Externally-hosted publisher handlers &mdash; a listing points at the publisher's own URL and Kēryx forwards the paid call.</>,
           <>Provisioning a Circle Gateway account and flipping the default facilitator from demo to gateway in production.</>,
-          <>An MCP server so agent tools like Claude Code and Cursor can discover Kēryx tools natively, without a separate integration.</>,
           <>OpenAPI spec and first-party SDKs for Node and Python.</>,
         ]} />
       </Section>
@@ -257,16 +260,18 @@ export default function WhitepaperPage() {
           be honest about that rather than to oversell it. The x402
           protocol path is real end to end &mdash; a 402 response, a
           machine-readable price tag, a signed retry, verify, execute,
-          settle &mdash; but the default facilitator in the deployed demo
-          is the local <b>demo</b> mode, which records synthetic tx hashes
-          rather than broadcasting onchain. Flipping to Circle Gateway is
-          a single environment variable, gated on our Gateway credentials
-          landing. Persistence falls back to in-memory storage when Redis
-          is not configured, meaning registry and ledger state can reset
-          on a cold start in that mode. Publisher-submitted tools are not
-          signature-verified and their handlers are not yet externally
-          hosted. All three are scoped, understood, and listed above under
-          Roadmap rather than hidden.
+          settle &mdash; but the default facilitator in the deployed
+          demo is the local <b>demo</b> mode, which records synthetic
+          tx hashes rather than broadcasting onchain. Flipping to Circle
+          Gateway is a single environment variable, gated on our
+          Gateway credentials landing. Persistence falls back to
+          in-memory storage when Redis is not configured, meaning
+          registry and ledger state can reset on a cold start in that
+          mode. Publisher-submitted tool handlers are still
+          Kēryx-controlled &mdash; a listing cannot yet point at the
+          publisher's own server. Wallet verification is enforced; the
+          externally-hosted execution path is next on the roadmap
+          above rather than hidden.
         </P>
       </Section>
 

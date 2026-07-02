@@ -133,7 +133,7 @@ This is a hackathon build, but the x402 protocol path is real. `POST /api/call` 
 - **`gateway`** — set `CIRCLE_GATEWAY_API_URL` (defaults to Circle's testnet endpoint) and Kēryx routes verify/settle through Circle Gateway. Real onchain USDC on Arc, batched.
 - **`demo`** — the default when no facilitator is configured. Accepts well-formed `X-PAYMENT` payloads, records a synthetic tx hash, and labels the ledger entry `demo` so `/live` never misrepresents onchain state.
 
-Publisher wallet signature verification (EIP-191) is not yet enforced, so treat community-submitted tools as unverified until that ships. The full protocol design and the settlement roadmap live in the [whitepaper](https://keryxhq.xyz/whitepaper).
+Publisher wallet ownership is enforced via EIP-191 signatures — every new tool registration must be signed by the wallet it claims to belong to. Community-submitted tools still carry a `verified: false` flag until Kēryx promotes them, and their handlers run inside Kēryx's runtime rather than on the publisher's own infrastructure. External handler hosting is the next step on the [whitepaper](https://keryxhq.xyz/whitepaper) roadmap.
 
 ## License
 

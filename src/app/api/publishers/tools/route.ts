@@ -1,17 +1,23 @@
 /**
  * POST /api/publishers/tools — register a new tool.
  *
- * Day 2 accepts the submission and stores it. Day 3 will verify the
- * publisher wallet by signature (EIP-191 personal_sign of a nonce) before
- * accepting listings. For the demo window this open flow is acceptable
- * because handler execution is Kēryx-controlled — externally-provided
- * handlers ship day 3.
+ * Publisher must first request a nonce from POST /api/publishers/nonce,
+ * sign the returned canonical message with the wallet address they claim,
+ * and submit the base64 or hex signature here alongside the tool payload.
+ * Server rebuilds the exact signed message, verifies it via viem, and
+ * consumes the nonce so it can't be replayed.
+ *
+ * This enforces that only the wallet that owns publisherWallet can list
+ * tools under it. Tools are stored with verified=false until Kēryx
+ * manually promotes them; the signature only proves wallet control.
  */
 
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { verifyMessage } from "viem";
 import { getTool, upsertTool } from "@/lib/registry/store";
 import type { ToolDefinition } from "@/lib/registry/seed";
+import { buildMessage, consumeNonce } from "@/lib/publishers/nonce";
 
 export const runtime = "nodejs";
 
@@ -34,6 +40,14 @@ const PublishSchema = z.object({
     .string()
     .regex(/^0x[a-fA-F0-9]{40}$/, { message: "publisherWallet must be a 0x address" }),
   publisherName: z.string().min(1).max(60),
+  /** Server-issued nonce from POST /api/publishers/nonce. */
+  nonce: z.string().min(1).max(64),
+  /** UTC timestamp the nonce was issued at (echoed back by the client). */
+  issuedAt: z.string().datetime(),
+  /** EIP-191 personal_sign signature over the canonical message. */
+  signature: z
+    .string()
+    .regex(/^0x[a-fA-F0-9]+$/, { message: "signature must be 0x-hex" }),
 });
 
 export async function POST(req: Request) {
@@ -48,25 +62,61 @@ export async function POST(req: Request) {
   if (!parsed.success) {
     return NextResponse.json(
       { error: "invalid_body", issues: parsed.error.issues },
-      { status: 400 }
+      { status: 400 },
+    );
+  }
+  const data = parsed.data;
+
+  const existing = await getTool(data.id);
+  if (existing) {
+    return NextResponse.json(
+      { error: "tool_id_taken", id: data.id },
+      { status: 409 },
     );
   }
 
-  const existing = await getTool(parsed.data.id);
-  if (existing) {
+  // Rebuild the exact message we told the client to sign.
+  const message = buildMessage({
+    wallet: data.publisherWallet,
+    toolId: data.id,
+    nonce: data.nonce,
+    issuedAt: data.issuedAt,
+  });
+
+  let signatureValid = false;
+  try {
+    signatureValid = await verifyMessage({
+      address: data.publisherWallet as `0x${string}`,
+      message,
+      signature: data.signature as `0x${string}`,
+    });
+  } catch {
+    signatureValid = false;
+  }
+  if (!signatureValid) {
     return NextResponse.json(
-      { error: "tool_id_taken", id: parsed.data.id },
-      { status: 409 }
+      { error: "signature_invalid" },
+      { status: 401 },
+    );
+  }
+
+  const nonceOk = await consumeNonce(data.publisherWallet, data.nonce);
+  if (!nonceOk) {
+    return NextResponse.json(
+      { error: "nonce_invalid_or_expired" },
+      { status: 401 },
     );
   }
 
   const tool: ToolDefinition = {
-    ...parsed.data,
-    publisherWallet: parsed.data.publisherWallet as `0x${string}`,
-    args: {
-      /** Community tools open with an empty arg map — publishers refine
-       *  via the /publish flow's advanced tab (day 3). */
-    },
+    id: data.id,
+    name: data.name,
+    summary: data.summary,
+    category: data.category,
+    priceUsd: data.priceUsd,
+    publisherWallet: data.publisherWallet as `0x${string}`,
+    publisherName: data.publisherName,
+    args: {},
     sampleArgs: {},
     verified: false,
     latencyMs: 1000,
@@ -80,9 +130,12 @@ export async function POST(req: Request) {
         error: "upsert_failed",
         detail: err instanceof Error ? err.message : String(err),
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
-  return NextResponse.json({ ok: true, tool: { id: tool.id, name: tool.name } });
+  return NextResponse.json({
+    ok: true,
+    tool: { id: tool.id, name: tool.name, verifiedWallet: tool.publisherWallet },
+  });
 }
