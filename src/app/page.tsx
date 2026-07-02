@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { listTools } from "@/lib/registry/store";
 import Reveal from "@/components/motion/Reveal";
-import Counter from "@/components/motion/Counter";
 
 export const dynamic = "force-dynamic";
 
@@ -197,65 +196,6 @@ export default async function Landing() {
               </span>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ============================================================
-          STATS
-          ========================================================== */}
-      <section style={{ paddingTop: 72, paddingBottom: 40 }}>
-        <div
-          className="container-page"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            gap: 64,
-          }}
-        >
-          {[
-            { label: "Tools live", value: tools.length, suffix: "" },
-            { label: "To publishers", value: 95, suffix: "%" },
-          ].map((s, i) => (
-            <Reveal key={s.label} delay={i * 0.08}>
-              <div style={{ textAlign: "center" }}>
-                <div
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: 30,
-                    fontWeight: 700,
-                    color: "var(--text-primary)",
-                    lineHeight: 1,
-                    letterSpacing: "-0.02em",
-                  }}
-                >
-                  <Counter value={s.value} suffix={s.suffix} />
-                </div>
-                <div className="text-eyebrow" style={{ marginTop: 10 }}>
-                  {s.label}
-                </div>
-              </div>
-            </Reveal>
-          ))}
-          <Reveal delay={0.24}>
-            <div style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: 30,
-                  fontWeight: 700,
-                  color: "var(--text-primary)",
-                  lineHeight: 1,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                &lt;2s
-              </div>
-              <div className="text-eyebrow" style={{ marginTop: 10 }}>
-                Settlement
-              </div>
-            </div>
-          </Reveal>
         </div>
       </section>
 
