@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Wordmark from "@/components/Wordmark";
 
 const NAV = [
   { href: "/ask", label: "Ask" },
@@ -50,42 +51,10 @@ export default function Header() {
             display: "flex",
             alignItems: "center",
             gap: 10,
-            fontFamily: "var(--font-display)",
-            fontWeight: 800,
-            fontSize: 18,
-            letterSpacing: "-0.01em",
+            color: "var(--text-primary)",
           }}
         >
-          <span
-            aria-hidden
-            style={{
-              width: 26,
-              height: 26,
-              borderRadius: 6,
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background:
-                "linear-gradient(135deg, var(--gold-bright), var(--gold-dim))",
-              color: "var(--bg-primary)",
-              fontFamily: "var(--font-display)",
-              fontWeight: 800,
-              fontSize: 13,
-            }}
-          >
-            K
-          </span>
-          <span
-            style={{
-              background:
-                "linear-gradient(135deg, var(--gold-bright), var(--gold-dim))",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            Kēryx
-          </span>
+          <Wordmark size={22} showR />
         </Link>
 
         <nav

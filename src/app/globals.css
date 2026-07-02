@@ -6,29 +6,39 @@
    ========================================================================= */
 
 :root {
-  /* --- Surface scale (background depth) -------------------------------- */
-  --surface-0: #050505;
-  --surface-1: #0a0a0a;
-  --surface-2: #121212;
-  --surface-3: #1a1a1a;
-  --surface-glass: rgba(10, 10, 10, 0.78);
+  /* --- Surface scale (warmer ink-black, like aged paper's shadow) ------ */
+  --surface-0: #0a0806;
+  --surface-1: #100d09;
+  --surface-2: #17130d;
+  --surface-3: #1f1a12;
+  --surface-glass: rgba(16, 13, 9, 0.82);
 
   --bg-primary: var(--surface-0);
   --bg-secondary: var(--surface-1);
   --bg-tertiary: var(--surface-2);
   --bg-elevated: var(--surface-3);
 
-  /* --- Brand accent (warm herald gold) --------------------------------- */
-  --gold: #e2c56e;
-  --gold-bright: #f4d47c;
-  --gold-dim: #b8972e;
-  --gold-dark: #8a6f1e;
-  --gold-glow: rgba(226, 197, 110, 0.22);
-  --gold-tint: rgba(226, 197, 110, 0.08);
+  /* --- Brand primary (warm herald gold, burnt amber) ------------------- */
+  --gold: #d4a94a;
+  --gold-bright: #ecc76b;
+  --gold-warm: #b48532;
+  --gold-dim: #8a6119;
+  --gold-dark: #4d3608;
+  --gold-glow: rgba(212, 169, 74, 0.28);
+  --gold-tint: rgba(212, 169, 74, 0.08);
+  --gold-ink: #f3d894;
+
+  /* --- Brand counter (deep cobalt from the inspos) --------------------- */
+  --cobalt: #1e3a8a;
+  --cobalt-deep: #0f2560;
+  --cobalt-bright: #3155c2;
+  --cobalt-glow: rgba(30, 58, 138, 0.35);
+  --cobalt-tint: rgba(30, 58, 138, 0.12);
+  --cobalt-ink: #6d8ce8;
 
   --accent: var(--gold);
   --accent-bright: var(--gold-bright);
-  --accent-dim: var(--gold-dim);
+  --accent-dim: var(--gold-warm);
   --accent-dark: var(--gold-dark);
   --accent-glow: var(--gold-glow);
 
@@ -41,19 +51,21 @@
   --info-bg: rgba(96, 165, 250, 0.12);
 
   /* --- Text ------------------------------------------------------------ */
-  --text-primary: #f5f5f5;
-  --text-secondary: #a3a3a3;
-  --text-muted: #6b6b6b;
-  --text-faint: #404040;
+  --text-primary: #f2ebd8;         /* warm off-white, parchment-inspired */
+  --text-secondary: #a89f8a;
+  --text-muted: #6c6558;
+  --text-faint: #3d382e;
 
-  /* --- Border ---------------------------------------------------------- */
-  --border: #1f1f1f;
-  --border-hover: #3a3a3a;
-  --border-strong: #2a2a2a;
+  /* --- Border (warm-toned) --------------------------------------------- */
+  --border: #241e14;
+  --border-hover: #3c3221;
+  --border-strong: #2b241a;
 
-  /* --- Typography ------------------------------------------------------ */
+  /* --- Typography ------------------------------------------------------
+     Body sans keeps working prose readable; display serif carries the
+     Renaissance / herald / museum-catalog voice. */
   --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-display: 'Manrope', 'Geist', -apple-system, system-ui, sans-serif;
+  --font-display: 'Fraunces', 'Cormorant Garamond', 'EB Garamond', ui-serif, Georgia, serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
 
   --text-xs: 11px;
@@ -123,7 +135,7 @@ body {
   font-feature-settings: "tnum", "ss01";
 }
 
-::selection { background: var(--accent); color: var(--bg-primary); }
+::selection { background: var(--gold-ink); color: var(--bg-primary); }
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: var(--radius-pill); }
@@ -142,17 +154,21 @@ textarea:focus-visible {
   border-radius: var(--radius-xs);
 }
 
-/* Typography utilities */
+/* Typography utilities — Fraunces serif carries the editorial weight.
+   Slight negative letter-spacing tightens display sizes; body sans stays
+   unchanged for readability. */
 h1, .display {
   font-family: var(--font-display);
-  letter-spacing: -0.035em;
-  line-height: 1.05;
-  font-weight: 700;
+  font-optical-sizing: auto;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  font-weight: 500;
 }
-.text-display    { font-size: var(--text-display); letter-spacing: -0.04em; line-height: 1; font-weight: 800; }
-.text-headline   { font-size: var(--text-3xl);     letter-spacing: -0.03em; line-height: 1.08; font-weight: 700; }
-.text-title      { font-size: var(--text-2xl);     letter-spacing: -0.02em; line-height: 1.18; font-weight: 700; }
-.text-subtitle   { font-size: var(--text-lg);      letter-spacing: -0.01em; line-height: 1.35; font-weight: 600; }
+.text-display    { font-family: var(--font-display); font-size: var(--text-display); letter-spacing: -0.03em; line-height: 0.98; font-weight: 500; font-optical-sizing: auto; }
+.text-headline   { font-family: var(--font-display); font-size: var(--text-3xl);     letter-spacing: -0.02em; line-height: 1.05; font-weight: 500; font-optical-sizing: auto; }
+.text-title      { font-family: var(--font-display); font-size: var(--text-2xl);     letter-spacing: -0.015em; line-height: 1.15; font-weight: 500; font-optical-sizing: auto; }
+.text-subtitle   { font-family: var(--font-display); font-size: var(--text-lg);      letter-spacing: -0.01em; line-height: 1.3; font-weight: 500; font-optical-sizing: auto; }
+.text-italic     { font-family: var(--font-display); font-style: italic; font-feature-settings: "ss01", "swsh"; }
 .text-body       { font-size: var(--text-base);    line-height: 1.6; }
 .text-small      { font-size: var(--text-sm);      line-height: 1.55; color: var(--text-secondary); }
 .text-caption    { font-size: var(--text-xs);      line-height: 1.45; color: var(--text-muted); }
@@ -198,6 +214,9 @@ h1, .display {
   background: var(--accent);
   color: var(--bg-primary);
   border-color: var(--accent);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: 0.005em;
 }
 .btn-primary:hover:not(:disabled) {
   background: var(--accent-bright);
@@ -259,7 +278,8 @@ h1, .display {
   text-transform: uppercase;
   font-weight: 600;
 }
-.badge-gold    { background: var(--gold-tint); color: var(--accent); border-color: rgba(226,197,110,0.3); }
+.badge-gold    { background: var(--gold-tint); color: var(--gold-ink); border-color: rgba(212,169,74,0.35); }
+.badge-cobalt  { background: var(--cobalt-tint); color: var(--cobalt-ink); border-color: rgba(109,140,232,0.35); }
 .badge-success { background: var(--success-bg); color: var(--success); border-color: rgba(34,197,94,0.25); }
 .badge-info    { background: var(--info-bg); color: var(--info); border-color: rgba(96,165,250,0.3); }
 
@@ -314,18 +334,112 @@ h1, .display {
   border-radius: var(--radius-md);
 }
 
-/* Background ornaments */
+/* ============================================================================
+   BACKGROUND ORNAMENTS · texture is the direction
+   ========================================================================= */
+
 .hero-glow {
-  background: radial-gradient(
-    ellipse 70% 50% at 50% 0%,
-    var(--gold-tint) 0%,
-    transparent 70%
-  );
+  background:
+    radial-gradient(ellipse 55% 50% at 30% 0%, var(--gold-tint) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 40% at 80% 20%, var(--cobalt-tint) 0%, transparent 65%);
 }
+
+/* Halftone via layered radial-gradient dots. Cheaper than a raster image
+   and scales cleanly for retina without an asset request. */
+.halftone {
+  --dot: rgba(212, 169, 74, 0.10);
+  background-image:
+    radial-gradient(var(--dot) 1px, transparent 1.6px),
+    radial-gradient(var(--dot) 1px, transparent 1.6px);
+  background-size: 14px 14px, 14px 14px;
+  background-position: 0 0, 7px 7px;
+}
+.halftone-cobalt {
+  --dot: rgba(109, 140, 232, 0.14);
+  background-image:
+    radial-gradient(var(--dot) 1px, transparent 1.6px),
+    radial-gradient(var(--dot) 1px, transparent 1.6px);
+  background-size: 14px 14px, 14px 14px;
+  background-position: 0 0, 7px 7px;
+}
+.halftone-fade {
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 100%);
+}
+
+/* Engraved crosshatch — two 45deg linear gradients, low opacity, tight repeat. */
+.engraved {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(212, 169, 74, 0.055) 0,
+      rgba(212, 169, 74, 0.055) 1px,
+      transparent 1px,
+      transparent 5px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(212, 169, 74, 0.055) 0,
+      rgba(212, 169, 74, 0.055) 1px,
+      transparent 1px,
+      transparent 5px
+    );
+}
+.engraved-cobalt {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(109, 140, 232, 0.09) 0,
+      rgba(109, 140, 232, 0.09) 1px,
+      transparent 1px,
+      transparent 5px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(109, 140, 232, 0.09) 0,
+      rgba(109, 140, 232, 0.09) 1px,
+      transparent 1px,
+      transparent 5px
+    );
+}
+
+/* Chiaroscuro vignette — soft dark falloff at edges for museum-catalog feel. */
+.chiaroscuro {
+  background: radial-gradient(
+    ellipse 90% 70% at 50% 45%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+  pointer-events: none;
+}
+
+/* Cobalt full-bleed section background — the storytelling flip. */
+.section-cobalt {
+  background:
+    radial-gradient(ellipse 50% 60% at 20% 30%, rgba(49, 85, 194, 0.18), transparent 60%),
+    linear-gradient(180deg, var(--cobalt-deep) 0%, #0a1236 100%);
+  color: var(--text-primary);
+  position: relative;
+  overflow: hidden;
+}
+.section-cobalt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(243, 216, 148, 0.10) 1px, transparent 1.6px),
+    radial-gradient(rgba(243, 216, 148, 0.10) 1px, transparent 1.6px);
+  background-size: 18px 18px, 18px 18px;
+  background-position: 0 0, 9px 9px;
+  opacity: 0.6;
+}
+
+/* Old grid still available for other pages if needed. */
 .grid-bg {
   background-image:
-    linear-gradient(rgba(226, 197, 110, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(226, 197, 110, 0.04) 1px, transparent 1px);
+    linear-gradient(rgba(212, 169, 74, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212, 169, 74, 0.04) 1px, transparent 1px);
   background-size: 60px 60px;
   mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 40%, transparent 100%);
 }

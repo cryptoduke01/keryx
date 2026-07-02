@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Manrope, JetBrains_Mono } from "next/font/google";
+import { Geist, Fraunces, JetBrains_Mono } from "next/font/google";
 import ClientProviders from "@/providers/ClientProviders";
 import Header from "@/components/Header";
 import "./globals.css";
@@ -10,10 +10,11 @@ const geist = Geist({
   display: "swap",
 });
 
-const manrope = Manrope({
+const fraunces = Fraunces({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  style: ["normal", "italic"],
+  axes: ["SOFT", "opsz"],
   display: "swap",
 });
 
@@ -50,7 +51,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${manrope.variable} ${jetbrains.variable}`}
+      className={`${geist.variable} ${fraunces.variable} ${jetbrains.variable}`}
     >
       <body style={{ minHeight: "100vh" }}>
         <ClientProviders>
