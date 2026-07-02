@@ -7,6 +7,15 @@ The onchain source of truth for who owns which tool id on Kēryx.
 - **Deploy script:** [`script/Deploy.s.sol`](./script/Deploy.s.sol)
 - **Target chain:** Arc testnet (`eip155:5042002`), RPC `https://rpc.testnet.arc.network`
 
+## Live deployment
+
+- **Address:** [`0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7`](https://testnet.arcscan.app/address/0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7)
+- **Owner:** `0x8F47aE9eC148903C8535b9289ad8efA400e026B6` (Kēryx treasury)
+- **Deploy tx:** `0x3b4b18c4a38d8ad77da82b4669e4d03bb6e1ca84f7e15ccb7c31a319792ce34c`
+- **All 5 seeded tools published onchain:** `solana.token-activity`, `solana.launches`, `solana.rug-check`, `search.web`, `crypto.trending`.
+
+Broadcast records archived in `broadcast/Deploy.s.sol/5042002/`.
+
 ## What it stores
 
 For each tool id (hashed as `keccak256(bytes(id))`):

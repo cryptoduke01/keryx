@@ -246,9 +246,18 @@ export default function WhitepaperPage() {
           wallet that first publishes an id can update its price, edit
           metadata, or transfer the listing. Kēryx as owner can pause the
           registry or mark a listing verified; it cannot rewrite a
-          publisher's state. The <code style={codeInline}>/registry</code>{" "}
-          page renders an <b>On Arc</b> badge for every tool whose id
-          hash resolves to a live record.
+          publisher's state. The contract is deployed on Arc testnet at{" "}
+          <a
+            href="https://testnet.arcscan.app/address/0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7"
+            style={linkStyle}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <code style={codeInline}>0x7eA3…8bA7</code>
+          </a>
+          , owned by the Kēryx treasury, and all five seeded tools are
+          already listed onchain &mdash; visible as <b>On Arc</b> badges
+          on the <code style={codeInline}>/registry</code> page.
         </P>
       </Section>
 
