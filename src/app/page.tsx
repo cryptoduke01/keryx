@@ -52,8 +52,12 @@ export default async function Landing() {
               /* Fixed dark tone, not tied to --bg-primary: the photo stays
                  dark/moody in both themes (same pattern Vantage itself uses
                  for its photo panel), so the fade must always resolve to a
-                 dark endpoint rather than the page's own background color. */
-              "linear-gradient(180deg, rgba(11,11,12,0.15) 0%, rgba(11,11,12,0.4) 55%, rgba(11,11,12,0.94) 96%)",
+                 dark endpoint rather than the page's own background color.
+                 Second gradient darkens specifically behind the bottom-left
+                 text block, since a uniform top-to-bottom fade alone left
+                 the headline riding directly on the photo's lighter dot
+                 regions with no legibility guarantee. */
+              "linear-gradient(180deg, rgba(11,11,12,0.15) 0%, rgba(11,11,12,0.45) 55%, rgba(11,11,12,0.95) 97%), linear-gradient(100deg, rgba(11,11,12,0.7) 0%, rgba(11,11,12,0.35) 38%, transparent 68%)",
           }}
         />
 
@@ -117,9 +121,10 @@ export default async function Landing() {
                   color: "#f5f4f0",
                   marginBottom: 18,
                   maxWidth: 640,
+                  textShadow: "0 2px 24px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.6)",
                 }}
               >
-                A herald for the age of agents.
+                The toll booth for the agent economy.
               </h1>
             </Reveal>
             <Reveal immediate delay={0.12}>
@@ -127,15 +132,16 @@ export default async function Landing() {
                 style={{
                   fontFamily: "var(--font-sans)",
                   fontSize: 16,
-                  color: "rgba(245,244,240,0.78)",
+                  color: "rgba(245,244,240,0.85)",
                   lineHeight: 1.6,
                   maxWidth: 520,
                   marginBottom: 30,
+                  textShadow: "0 2px 16px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.6)",
                 }}
               >
                 Kēryx is the registry where developers publish paid tools and
                 AI agents pay to use them. Sub-cent USDC settles on Arc in
-                under half a second — no subscriptions, no API keys, no human
+                under half a second. No subscriptions, no API keys, no human
                 in the loop.
               </p>
             </Reveal>
@@ -304,7 +310,7 @@ export default async function Landing() {
                 n: "02",
                 title: "Agents discover it",
                 desc:
-                  "Every listing carries a machine-readable manifest. Claude Code, Cursor, custom agents — they find your tool by capability and know its price before they call it.",
+                  "Every listing carries a machine-readable manifest. Claude Code, Cursor, and custom agents find your tool by capability and know its price before they call it.",
                 icon: (
                   <>
                     <circle cx="8.5" cy="8.5" r="5" strokeLinecap="round" />
@@ -550,6 +556,18 @@ export default async function Landing() {
               <div className="art-photo-tint" />
               <div className="art-grain" />
               <div className="art-vignette" />
+              {/* Inverse vignette: darkens the CENTER specifically, since
+                  this text block is centered (not bottom-left like the
+                  hero) and .art-vignette alone only darkens the edges. */}
+              <div
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "radial-gradient(ellipse 70% 65% at 50% 50%, rgba(11,11,12,0.55) 0%, transparent 70%)",
+                }}
+              />
               <div
                 style={{
                   position: "absolute",
@@ -572,6 +590,7 @@ export default async function Landing() {
                     lineHeight: 1.05,
                     marginBottom: 18,
                     color: "#f5f4f0",
+                    textShadow: "0 2px 24px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.6)",
                   }}
                 >
                   Make something agents want.
@@ -579,10 +598,11 @@ export default async function Landing() {
                 <p
                   style={{
                     fontSize: 15.5,
-                    color: "rgba(245,244,240,0.78)",
+                    color: "rgba(245,244,240,0.88)",
                     lineHeight: 1.6,
                     marginBottom: 30,
                     maxWidth: 460,
+                    textShadow: "0 2px 16px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.6)",
                   }}
                 >
                   The next trillion users on the internet are AI agents. Kēryx
@@ -635,6 +655,7 @@ export default async function Landing() {
             <Link href="/publish" style={{ fontSize: 13, color: "var(--text-muted)" }}>Publish</Link>
             <Link href="/live" style={{ fontSize: 13, color: "var(--text-muted)" }}>Live</Link>
             <Link href="/docs" style={{ fontSize: 13, color: "var(--text-muted)" }}>Docs</Link>
+            <Link href="/whitepaper" style={{ fontSize: 13, color: "var(--text-muted)" }}>Whitepaper</Link>
           </div>
           <span style={{ fontSize: 11, color: "var(--text-faint)" }}>
             Settles on Arc · MIT

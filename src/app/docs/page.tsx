@@ -27,7 +27,7 @@ export default function DocsPage() {
         </p>
         <CodeBlock
           lang="bash"
-          code={`curl -X POST https://keryx.dev/api/call \\
+          code={`curl -X POST https://keryx.io/api/call \\
   -H "content-type: application/json" \\
   -H "x-keryx-agent: my-agent" \\
   -d '{
@@ -51,7 +51,7 @@ export default function DocsPage() {
         </p>
         <CodeBlock
           lang="bash"
-          code={`curl -X POST https://keryx.dev/api/publishers/tools \\
+          code={`curl -X POST https://keryx.io/api/publishers/tools \\
   -H "content-type: application/json" \\
   -d '{
     "id": "search.web",
@@ -97,6 +97,17 @@ export const POST = withKeryxPrice({
           <li>Live x402 quote endpoint with Circle Gateway batching</li>
           <li>OpenAPI spec + SDKs (Node, Python)</li>
         </ul>
+      </div>
+
+      <div style={{ marginTop: 16, padding: 16, borderTop: "1px solid var(--border)" }}>
+        <p style={{ fontSize: 13.5, color: "var(--text-secondary)", lineHeight: 1.6 }}>
+          For the full protocol design, pricing model, and settlement
+          roadmap, read the{" "}
+          <Link href="/whitepaper" style={{ textDecoration: "underline", textUnderlineOffset: 3 }}>
+            whitepaper
+          </Link>
+          .
+        </p>
       </div>
     </div>
   );

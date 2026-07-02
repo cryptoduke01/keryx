@@ -40,15 +40,15 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kēryx — the paid tool registry for AI agents",
+  title: "Kēryx · The toll booth for the agent economy",
   description:
-    "Any developer publishes a tool. Any AI agent pays to use it. Sub-cent USDC payments settle on Arc in under half a second. Kēryx is the herald for agent-payable software.",
-  metadataBase: new URL("https://keryx.dev"),
+    "Any developer publishes a tool. Any AI agent pays to use it. Sub-cent USDC settles on Arc in under half a second. Kēryx is the toll booth for the agent economy.",
+  metadataBase: new URL("https://keryx.io"),
   openGraph: {
-    title: "Kēryx — the paid tool registry for AI agents",
+    title: "Kēryx · The toll booth for the agent economy",
     description:
       "Any developer publishes a tool. Any AI agent pays to use it. Sub-cent USDC on Arc.",
-    url: "https://keryx.dev",
+    url: "https://keryx.io",
     siteName: "Kēryx",
     type: "website",
   },

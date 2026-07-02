@@ -1,7 +1,7 @@
 import AskClient from "./AskClient";
 
 export const metadata = {
-  title: "Ask Kēryx — the paid tool registry for AI agents",
+  title: "Ask Kēryx · The paid tool registry for AI agents",
   description:
     "Ask a question. Watch Kēryx pay real developers for real data to answer it.",
 };

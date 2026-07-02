@@ -25,8 +25,8 @@ function makeConnectors() {
         metadata: {
           name: "Kēryx",
           description: "The paid tool registry for AI agents",
-          url: "https://keryx.dev",
-          icons: ["https://keryx.dev/logo.png"],
+          url: "https://keryx.io",
+          icons: ["https://keryx.io/logo.png"],
         },
         showQrModal: true,
       })
