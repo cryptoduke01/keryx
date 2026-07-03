@@ -66,3 +66,14 @@ export async function upsertTool(tool: ToolDefinition): Promise<void> {
   }
   await saveUserTool(tool);
 }
+
+export async function deleteUserTool(id: string): Promise<void> {
+  if (seedIndex().has(id)) {
+    throw new Error(`Tool id "${id}" is a Kēryx seed and cannot be deleted.`);
+  }
+  if (redis) {
+    await redis.hdel(KEY_TOOLS, id);
+    return;
+  }
+  memory.userTools.delete(id);
+}

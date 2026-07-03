@@ -61,6 +61,8 @@ export async function consumeNonce(wallet: string, presented: string): Promise<b
   return true;
 }
 
+export type PublisherAction = "register" | "update" | "delete";
+
 /**
  * The canonical message a publisher signs. This is exactly what viem will
  * verify against, so any change here breaks existing sessions. Both sides
@@ -71,15 +73,25 @@ export function buildMessage(params: {
   toolId: string;
   nonce: string;
   issuedAt: string;
+  action?: PublisherAction;
 }): string {
+  const action = params.action ?? "register";
+  const actionLine =
+    action === "register"
+      ? "Signing this message proves you control the wallet and authorizes Kēryx to list this tool under it."
+      : action === "update"
+        ? "Signing this message proves you control the wallet and authorizes Kēryx to update the listing for this tool."
+        : "Signing this message proves you control the wallet and authorizes Kēryx to delete this tool listing.";
+
   return [
-    "Kēryx publisher registration",
+    "Kēryx publisher action",
     "",
+    `Action: ${action.toUpperCase()}`,
     `Wallet: ${params.wallet}`,
     `Tool:   ${params.toolId}`,
     `Nonce:  ${params.nonce}`,
     `Issued: ${params.issuedAt}`,
     "",
-    "Signing this message proves you control the wallet and authorizes Kēryx to list this tool under it.",
+    actionLine,
   ].join("\n");
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   useAccount,
@@ -35,12 +35,58 @@ export default function PublishClient() {
   const [handlerUrl, setHandlerUrl] = useState("");
   const [argsJson, setArgsJson] = useState('{}');
   const [publisherName, setPublisherName] = useState("");
+
+  const [editingOwned, setEditingOwned] = useState(false); // true when connected wallet owns the current slug
+  const [ownedTool, setOwnedTool] = useState<any>(null);
   const [status, setStatus] = useState<
     | { kind: "idle" }
     | { kind: "step"; step: "requesting-nonce" | "awaiting-signature" | "submitting" }
     | { kind: "ok"; toolId: string }
     | { kind: "err"; msg: string }
   >({ kind: "idle" });
+
+  // When connected wallet + slug point at a tool owned by this wallet, enter edit mode and prefill.
+  useEffect(() => {
+    let cancelled = false;
+    async function check() {
+      if (!address || !slug.trim()) {
+        setEditingOwned(false);
+        setOwnedTool(null);
+        return;
+      }
+      try {
+        const res = await fetch(`/api/tools/${encodeURIComponent(slug.trim())}`);
+        if (!res.ok) {
+          setEditingOwned(false);
+          setOwnedTool(null);
+          return;
+        }
+        const j = await res.json();
+        const t = j?.tool;
+        if (t && t.publisherWallet && t.publisherWallet.toLowerCase() === address.toLowerCase()) {
+          if (!cancelled) {
+            setEditingOwned(true);
+            setOwnedTool(t);
+            setName(t.name || "");
+            setSummary(t.summary || "");
+            setCategory((t.category as Category) || "compute");
+            setPriceUsd(String(t.priceUsd ?? "0.005"));
+            setHandlerUrl(t.handlerUrl || "");
+          }
+        } else if (!cancelled) {
+          setEditingOwned(false);
+          setOwnedTool(null);
+        }
+      } catch {
+        if (!cancelled) {
+          setEditingOwned(false);
+          setOwnedTool(null);
+        }
+      }
+    }
+    void check();
+    return () => { cancelled = true; };
+  }, [address, slug]);
 
   const canSubmit =
     isConnected &&
@@ -55,12 +101,14 @@ export default function PublishClient() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit || !address) return;
+    const action = editingOwned ? "update" : "register";
+
     try {
       setStatus({ kind: "step", step: "requesting-nonce" });
       const nonceRes = await fetch("/api/publishers/nonce", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ wallet: address, toolId: slug.trim() }),
+        body: JSON.stringify({ wallet: address, toolId: slug.trim(), action }),
       }).then((r) => r.json());
       if (!nonceRes?.ok || !nonceRes.message) {
         setStatus({ kind: "err", msg: nonceRes?.error ?? "nonce_failed" });
@@ -95,6 +143,7 @@ export default function PublishClient() {
           nonce: nonceRes.nonce,
           issuedAt: nonceRes.issuedAt,
           signature,
+          action,
         }),
       });
       const j = await r.json().catch(() => ({}));
@@ -104,7 +153,12 @@ export default function PublishClient() {
         if (j?.error === "tool_id_taken") {
           setStatus({
             kind: "err",
-            msg: `That id is already published. Try /registry to see it, or pick a different id.`,
+            msg: `That id is already taken by someone else. Pick a different id, or connect the owner wallet to update it.`,
+          });
+        } else if (j?.error === "not_owner") {
+          setStatus({
+            kind: "err",
+            msg: "You are not the owner of this tool. Connect the original publisher wallet to update or delete it.",
           });
         } else {
           setStatus({ kind: "err", msg: j?.error ?? "publish_failed" });
@@ -112,13 +166,24 @@ export default function PublishClient() {
         return;
       }
       // Success — invalidate the router cache so /registry shows the new
-      // listing without a hard reload, then clear the form for another go.
+      // listing without a hard reload.
       setStatus({ kind: "ok", toolId: j?.tool?.id ?? slug.trim() });
       router.refresh();
-      setName("");
-      setSlug("");
-      setSummary("");
-      setPublisherName((n) => n); // keep publisher name for follow-up publishes
+
+      if (!editingOwned) {
+        // Only clear for brand new publishes
+        setName("");
+        setSlug("");
+        setSummary("");
+        setHandlerUrl("");
+        setArgsJson("{}");
+        setPublisherName((n) => n);
+        setEditingOwned(false);
+        setOwnedTool(null);
+      } else {
+        // For updates, keep the values so they can make another change easily.
+        setPublisherName((n) => n);
+      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : "network_error";
       setStatus({
@@ -128,11 +193,63 @@ export default function PublishClient() {
     }
   }
 
+  async function deleteOwnedTool() {
+    if (!editingOwned || !address || !slug.trim()) return;
+    if (!confirm(`Delete "${slug}"? This cannot be undone.`)) return;
+
+    try {
+      setStatus({ kind: "step", step: "requesting-nonce" });
+      const nonceRes = await fetch("/api/publishers/nonce", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ wallet: address, toolId: slug.trim(), action: "delete" }),
+      }).then((r) => r.json());
+      if (!nonceRes?.ok || !nonceRes.message) {
+        setStatus({ kind: "err", msg: nonceRes?.error ?? "nonce_failed" });
+        return;
+      }
+
+      setStatus({ kind: "step", step: "awaiting-signature" });
+      const signature = await signMessageAsync({ message: nonceRes.message });
+
+      setStatus({ kind: "step", step: "submitting" });
+      const delRes = await fetch(`/api/publishers/tools?id=${encodeURIComponent(slug.trim())}`, {
+        method: "DELETE",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          id: slug.trim(),
+          publisherWallet: address,
+          nonce: nonceRes.nonce,
+          issuedAt: nonceRes.issuedAt,
+          signature,
+        }),
+      });
+      const dj = await delRes.json().catch(() => ({}));
+      if (!delRes.ok) {
+        setStatus({ kind: "err", msg: dj?.error ?? "delete_failed" });
+        return;
+      }
+      setStatus({ kind: "ok", toolId: slug.trim() });
+      // Clear form after delete
+      setName("");
+      setSlug("");
+      setSummary("");
+      setHandlerUrl("");
+      setArgsJson("{}");
+      setEditingOwned(false);
+      setOwnedTool(null);
+      router.refresh();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "network_error";
+      setStatus({ kind: "err", msg });
+    }
+  }
+
   const submitLabel = (() => {
-    if (status.kind !== "step") return "Sign and publish";
+    if (status.kind !== "step") return editingOwned ? "Sign and update" : "Sign and publish";
     if (status.step === "requesting-nonce") return "Requesting nonce…";
     if (status.step === "awaiting-signature") return "Waiting for wallet…";
-    return "Publishing…";
+    return editingOwned ? "Updating…" : "Publishing…";
   })();
 
   return (
@@ -194,6 +311,21 @@ export default function PublishClient() {
           setConnectError(null);
         }}
       />
+
+      {editingOwned && (
+        <div
+          style={{
+            padding: "10px 14px",
+            borderRadius: 8,
+            background: "rgba(16, 185, 129, 0.08)",
+            border: "1px solid rgba(16, 185, 129, 0.3)",
+            fontSize: 13,
+            color: "var(--text-primary)",
+          }}
+        >
+          You own <code style={{ fontFamily: "var(--font-mono)" }}>{slug}</code>. Changes below will update the live listing.
+        </div>
+      )}
 
       <Field label="Tool name" hint="e.g. Grounded Web Search">
         <input
@@ -290,13 +422,31 @@ export default function PublishClient() {
         />
       </Field>
 
-      <button
-        type="submit"
-        className="btn btn-primary btn-lg"
-        disabled={!canSubmit}
-      >
-        {submitLabel}
-      </button>
+      <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+        <button
+          type="submit"
+          className="btn btn-primary btn-lg"
+          disabled={!canSubmit}
+        >
+          {submitLabel}
+        </button>
+
+        {editingOwned && (
+          <button
+            type="button"
+            className="btn"
+            onClick={() => void deleteOwnedTool()}
+            disabled={status.kind === "step"}
+            style={{
+              background: "rgba(220, 80, 80, 0.1)",
+              border: "1px solid rgba(220, 80, 80, 0.4)",
+              color: "#c2410f",
+            }}
+          >
+            Delete tool
+          </button>
+        )}
+      </div>
 
       {status.kind === "ok" && (
         <div

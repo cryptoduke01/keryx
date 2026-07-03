@@ -21,6 +21,7 @@ const Body = z.object({
     .min(3)
     .max(64)
     .regex(/^[a-z0-9][a-z0-9._-]*[a-z0-9]$/),
+  action: z.enum(["register", "update", "delete"]).optional(),
 });
 
 export async function POST(req: Request) {
@@ -37,14 +38,15 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
-  const { wallet, toolId } = parsed.data;
+  const { wallet, toolId, action = "register" } = parsed.data;
   const nonce = await issueNonce(wallet);
   const issuedAt = new Date().toISOString();
-  const message = buildMessage({ wallet, toolId, nonce, issuedAt });
+  const message = buildMessage({ wallet, toolId, nonce, issuedAt, action });
   return NextResponse.json({
     ok: true,
     wallet,
     toolId,
+    action,
     nonce,
     issuedAt,
     ttlSeconds: 300,
