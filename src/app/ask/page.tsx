@@ -24,6 +24,10 @@ export default function AskPage() {
           </a>{" "}
           while you chat.
         </p>
+        <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 8 }}>
+          The agent has a tiny budget and is instructed to only spend when the fresh data is worth the cost.
+          For many general questions it will answer from knowledge without calling paid tools.
+        </p>
       </div>
 
       <AskClient />

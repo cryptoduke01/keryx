@@ -121,9 +121,9 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
   },
   {
     id: "search.web",
-    name: "Grounded Web Search",
+    name: "Wikipedia Grounded Search",
     summary:
-      "Query-to-summary search backed by Wikipedia. Returns page titles, extracts, and canonical URLs. Optimised for LLM grounding.",
+      "Factual search over Wikipedia. Returns page titles, short extracts, and URLs. Best for definitions, history, geography, notable facts, and established knowledge. NOT for prices, availability, bookings, current events, commercial recommendations, or live data.",
     category: "search",
     priceUsd: 0.004,
     publisherWallet: KERYX_TREASURY_ADDRESS,
@@ -167,7 +167,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
   {
     id: "weather.current",
     name: "Current Weather",
-    summary: "Live current weather for any lat/lon: temperature, wind, humidity, conditions.",
+    summary: "Live current weather for any lat/lon. Worth paying for when the user needs up-to-the-minute conditions (travel today, outdoor plans, severe weather). Not needed for general city descriptions.",
     category: "weather",
     priceUsd: 0.002,
     publisherWallet: KERYX_TREASURY_ADDRESS,
@@ -184,7 +184,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
   {
     id: "weather.forecast",
     name: "Weather Forecast",
-    summary: "Hourly + daily forecast for a location (up to 7 days). Temperature, precipitation, wind.",
+    summary: "Hourly + daily forecast for a location (up to 7 days). Worth it for concrete near-term travel or event planning. Not needed for generic 'Berlin has seasons' advice.",
     category: "weather",
     priceUsd: 0.003,
     publisherWallet: KERYX_TREASURY_ADDRESS,
@@ -203,7 +203,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
   {
     id: "finance.exchange-rates",
     name: "Exchange Rates",
-    summary: "Live fiat + crypto exchange rates for any base currency (200+ currencies).",
+    summary: "Live fiat + crypto exchange rates for any base currency (200+ currencies). Call when you need current rates for a specific conversion or comparison you will show the user.",
     category: "finance",
     priceUsd: 0.002,
     publisherWallet: KERYX_TREASURY_ADDRESS,
@@ -218,7 +218,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
   {
     id: "finance.convert",
     name: "Currency Converter",
-    summary: "Convert an amount from one currency to another using live rates.",
+    summary: "Convert an amount from one currency to another using live rates. Only call when you are actually going to perform and display a specific conversion for the user.",
     category: "finance",
     priceUsd: 0.002,
     publisherWallet: KERYX_TREASURY_ADDRESS,
@@ -237,7 +237,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
   {
     id: "geo.ip-lookup",
     name: "IP Geolocation",
-    summary: "Location, ISP, ASN, timezone and security flags for an IP address (or your own).",
+    summary: "Location, ISP, ASN, timezone and security flags for an IP (or caller's IP). Only useful when the user's actual location or network context materially affects the answer (e.g. local currency, nearby services, compliance).",
     category: "geo",
     priceUsd: 0.002,
     publisherWallet: KERYX_TREASURY_ADDRESS,
@@ -341,7 +341,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
   {
     id: "demo.content-block",
     name: "Demo: Paid Content Snippet",
-    summary: "Returns a short paid knowledge snippet (demo of creator-published tool). Pays a test external publisher.",
+    summary: "Example of a *paid creator tool*. Returns a short knowledge snippet that is intentionally monetized. 95% of the fee goes to an external demo publisher, not Kēryx treasury. Use to demonstrate real money flowing to third-party publishers.",
     category: "web",
     priceUsd: 0.004,
     publisherWallet: "0x1111111111111111111111111111111111111111" as const,
@@ -358,7 +358,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
   {
     id: "geo.country",
     name: "Country Info",
-    summary: "Basic country data: capital, population, currencies, languages, region for a country name or code.",
+    summary: "Basic country data: capital, population, currencies, languages, region. Mostly useful for structured lookup when building a specific comparison or form. General knowledge about Germany is usually sufficient.",
     category: "geo",
     priceUsd: 0.001,
     publisherWallet: KERYX_TREASURY_ADDRESS,

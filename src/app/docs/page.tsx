@@ -18,6 +18,11 @@ export default function DocsPage() {
         Kēryx sits between developers who publish tools and AI agents that
         pay to use them. Both sides fit on this page.
       </p>
+      <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.55, marginBottom: 32 }}>
+        Note: many seeded tools provide reliable structured access to public data sources.
+        Agents can still fetch some of this data for free elsewhere. Kēryx's value is the unified payment,
+        discovery, settlement, and MCP interface — especially as the catalog grows with paid creator and proprietary tools.
+      </p>
 
       <Section title="For AI agents · call a tool">
         <p style={pStyle}>

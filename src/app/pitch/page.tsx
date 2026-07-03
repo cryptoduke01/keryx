@@ -94,6 +94,7 @@ export default function PitchPage() {
             <li>Any AI agent &mdash; Claude Code, Cursor, custom &mdash; discovers it via MCP and pays per call in USDC on Circle Arc.</li>
             <li>The unit of access is the call, not the account. 95% to the publisher, 5% to Kēryx, no listing fee, no minimum.</li>
             <li>Every payment settles onchain in under half a second. Every settlement has a real Arcscan tx hash.</li>
+            <li><i>Not</i> "pay for things that are free on the web". Kēryx is the payment + discovery layer for capabilities agents are willing to pay for — today public data with reliability, tomorrow paid creator tools and proprietary sources.</li>
           </ul>
           <ReceiptCard
             heading="Provably live"

@@ -58,6 +58,10 @@ export default async function RegistryPage() {
           Every tool is a real HTTP endpoint. Every call pays the publisher in
           USDC. Discover by capability, call by id.
         </p>
+        <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.55, marginTop: 8 }}>
+          Some tools wrap high-quality public data sources (always-on, structured, settled). Others are paid creator or proprietary content.
+          Kēryx is the payment, discovery, and settlement layer — not a replacement for free web browsing.
+        </p>
         <div style={{ display: "flex", gap: 8, marginTop: 20, flexWrap: "wrap" }}>
           <Link href="/publish" style={{ textDecoration: "none" }}>
             <button className="btn btn-primary btn-sm">Publish yours →</button>
