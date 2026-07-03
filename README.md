@@ -1,66 +1,77 @@
+<div align="center">
+
 # Kēryx
 
 **The toll booth for the agent economy.**
 
-Kēryx is a paid-tool registry for AI agents. Any developer publishes a tool. Any agent pays to use it. Settlement runs in USDC on [Arc](https://www.arc.network/), Circle's stablecoin-native L1, so a single call can cost fractions of a cent and clear in under half a second. No subscriptions, no API keys, no human in the loop.
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
+[![Arc](https://img.shields.io/badge/Arc-Circle_L1-00C4B4?style=flat)](https://www.arc.network/)
+[![x402](https://img.shields.io/badge/x402-micropayments-orange?style=flat)](https://github.com/coinbase/x402)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Built for the Lepton Agents Hackathon (Canteen × Circle × Arc).
+**Live:** [keryxhq.xyz](https://keryxhq.xyz) • **Docs:** [keryxhq.xyz/docs](https://keryxhq.xyz/docs) • **Ledger:** [keryxhq.xyz/live](https://keryxhq.xyz/live)
 
-- **Live:** [keryxhq.xyz](https://keryxhq.xyz)
-- **Docs:** [/docs](https://keryxhq.xyz/docs)
-- **Ledger:** [/live](https://keryxhq.xyz/live)
+</div>
 
-## Why
+---
 
-Agents are becoming the primary consumers of software, not just people using software through a chat window. But the tools an agent might want to call, live signals, scraped data, search, compute, are still gated behind human-shaped friction: sign up, generate an API key, add a card, wait for a webhook. None of that works when the caller is a stateless agent that wants to make one call and pay for exactly that one call.
+Kēryx is the **paid tool registry for AI agents**.
 
-Kēryx removes the account. A publisher lists a tool with a price. An agent calls the tool with USDC already in hand. Payment and execution happen in the same round trip. That's the whole product.
+Developers publish tools. Agents discover them, pay per call in sub-cent USDC on [Arc](https://www.arc.network/), and get results instantly. No accounts, no API keys, no subscriptions, no human gatekeepers.
+
+Built for the **Lepton Agents Hackathon** (Canteen × Circle × Arc).
+
+---
+
+## Why Kēryx
+
+Every API on the internet was designed for humans.
+
+Agents are becoming the primary consumers of software — yet they still have to pretend to be people: sign up, generate keys, add cards, wait for webhooks.
+
+**Kēryx removes the human-shaped friction.**
+
+- A tool is just an HTTP endpoint + price + wallet.
+- An agent pays exactly once per call using x402 micropayments.
+- Settlement is real (or demo), fast, and auditable on a public ledger.
+
+Payment + execution happen in the same round-trip.
+
+---
 
 ## How it works
 
-1. **Publish.** A developer registers an HTTP endpoint with an id, a price in USD, and a wallet address. Kēryx lists it in the public registry.
-2. **Discover.** Any agent hits `GET /api/tools` to see every available tool, its price, its argument schema, and a sample call, no docs page required.
-3. **Call and pay.** The agent calls `POST /api/call` with the tool id and its arguments. Kēryx quotes the price, executes the tool, splits the payment (95% to the publisher, 5% platform fee), and returns the result plus a ledger entry in one response.
+1. **Publish** — Register a tool with an id, price (in USD), and Arc wallet. It appears instantly in the public registry.
+2. **Discover** — Any agent calls `GET /api/tools` and receives every tool with price, schema, and example call (machine-readable).
+3. **Call & Pay** — `POST /api/call` with toolId + args. Kēryx returns a 402 with payment details → agent signs (EIP-3009) → Kēryx executes, splits (95% publisher / 5% platform), and returns the result + ledger entry.
 
-Every call, successful or failed, is written to a public ledger visible at [/live](https://keryxhq.xyz/live), so the flow of money between agents and publishers is auditable in real time.
+Every call (success or failure) is written to the public ledger at [/live](https://keryxhq.xyz/live).
 
-## Architecture
+---
 
-- **Framework:** Next.js 16 (App Router), TypeScript, Tailwind v4, Turbopack
-- **Settlement chain:** [Arc testnet](https://testnet.arcscan.app) (chain id `5042002`), USDC-native gas, ERC-20 USDC at `0x3600…0000`
-- **Payment rail:** [x402](https://github.com/coinbase/x402) request-level micropayments, batched through Circle Gateway
-- **Persistence:** [Upstash Redis](https://upstash.com) when configured, falls back to in-memory storage for local/demo use (see `src/lib/registry/store.ts` and `src/lib/ledger.ts`)
-- **Playground agent:** [Vercel AI SDK](https://sdk.vercel.ai) + OpenAI function-calling, so `/ask` can call registry tools live and show its work
-- **Wallet:** wagmi + viem, WalletConnect optional
+## Live Links
 
-```
-src/
-  app/
-    api/
-      call/                 POST — the paid tool call
-      tools/                GET  — list every published tool
-      tools/[id]/           GET  — fetch one tool's schema
-      publishers/tools/     POST — register a new tool
-      ledger/               GET  — recent ledger entries + stats
-      ask/                  POST — the playground agent (function-calling over the registry)
-    ask/                     /ask   — chat playground, pays real tools to answer
-    docs/                    /docs  — integration docs for agents and publishers
-    live/                    /live  — public settlement ledger
-    publish/                 /publish — publisher-facing tool submission form
-    registry/                /registry — browse published tools
-  components/                Header, theme toggle, wordmark, motion primitives
-  lib/
-    chains.ts                Arc chain definition, USDC constants, fee split
-    x402-price.ts            quote math (price → platform fee → publisher net)
-    ledger.ts                ledger read/write, Redis-or-memory
-    registry/                tool store, seed data, tool execution handlers
-```
+| What | Link |
+|------|------|
+| 🌐 Product | [keryxhq.xyz](https://keryxhq.xyz) |
+| 📖 Integration Docs | [keryxhq.xyz/docs](https://keryxhq.xyz/docs) |
+| 📊 Public Ledger | [keryxhq.xyz/live](https://keryxhq.xyz/live) |
+| 🧪 Agent Playground | [keryxhq.xyz/ask](https://keryxhq.xyz/ask) |
+| 📝 Publish a tool | [keryxhq.xyz/publish](https://keryxhq.xyz/publish) |
+| 🗂️ Browse registry | [keryxhq.xyz/registry](https://keryxhq.xyz/registry) |
 
-## Try it
+---
 
-**As an agent, call a tool directly:**
+## Try it right now
+
+### As an agent (curl)
 
 ```bash
+# 1. Discover tools
+curl https://keryxhq.xyz/api/tools
+
+# 2. Call a tool (you will get a 402 first)
 curl -X POST https://keryxhq.xyz/api/call \
   -H "content-type: application/json" \
   -H "x-keryx-agent: my-agent" \
@@ -68,18 +79,11 @@ curl -X POST https://keryxhq.xyz/api/call \
     "toolId": "solana.token-activity",
     "args": { "mintOrSymbol": "BONK" }
   }'
-# → HTTP 402 with a machine-readable price tag.
-# Sign an EIP-3009 USDC authorization against the returned
-# `accepts` block, base64-encode it, retry with X-PAYMENT.
 ```
 
-**Discover what's available first:**
+The 402 response contains a machine-readable `accepts` block. Sign it and retry with the `X-PAYMENT` header.
 
-```bash
-curl https://keryxhq.xyz/api/tools
-```
-
-**As a publisher, list your own endpoint:**
+### As a publisher
 
 ```bash
 curl -X POST https://keryxhq.xyz/api/publishers/tools \
@@ -95,19 +99,53 @@ curl -X POST https://keryxhq.xyz/api/publishers/tools \
   }'
 ```
 
-Full request/response shapes, argument schemas, and the coding-agent SDK snippet are on the [docs page](https://keryxhq.xyz/docs).
+Full schemas and agent SDK snippets live in the [docs](https://keryxhq.xyz/docs).
 
-## Seeded tools
+---
 
-The registry ships with five verified tools, every one backed by a real public API — no mocked data:
+## Seeded Tools (all real data)
 
-| id | upstream | price |
-|---|---|---|
-| `solana.token-activity` | DexScreener — top DEX pairs, 24h volume, buy/sell counts, liquidity | $0.005 |
-| `solana.launches` | DexScreener — newly boosted Solana token profiles | $0.003 |
-| `solana.rug-check` | rugcheck.xyz — live risk score + flagged risks | $0.002 |
-| `search.web` | Wikipedia REST + MediaWiki search — grounded page summaries | $0.004 |
-| `crypto.trending` | CoinGecko — trending coins with price, 24h change, rank | $0.001 |
+| id | Source | Price |
+|----|--------|-------|
+| `solana.token-activity` | DexScreener — volume, pairs, liquidity, buy/sell counts | $0.005 |
+| `solana.launches` | DexScreener — newly boosted tokens | $0.003 |
+| `solana.rug-check` | rugcheck.xyz — risk score + flags | $0.002 |
+| `search.web` | Wikipedia — grounded summaries + URLs | $0.004 |
+| `crypto.trending` | CoinGecko — trending coins + market data | $0.001 |
+
+Additional community tools (with `verified: false`) can be published by anyone.
+
+---
+
+## Architecture
+
+**Stack**
+- Next.js 16 (App Router) + TypeScript + Tailwind v4 + Turbopack
+- Arc testnet (chain id `5042002`) — USDC native, ultra-cheap
+- x402 + Circle Gateway for real micropayments
+- Upstash Redis (optional) or in-memory fallback
+- Vercel AI SDK + OpenAI for the `/ask` playground agent
+- wagmi + viem for wallet flows
+
+**Key routes**
+
+```
+app/
+├── api/
+│   ├── call/                 # POST — paid execution + settlement
+│   ├── tools/                # GET — full registry
+│   ├── tools/[id]/           # GET — single tool schema
+│   ├── publishers/tools/     # POST — register new tool (signed)
+│   ├── ledger/               # GET — public history + stats
+│   └── ask/                  # POST — agent playground
+├── ask/                      # Chat UI that actually pays for tools
+├── docs/                     # Human + agent integration guides
+├── live/                     # Public settlement ledger
+├── publish/                  # Publisher form
+└── registry/                 # Browse tools
+```
+
+---
 
 ## Running locally
 
@@ -115,26 +153,43 @@ The registry ships with five verified tools, every one backed by a real public A
 git clone https://github.com/cryptoduke01/keryx.git
 cd keryx
 pnpm install
-cp .env.example .env.local   # fill in what you need, everything has a sane fallback
+cp .env.example .env.local   # sane defaults exist
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Without any env vars set, the registry and ledger run entirely in memory and the `/ask` playground works if you supply `OPENAI_API_KEY`. See `.env.example` for what each variable unlocks (Redis persistence, WalletConnect, Circle Gateway settlement).
+Open http://localhost:3000.
+
+The playground at `/ask` works with just an `OPENAI_API_KEY`. Everything else gracefully falls back to in-memory mode.
 
 ```bash
-pnpm build        # production build
-pnpm typecheck    # tsc --noEmit
+pnpm build
+pnpm typecheck
 ```
 
-## Status
+See `.env.example` for Redis, WalletConnect, and real Circle Gateway settlement.
 
-This is a hackathon build, but the x402 protocol path is real. `POST /api/call` returns a genuine `402 Payment Required` with a machine-readable `accepts` array when the `X-PAYMENT` header is missing, and executes only after a signed payload verifies. Which facilitator runs the verify + settle is picked by env:
+---
 
-- **`gateway`** — set `CIRCLE_GATEWAY_API_URL` (defaults to Circle's testnet endpoint) and Kēryx routes verify/settle through Circle Gateway. Real onchain USDC on Arc, batched.
-- **`demo`** — the default when no facilitator is configured. Accepts well-formed `X-PAYMENT` payloads, records a synthetic tx hash, and labels the ledger entry `demo` so `/live` never misrepresents onchain state.
+## Status & Roadmap notes
 
-Publisher wallet ownership is enforced via EIP-191 signatures — every new tool registration must be signed by the wallet it claims to belong to. Community-submitted tools still carry a `verified: false` flag until Kēryx promotes them, and their handlers run inside Kēryx's runtime rather than on the publisher's own infrastructure. External handler hosting is the next step on the [whitepaper](https://keryxhq.xyz/whitepaper) roadmap.
+This started as a hackathon build, but the payment rail is real.
+
+- `POST /api/call` correctly returns HTTP 402 + machine-readable payment requirements.
+- Publisher ownership is enforced with EIP-191 signatures.
+- Real on-chain settlement when `CIRCLE_GATEWAY_*` vars are set.
+- Community tools are accepted but flagged `verified: false` until reviewed.
+- Next milestone on the [whitepaper](https://keryxhq.xyz/whitepaper): external handler hosting so publishers run their own endpoints.
+
+---
 
 ## License
 
 MIT
+
+---
+
+<div align="center">
+
+**Built by duke.sol** • [keryxhq.xyz](https://keryxhq.xyz) • [@dukedotsol](https://x.com/dukedotsol)
+
+</div>
