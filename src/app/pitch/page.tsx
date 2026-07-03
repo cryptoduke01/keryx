@@ -15,14 +15,30 @@ export default function PitchPage() {
       <PrintButton />
 
       {/* -------------------- SLIDE 1 · Cover --------------------- */}
-      <section className="pitch-slide pitch-cover">
-        <div className="pitch-cover-wordmark">Kēryx</div>
-        <div className="pitch-cover-tagline">
-          The toll booth for the agent economy.
-        </div>
-        <div className="pitch-cover-meta">
-          <div>Pitch deck · v0.1 · July 2026</div>
-          <div>keryxhq.xyz</div>
+      <section className="pitch-slide pitch-cover pitch-cover-hero">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/inspo/pitch-cover.jpg"
+          alt=""
+          className="pitch-cover-bg"
+        />
+        <div className="pitch-cover-scrim" />
+        <div className="pitch-cover-content">
+          <div className="pitch-cover-mark">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/keryx-mark.svg" alt="Kēryx monogram" width={92} height={92} />
+          </div>
+          <div className="pitch-cover-wordmark">Kēryx</div>
+          <div className="pitch-cover-primary">
+            Commerce at machine speed.
+          </div>
+          <div className="pitch-cover-secondary">
+            The toll booth for the agent economy.
+          </div>
+          <div className="pitch-cover-meta">
+            <div>Pitch deck · v0.1 · July 2026</div>
+            <div>team@keryxhq.xyz · keryxhq.xyz</div>
+          </div>
         </div>
       </section>
 
@@ -276,26 +292,36 @@ export default function PitchPage() {
           />
           <AskCard
             heading="Publishers"
-            body="Any operator of a real API — search, crypto data, RPC, scraping — should list a tool. Verified first-50 slots free. Contact @keryxhq."
+            body="Any operator of a real API — search, crypto data, RPC, scraping — should list a tool. Verified first-50 slots free. team@keryxhq.xyz · @keryxhq."
           />
         </div>
       </section>
 
       {/* -------------------- SLIDE 13 · Close ----------------- */}
-      <section className="pitch-slide pitch-cover">
-        <div className="pitch-cover-wordmark">Kēryx</div>
-        <div className="pitch-cover-tagline">
-          The toll booth for the agent economy.
-        </div>
-        <div className="pitch-close-links">
-          <div><span>Site</span> keryxhq.xyz</div>
-          <div><span>Contract</span> 0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7</div>
-          <div><span>Repo</span> github.com/cryptoduke01/keryx</div>
-          <div><span>X</span> @keryxhq</div>
-        </div>
-        <div className="pitch-cover-meta">
-          <div>Not backed by Ycmobinator.</div>
-          <div>MIT · Settles on Arc testnet.</div>
+      <section className="pitch-slide pitch-cover pitch-cover-hero">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/inspo/pitch-cover.jpg" alt="" className="pitch-cover-bg" />
+        <div className="pitch-cover-scrim" />
+        <div className="pitch-cover-content">
+          <div className="pitch-cover-mark">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/keryx-mark.svg" alt="Kēryx monogram" width={72} height={72} />
+          </div>
+          <div className="pitch-cover-wordmark" style={{ fontSize: 96 }}>Kēryx</div>
+          <div className="pitch-cover-primary" style={{ marginBottom: 40 }}>
+            Commerce at machine speed.
+          </div>
+          <div className="pitch-close-links">
+            <div><span>Site</span> keryxhq.xyz</div>
+            <div><span>Contact</span> team@keryxhq.xyz</div>
+            <div><span>Contract</span> 0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7</div>
+            <div><span>Repo</span> github.com/cryptoduke01/keryx</div>
+            <div><span>X</span> @keryxhq</div>
+          </div>
+          <div className="pitch-cover-meta">
+            <div>Not backed by Ycmobinator.</div>
+            <div>MIT · Settles on Arc testnet.</div>
+          </div>
         </div>
       </section>
     </div>

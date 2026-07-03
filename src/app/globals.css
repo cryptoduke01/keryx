@@ -631,6 +631,49 @@ body.pitch-mode {
   padding: 96px 112px;
 }
 
+/* Full-bleed image cover (slide 1 + 13). Aqueduct is the hero image on the
+   left; scrim gradient ensures the wordmark + text are readable on the
+   right half of the slide. */
+.pitch-cover-hero {
+  padding: 0;
+  overflow: hidden;
+}
+.pitch-cover-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left center;
+  z-index: 0;
+  filter: contrast(1.05) saturate(1.05) brightness(0.95);
+}
+.pitch-cover-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(11,11,12,0.65) 0%, rgba(11,11,12,0.45) 30%, rgba(11,11,12,0.85) 70%, rgba(11,11,12,0.95) 100%),
+    radial-gradient(ellipse 60% 80% at 100% 50%, rgba(11,11,12,0.85), transparent 70%);
+}
+.pitch-cover-content {
+  position: relative;
+  z-index: 2;
+  padding: 96px 112px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: flex-start;
+  justify-content: center;
+}
+.pitch-cover-mark {
+  margin-bottom: 28px;
+  opacity: 0.95;
+}
+.pitch-cover-mark img {
+  filter: drop-shadow(0 4px 20px rgba(0,0,0,0.4));
+}
+
 .pitch-cover-wordmark {
   font-family: var(--font-wordmark);
   font-style: italic;
@@ -639,7 +682,31 @@ body.pitch-mode {
   letter-spacing: -0.02em;
   line-height: 0.9;
   color: #f5f4f0;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+}
+
+.pitch-cover-primary {
+  font-family: var(--font-display);
+  font-size: 46px;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  color: #f5f4f0;
+  max-width: 820px;
+  margin-bottom: 14px;
+  text-shadow: 0 2px 14px rgba(0,0,0,0.6);
+}
+
+.pitch-cover-secondary {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  color: rgba(245,244,240,0.72);
+  letter-spacing: 0.005em;
+  margin-bottom: 56px;
+  max-width: 780px;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
 }
 
 .pitch-cover-tagline {
@@ -660,8 +727,9 @@ body.pitch-mode {
   width: 100%;
   font-family: var(--font-mono);
   font-size: 13px;
-  color: rgba(245,244,240,0.55);
+  color: rgba(245,244,240,0.7);
   letter-spacing: 0.02em;
+  margin-top: auto;
 }
 
 .pitch-close-links {
