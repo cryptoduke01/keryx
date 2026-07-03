@@ -6,7 +6,10 @@ import {
   useConnect,
   useDisconnect,
   useSignMessage,
+  useChainId,
+  useSwitchChain,
 } from "wagmi";
+import { arcTestnet } from "@/lib/chains";
 
 type Category = "solana" | "search" | "scrape" | "memory" | "compute" | "social";
 
@@ -15,6 +18,12 @@ export default function PublishClient() {
   const { connectors, connectAsync, isPending: isConnecting } = useConnect();
   const { disconnectAsync } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
+  const chainId = useChainId();
+  const { switchChainAsync, isPending: isSwitching } = useSwitchChain();
+
+  const [connectError, setConnectError] = useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const wrongNetwork = isConnected && chainId !== arcTestnet.id;
 
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
@@ -31,6 +40,7 @@ export default function PublishClient() {
 
   const canSubmit =
     isConnected &&
+    !wrongNetwork &&
     name.trim().length > 2 &&
     slug.trim().length > 2 &&
     summary.trim().length > 8 &&
@@ -104,18 +114,53 @@ export default function PublishClient() {
         address={address}
         isConnected={isConnected}
         isConnecting={isConnecting}
+        isSwitching={isSwitching}
+        wrongNetwork={wrongNetwork}
         connectorName={connector?.name}
-        onConnect={async () => {
-          const preferred = connectors.find((c) => c.name === "MetaMask") ?? connectors[0];
-          if (!preferred) return;
+        pickerOpen={pickerOpen}
+        connectors={connectors.map((c) => ({ id: c.id, name: c.name, ready: !!c }))}
+        error={connectError}
+        onOpenPicker={() => {
+          setConnectError(null);
+          setPickerOpen(true);
+        }}
+        onPickConnector={async (connectorId) => {
+          setConnectError(null);
+          setPickerOpen(false);
+          const c = connectors.find((x) => x.id === connectorId);
+          if (!c) {
+            setConnectError("Connector not available.");
+            return;
+          }
           try {
-            await connectAsync({ connector: preferred });
-          } catch {
-            /* user closed wallet modal */
+            await connectAsync({ connector: c, chainId: arcTestnet.id });
+          } catch (err) {
+            const msg = err instanceof Error ? err.message : "connect_failed";
+            if (/not installed|no provider|window\.ethereum/i.test(msg)) {
+              setConnectError(`${c.name} isn't installed in this browser. Install it or pick another wallet.`);
+            } else if (/rejected|denied|user closed/i.test(msg)) {
+              setConnectError("Connection cancelled in the wallet.");
+            } else {
+              setConnectError(msg.slice(0, 140));
+            }
+          }
+        }}
+        onSwitchNetwork={async () => {
+          setConnectError(null);
+          try {
+            await switchChainAsync({ chainId: arcTestnet.id });
+          } catch (err) {
+            const msg = err instanceof Error ? err.message : "switch_failed";
+            setConnectError(
+              /add|4902/i.test(msg)
+                ? "Approve adding Arc testnet in your wallet, then retry."
+                : msg.slice(0, 140),
+            );
           }
         }}
         onDisconnect={() => {
           void disconnectAsync();
+          setConnectError(null);
         }}
       />
 
@@ -221,15 +266,29 @@ function WalletHeader({
   address,
   isConnected,
   isConnecting,
+  isSwitching,
+  wrongNetwork,
   connectorName,
-  onConnect,
+  connectors,
+  pickerOpen,
+  error,
+  onOpenPicker,
+  onPickConnector,
+  onSwitchNetwork,
   onDisconnect,
 }: {
   address?: string;
   isConnected: boolean;
   isConnecting: boolean;
+  isSwitching: boolean;
+  wrongNetwork: boolean;
   connectorName?: string;
-  onConnect: () => void;
+  connectors: Array<{ id: string; name: string; ready: boolean }>;
+  pickerOpen: boolean;
+  error: string | null;
+  onOpenPicker: () => void;
+  onPickConnector: (id: string) => void | Promise<void>;
+  onSwitchNetwork: () => void | Promise<void>;
   onDisconnect: () => void;
 }) {
   return (
@@ -240,56 +299,136 @@ function WalletHeader({
         borderRadius: 10,
         background: "var(--surface-2)",
         display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
+        flexDirection: "column",
         gap: 12,
-        flexWrap: "wrap",
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
-        <div className="text-eyebrow">Publisher wallet</div>
-        {isConnected && address ? (
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 13,
-              color: "var(--text-primary)",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 12,
+          flexWrap: "wrap",
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
+          <div className="text-eyebrow">Publisher wallet</div>
+          {isConnected && address ? (
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 13,
+                color: "var(--text-primary)",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {address}
+              {connectorName && (
+                <span style={{ marginLeft: 8, fontSize: 11, color: "var(--text-muted)" }}>
+                  via {connectorName}
+                </span>
+              )}
+            </span>
+          ) : (
+            <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+              Connect a wallet on Arc testnet. Signing proves you control the wallet the payouts land in.
+            </span>
+          )}
+        </div>
+        {isConnected ? (
+          <button
+            type="button"
+            onClick={onDisconnect}
+            className="btn"
+            style={{ fontSize: 12 }}
           >
-            {address}
-            {connectorName && (
-              <span style={{ marginLeft: 8, fontSize: 11, color: "var(--text-muted)" }}>
-                via {connectorName}
-              </span>
-            )}
-          </span>
+            Disconnect
+          </button>
         ) : (
-          <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>
-            Connect a wallet on Arc testnet. Signing proves you control the wallet the payouts land in.
-          </span>
+          <button
+            type="button"
+            onClick={onOpenPicker}
+            disabled={isConnecting}
+            className="btn btn-primary"
+            style={{ fontSize: 13 }}
+          >
+            {isConnecting ? "Connecting…" : "Connect wallet"}
+          </button>
         )}
       </div>
-      {isConnected ? (
-        <button
-          type="button"
-          onClick={onDisconnect}
-          className="btn"
-          style={{ fontSize: 12 }}
+
+      {pickerOpen && !isConnected && (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+          {connectors.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => onPickConnector(c.id)}
+              disabled={isConnecting}
+              style={{
+                padding: "10px 12px",
+                borderRadius: 8,
+                border: "1px solid var(--border)",
+                background: "var(--surface-3)",
+                color: "var(--text-primary)",
+                fontSize: 13,
+                textAlign: "left",
+                cursor: "pointer",
+              }}
+            >
+              {c.name}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {wrongNetwork && isConnected && (
+        <div
+          style={{
+            padding: "10px 12px",
+            borderRadius: 8,
+            border: "1px solid var(--border)",
+            background: "var(--surface-3)",
+            fontSize: 12.5,
+            color: "var(--text-primary)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 10,
+            flexWrap: "wrap",
+          }}
         >
-          Disconnect
-        </button>
-      ) : (
-        <button
-          type="button"
-          onClick={onConnect}
-          disabled={isConnecting}
-          className="btn btn-primary"
-          style={{ fontSize: 13 }}
+          <span>
+            Wrong network. Switch to <b>Arc testnet</b> so your publish tx settles where the registry lives.
+          </span>
+          <button
+            type="button"
+            onClick={onSwitchNetwork}
+            disabled={isSwitching}
+            className="btn btn-primary"
+            style={{ fontSize: 12 }}
+          >
+            {isSwitching ? "Switching…" : "Switch network"}
+          </button>
+        </div>
+      )}
+
+      {error && (
+        <div
+          style={{
+            padding: "10px 12px",
+            borderRadius: 8,
+            border: "1px solid var(--border)",
+            background: "rgba(220,80,80,0.08)",
+            fontSize: 12.5,
+            color: "var(--text-primary)",
+            lineHeight: 1.5,
+          }}
         >
-          {isConnecting ? "Connecting…" : "Connect wallet"}
-        </button>
+          {error}
+        </div>
       )}
     </div>
   );

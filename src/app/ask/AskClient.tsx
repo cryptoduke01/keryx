@@ -16,7 +16,40 @@ interface ToolEvent {
   name: string;
   cost?: number;
   publisher?: string;
+  txHash?: string;
+  settlementMode?: "gateway" | "local" | "demo";
   status: "pending" | "paid" | "failed";
+}
+
+const STORAGE_KEY = "keryx.ask.history.v1";
+const HISTORY_LIMIT = 24; // enough to keep a sensible conversation, not enough to bloat localStorage
+
+function loadHistory(): UiMessage[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (m): m is UiMessage =>
+        m && typeof m === "object" && typeof m.id === "string" &&
+        typeof m.content === "string" &&
+        (m.role === "user" || m.role === "assistant" || m.role === "system"),
+    );
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory(messages: UiMessage[]) {
+  if (typeof window === "undefined") return;
+  try {
+    const trimmed = messages.slice(-HISTORY_LIMIT);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
+  } catch {
+    /* quota exceeded, private browsing, etc — silently drop */
+  }
 }
 
 const SUGGESTIONS = [
@@ -59,7 +92,15 @@ async function* readSseLines(body: ReadableStream<Uint8Array>) {
 type Parsed =
   | { kind: "text"; delta: string }
   | { kind: "toolCall"; name: string }
-  | { kind: "toolResult"; name: string; ok: boolean; cost?: number; publisher?: string }
+  | {
+      kind: "toolResult";
+      name: string;
+      ok: boolean;
+      cost?: number;
+      publisher?: string;
+      txHash?: string;
+      settlementMode?: "gateway" | "local" | "demo";
+    }
   | { kind: "done" }
   | { kind: "error"; msg: string }
   | null;
@@ -84,7 +125,15 @@ function parseLine(line: string): Parsed {
         result && typeof result === "object" && "paid" in result && result.paid?.priceUsd
           ? Number(result.paid.priceUsd)
           : undefined;
-      return { kind: "toolResult", name, ok, cost };
+      const txHash =
+        result && typeof result === "object" && "txHash" in result && typeof result.txHash === "string"
+          ? result.txHash
+          : undefined;
+      const settlementMode =
+        result && typeof result === "object" && "settlementMode" in result && typeof result.settlementMode === "string"
+          ? (result.settlementMode as "gateway" | "local" | "demo")
+          : undefined;
+      return { kind: "toolResult", name, ok, cost, txHash, settlementMode };
     }
     if (tag === "d") return { kind: "done" };
     if (tag === "3") return { kind: "error", msg: typeof data === "string" ? data : "stream_error" };
@@ -98,15 +147,34 @@ export default function AskClient() {
   const [messages, setMessages] = useState<UiMessage[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const scrollerRef = useRef<HTMLDivElement | null>(null);
 
   const agentId = useMemo(() => `web-${Math.random().toString(36).slice(2, 8)}`, []);
 
+  // Restore history from localStorage on first client render, then persist
+  // every subsequent update. Skips the first render to avoid overwriting
+  // localStorage with an empty [] before the load completes.
+  useEffect(() => {
+    setMessages(loadHistory());
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (hydrated) saveHistory(messages);
+  }, [messages, hydrated]);
+
   useEffect(() => {
     if (!scrollerRef.current) return;
     scrollerRef.current.scrollTop = scrollerRef.current.scrollHeight;
   }, [messages]);
+
+  function newConversation() {
+    if (busy) abortRef.current?.abort();
+    setMessages([]);
+    setInput("");
+  }
 
   const canSend = input.trim().length > 0 && !busy;
 
@@ -188,6 +256,8 @@ export default function AskClient() {
                 name: evt.name,
                 status: evt.ok ? "paid" : "failed",
                 cost: evt.cost,
+                txHash: evt.txHash,
+                settlementMode: evt.settlementMode,
               };
               return { ...m, toolEvents: next };
             })
@@ -224,10 +294,56 @@ export default function AskClient() {
       style={{
         display: "grid",
         gridTemplateColumns: "1fr",
-        gap: 20,
+        gap: 14,
         maxWidth: 820,
       }}
     >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 12,
+          padding: "0 4px",
+        }}
+      >
+        <div
+          className="text-eyebrow"
+          style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--text-muted)" }}
+        >
+          <span
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: 999,
+              background: "#10b981",
+              display: "inline-block",
+              animation: "keryx-pulse 1600ms ease-in-out infinite",
+            }}
+          />
+          {messages.length === 0
+            ? "Ready · live on Arc testnet"
+            : `${messages.filter((m) => m.role === "user").length} question${messages.filter((m) => m.role === "user").length === 1 ? "" : "s"} in this session`}
+        </div>
+        {messages.length > 0 && (
+          <button
+            type="button"
+            onClick={newConversation}
+            style={{
+              background: "transparent",
+              border: "1px solid var(--border)",
+              color: "var(--text-secondary)",
+              fontSize: 12,
+              padding: "5px 10px",
+              borderRadius: 6,
+              cursor: "pointer",
+            }}
+          >
+            New conversation
+          </button>
+        )}
+      </div>
+
       <div
         ref={scrollerRef}
         className="card"
@@ -387,10 +503,63 @@ function ToolChip({ tool }: { tool: ToolEvent }) {
       : tool.status === "failed"
         ? "badge badge-info"
         : "badge";
+  const statusWord =
+    tool.status === "pending" ? "calling" : tool.status === "paid" ? "paid" : "failed";
+
+  // Real onchain tx (mode "local" / "gateway") → clickable arcscan link.
+  // Synthetic demo tx → visible but not clickable.
+  const isRealTx = tool.txHash && !tool.txHash.startsWith("demo_") && (tool.settlementMode === "local" || tool.settlementMode === "gateway");
+  const shortHash = tool.txHash?.replace(/^demo_/, "").slice(0, 10);
+
   return (
-    <span className={badgeClass}>
-      {tool.status === "pending" ? "…" : tool.status === "paid" ? "paid" : "failed"} {label}
-      {cost}
+    <span
+      className={badgeClass}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {tool.status === "pending" && (
+        <span
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: 999,
+            background: "currentColor",
+            animation: "keryx-pulse 900ms ease-in-out infinite",
+            display: "inline-block",
+          }}
+        />
+      )}
+      <span>
+        {statusWord} {label}{cost}
+      </span>
+      {tool.txHash && (
+        isRealTx ? (
+          <a
+            href={`https://testnet.arcscan.app/tx/${tool.txHash}`}
+            target="_blank"
+            rel="noreferrer"
+            className="text-mono"
+            style={{
+              fontSize: 10,
+              opacity: 0.85,
+              textDecoration: "underline",
+              textUnderlineOffset: 2,
+            }}
+            title="View this settlement on Arcscan"
+          >
+            {shortHash}…
+          </a>
+        ) : (
+          <span className="text-mono" style={{ fontSize: 10, opacity: 0.7 }}>
+            {shortHash}…
+          </span>
+        )
+      )}
+      <style dangerouslySetInnerHTML={{ __html: `@keyframes keryx-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }` }} />
     </span>
   );
 }

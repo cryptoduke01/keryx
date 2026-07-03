@@ -71,7 +71,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
         <StatCard label="Settlement" value="Arc · <2s" />
       </div>
 
-      <div className="card" style={{ padding: 0, overflow: "hidden" }}>
+      <div className="card ledger-card" style={{ padding: 0, overflow: "hidden" }}>
         <div
           style={{
             padding: "12px 20px",
@@ -81,7 +81,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
             gap: 12,
             alignItems: "center",
           }}
-          className="text-eyebrow"
+          className="text-eyebrow ledger-header"
         >
           <span>When</span>
           <span>Tool</span>
@@ -111,6 +111,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
         {entries.map((e, i) => (
           <div
             key={e.id}
+            className="ledger-row"
             style={{
               padding: "14px 20px",
               borderBottom:
@@ -124,10 +125,13 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
               transition: "background 700ms ease-out",
             }}
           >
-            <span style={{ fontSize: 12, color: "var(--text-secondary)", fontVariantNumeric: "tabular-nums" }}>
+            <span
+              className="cell-when"
+              style={{ fontSize: 12, color: "var(--text-secondary)", fontVariantNumeric: "tabular-nums" }}
+            >
               {relTime(e.ts, now)}
             </span>
-            <span style={{ minWidth: 0 }}>
+            <span className="cell-tool" style={{ minWidth: 0 }}>
               <div className="text-mono" style={{ fontSize: 13, color: "var(--text-primary)" }}>
                 {e.toolId}
               </div>
@@ -135,10 +139,11 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
                 caller: <span className="text-mono">{e.callerId}</span>
               </div>
             </span>
-            <span style={{ fontSize: 12, color: "var(--text-primary)" }}>
+            <span className="cell-publisher" style={{ fontSize: 12, color: "var(--text-primary)" }}>
               {e.publisherName}
             </span>
             <span
+              className="cell-price"
               style={{
                 fontSize: 13,
                 fontWeight: 700,
@@ -149,8 +154,10 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
             >
               ${e.priceUsd.toFixed(4)}
             </span>
-            <SettlementCell mode={e.settlementMode} txHash={e.txHash} />
-            <span style={{ textAlign: "right" }}>
+            <span className="cell-settlement">
+              <SettlementCell mode={e.settlementMode} txHash={e.txHash} />
+            </span>
+            <span className="cell-status" style={{ textAlign: "right" }}>
               <span
                 className={
                   e.status === "paid"
@@ -166,6 +173,47 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
           </div>
         ))}
       </div>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @media (max-width: 720px) {
+              .ledger-header { display: none !important; }
+              .ledger-row {
+                display: block !important;
+                padding: 16px 18px !important;
+              }
+              .ledger-row > * { display: block !important; }
+              .ledger-row .cell-when {
+                text-align: left !important;
+                font-size: 11px !important;
+                color: var(--text-muted) !important;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                margin-bottom: 6px;
+              }
+              .ledger-row .cell-tool { margin-bottom: 8px; }
+              .ledger-row .cell-publisher {
+                font-size: 11px !important;
+                color: var(--text-muted) !important;
+                margin-bottom: 8px;
+              }
+              .ledger-row .cell-price {
+                text-align: left !important;
+                display: inline-block !important;
+                margin-right: 12px;
+              }
+              .ledger-row .cell-settlement {
+                display: inline-block !important;
+                margin-right: 12px;
+              }
+              .ledger-row .cell-status {
+                text-align: left !important;
+                display: inline-block !important;
+              }
+            }
+          `,
+        }}
+      />
     </>
   );
 }

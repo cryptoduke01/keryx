@@ -128,6 +128,8 @@ export async function POST(req: Request) {
           return {
             toolId: tool.id,
             paid: quote,
+            settlementMode: facilitator.mode,
+            txHash: settle.txHash,
             result,
           };
         } catch (err) {

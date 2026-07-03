@@ -148,7 +148,7 @@ export default async function Landing() {
                 <Link href="/ask" style={{ textDecoration: "none" }}>
                   <button className="btn btn-primary btn-lg">Ask Kēryx</button>
                 </Link>
-                <Link href="/publish" style={{ textDecoration: "none" }}>
+                <Link href="/whitepaper" style={{ textDecoration: "none" }}>
                   <button
                     className="btn btn-lg"
                     style={{
@@ -158,7 +158,7 @@ export default async function Landing() {
                       backdropFilter: "blur(4px)",
                     }}
                   >
-                    Publish a tool
+                    Read the whitepaper
                   </button>
                 </Link>
               </div>
@@ -602,35 +602,184 @@ export default async function Landing() {
       {/* ============================================================
           FOOTER
           ========================================================== */}
-      <footer style={{ borderTop: "1px solid var(--border)", padding: "32px 0" }}>
-        <div
-          className="container-page"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 16,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 700, fontSize: 15 }}>
-            Kēryx
+      <footer style={{ borderTop: "1px solid var(--border)", marginTop: 64, paddingTop: 56, paddingBottom: 40 }}>
+        <div className="container-page">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1.4fr 1fr 1fr 1fr",
+              gap: 32,
+              marginBottom: 48,
+            }}
+            className="footer-grid"
+          >
+            <div>
+              <div
+                style={{
+                  fontFamily: "var(--font-wordmark)",
+                  fontStyle: "italic",
+                  fontSize: 26,
+                  letterSpacing: "-0.01em",
+                  color: "var(--text-primary)",
+                  marginBottom: 12,
+                }}
+              >
+                Kēryx
+              </div>
+              <p style={{ fontSize: 13.5, color: "var(--text-secondary)", lineHeight: 1.55, maxWidth: 260, marginBottom: 20 }}>
+                The toll booth for the agent economy. Any developer publishes a paid tool. Any AI agent pays to use it. USDC on Arc.
+              </p>
+              <div style={{ display: "flex", gap: 10 }}>
+                <a
+                  href="https://x.com/keryxhq"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Kēryx on X"
+                  style={footerIconStyle}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                </a>
+                <a
+                  href="https://github.com/cryptoduke01/keryx"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Kēryx on GitHub"
+                  style={footerIconStyle}
+                >
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden>
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.22.48-2.69-1.07-2.69-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.81.06 1.23.83 1.23.83.72 1.23 1.88.88 2.34.67.07-.52.28-.88.51-1.08-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0016 8c0-4.42-3.58-8-8-8z" />
+                  </svg>
+                </a>
+                <a
+                  href="https://testnet.arcscan.app/address/0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="KeryxRegistry contract on Arcscan"
+                  style={footerIconStyle}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <path d="M4 4h16v16H4z" />
+                    <path d="M4 10h16" />
+                    <path d="M10 20V10" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <div className="text-eyebrow" style={footerColHead}>Product</div>
+              <FooterLink href="/ask">Ask playground</FooterLink>
+              <FooterLink href="/registry">Registry</FooterLink>
+              <FooterLink href="/publish">Publish a tool</FooterLink>
+              <FooterLink href="/live">Live ledger</FooterLink>
+            </div>
+
+            <div>
+              <div className="text-eyebrow" style={footerColHead}>Developers</div>
+              <FooterLink href="/docs">Integration docs</FooterLink>
+              <FooterLink href="/docs#mcp">MCP for Claude Code</FooterLink>
+              <FooterExternal href="https://github.com/cryptoduke01/keryx">GitHub</FooterExternal>
+              <FooterExternal href="https://testnet.arcscan.app/address/0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7">
+                Contract on Arc
+              </FooterExternal>
+            </div>
+
+            <div>
+              <div className="text-eyebrow" style={footerColHead}>Company</div>
+              <FooterLink href="/whitepaper">Whitepaper</FooterLink>
+              <FooterExternal href="https://x.com/keryxhq">@keryxhq</FooterExternal>
+              <FooterExternal href="https://www.arc.network">Runs on Arc</FooterExternal>
+              <FooterExternal href="https://lepton.thecanteenapp.com">Lepton Agents Hackathon</FooterExternal>
+            </div>
           </div>
-          <div style={{ display: "flex", gap: 22, flexWrap: "wrap" }}>
-            <Link href="/ask" style={{ fontSize: 13, color: "var(--text-muted)" }}>Ask</Link>
-            <Link href="/registry" style={{ fontSize: 13, color: "var(--text-muted)" }}>Registry</Link>
-            <Link href="/publish" style={{ fontSize: 13, color: "var(--text-muted)" }}>Publish</Link>
-            <Link href="/live" style={{ fontSize: 13, color: "var(--text-muted)" }}>Live</Link>
-            <Link href="/docs" style={{ fontSize: 13, color: "var(--text-muted)" }}>Docs</Link>
-            <Link href="/whitepaper" style={{ fontSize: 13, color: "var(--text-muted)" }}>Whitepaper</Link>
-            <a href="https://x.com/keryxhq" target="_blank" rel="noreferrer" style={{ fontSize: 13, color: "var(--text-muted)" }}>@keryxhq</a>
-            <a href="https://github.com/cryptoduke01/keryx" target="_blank" rel="noreferrer" style={{ fontSize: 13, color: "var(--text-muted)" }}>GitHub</a>
+
+          <div
+            style={{
+              paddingTop: 24,
+              borderTop: "1px solid var(--border)",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 16,
+              flexWrap: "wrap",
+            }}
+          >
+            <div style={{ fontSize: 11.5, color: "var(--text-faint)", letterSpacing: "0.02em" }}>
+              © 2026 Kēryx. Settles on Arc testnet. MIT-licensed. Not backed by Ycmobinator.
+            </div>
+            <div style={{ fontSize: 11, color: "var(--text-faint)", fontFamily: "var(--font-mono)" }}>
+              v0.1 · commit provably onchain
+            </div>
           </div>
-          <span style={{ fontSize: 11, color: "var(--text-faint)" }}>
-            Settles on Arc · MIT · Not backed by Ycmobinator
-          </span>
         </div>
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              @media (max-width: 720px) {
+                .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 28px !important; }
+              }
+              @media (max-width: 480px) {
+                .footer-grid { grid-template-columns: 1fr !important; }
+              }
+            `,
+          }}
+        />
       </footer>
     </>
+  );
+}
+
+const footerColHead: React.CSSProperties = {
+  marginBottom: 14,
+  color: "var(--text-secondary)",
+};
+
+const footerIconStyle: React.CSSProperties = {
+  width: 32,
+  height: 32,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: 8,
+  border: "1px solid var(--border)",
+  background: "var(--surface-2)",
+  color: "var(--text-secondary)",
+};
+
+function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link
+      href={href}
+      style={{
+        display: "block",
+        fontSize: 13.5,
+        color: "var(--text-secondary)",
+        padding: "5px 0",
+        textDecoration: "none",
+      }}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function FooterExternal({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      style={{
+        display: "block",
+        fontSize: 13.5,
+        color: "var(--text-secondary)",
+        padding: "5px 0",
+        textDecoration: "none",
+      }}
+    >
+      {children}
+    </a>
   );
 }
