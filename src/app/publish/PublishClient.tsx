@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   useAccount,
   useConnect,
@@ -14,6 +15,7 @@ import { arcTestnet } from "@/lib/chains";
 type Category = "solana" | "search" | "scrape" | "memory" | "compute" | "social";
 
 export default function PublishClient() {
+  const router = useRouter();
   const { address, isConnected, connector } = useAccount();
   const { connectors, connectAsync, isPending: isConnecting } = useConnect();
   const { disconnectAsync } = useDisconnect();
@@ -84,10 +86,26 @@ export default function PublishClient() {
       });
       const j = await r.json().catch(() => ({}));
       if (!r.ok) {
-        setStatus({ kind: "err", msg: j?.error ?? "publish_failed" });
+        // Special case: id already registered. Point the user at it rather
+        // than making them think publish silently failed.
+        if (j?.error === "tool_id_taken") {
+          setStatus({
+            kind: "err",
+            msg: `That id is already published. Try /registry to see it, or pick a different id.`,
+          });
+        } else {
+          setStatus({ kind: "err", msg: j?.error ?? "publish_failed" });
+        }
         return;
       }
+      // Success — invalidate the router cache so /registry shows the new
+      // listing without a hard reload, then clear the form for another go.
       setStatus({ kind: "ok", toolId: j?.tool?.id ?? slug.trim() });
+      router.refresh();
+      setName("");
+      setSlug("");
+      setSummary("");
+      setPublisherName((n) => n); // keep publisher name for follow-up publishes
     } catch (err) {
       const msg = err instanceof Error ? err.message : "network_error";
       setStatus({
@@ -243,19 +261,67 @@ export default function PublishClient() {
 
       {status.kind === "ok" && (
         <div
-          className="badge badge-success"
-          style={{ padding: "10px 14px", fontSize: 13, whiteSpace: "normal", lineHeight: 1.5 }}
+          style={{
+            padding: 16,
+            borderRadius: 10,
+            border: "1px solid var(--border)",
+            background: "var(--surface-2)",
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+          }}
         >
-          ✓ Published as <code style={{ fontFamily: "var(--font-mono)" }}>{status.toolId}</code>.
-          Head to <a href="/registry" style={{ color: "inherit", textDecoration: "underline" }}>/registry</a> to see the listing.
+          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, color: "var(--text-primary)" }}>
+            <span
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: 999,
+                background: "#10b981",
+                display: "inline-block",
+                animation: "keryx-pulse 2000ms ease-in-out infinite",
+              }}
+            />
+            Published as <code style={{ fontFamily: "var(--font-mono)" }}>{status.toolId}</code>
+          </div>
+          <div style={{ fontSize: 12.5, color: "var(--text-secondary)", lineHeight: 1.55 }}>
+            The tool is live in the registry now. Signed and stored — any agent hitting
+            {" "}<code style={{ fontFamily: "var(--font-mono)" }}>GET /api/tools</code>{" "}
+            picks it up immediately.
+          </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <a
+              href={`/registry`}
+              className="btn btn-sm btn-primary"
+              style={{ textDecoration: "none" }}
+            >
+              See on /registry →
+            </a>
+            <a
+              href={`/api/tools/${encodeURIComponent(status.toolId)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-sm"
+              style={{ textDecoration: "none" }}
+            >
+              View JSON
+            </a>
+          </div>
         </div>
       )}
       {status.kind === "err" && (
         <div
-          className="badge badge-info"
-          style={{ padding: "10px 14px", fontSize: 13, whiteSpace: "normal", lineHeight: 1.5 }}
+          style={{
+            padding: 12,
+            borderRadius: 8,
+            border: "1px solid var(--border)",
+            background: "rgba(220, 80, 80, 0.08)",
+            fontSize: 13,
+            color: "var(--text-primary)",
+            lineHeight: 1.55,
+          }}
         >
-          Could not publish: {status.msg}
+          {status.msg}
         </div>
       )}
     </form>
