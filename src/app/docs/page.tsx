@@ -106,14 +106,11 @@ export default function DocsPage() {
         />
       </Section>
 
-      <Section title="For Claude Code, Cursor, and any MCP client" id="mcp">
+      <Section title="For Claude Code, Cursor, Codex, and any MCP client" id="mcp">
         <p style={pStyle}>
-          Kēryx runs a Model Context Protocol server at{" "}
-          <code style={codeInline}>https://keryxhq.xyz/api/mcp</code>. Add it to
-          your client's config and every tool in the registry shows up
-          natively as a callable tool — no per-tool wiring, no wallet setup.
-          Payment is sponsored in demo mode; the /live ledger records each
-          call as it happens.
+          <b>Real agents do not use our /ask chat.</b> They talk directly to Kēryx.
+          Add the MCP server once and your agent gets the entire catalog (seeded + community) as native tools.
+          Kēryx handles discovery, x402 payment, settlement, and execution.
         </p>
         <CodeBlock
           lang="json"
@@ -127,10 +124,12 @@ export default function DocsPage() {
 }`}
         />
         <p style={pStyle}>
-          Drop that into{" "}
-          <code style={codeInline}>~/.claude/mcp.json</code> (Claude Code) or
-          your client's equivalent. Restart, and try:{" "}
-          <i>&ldquo;use keryx to find the top BONK whales.&rdquo;</i>
+          Claude Code: <code>~/.claude/mcp.json</code><br />
+          Cursor / other MCP clients: add the block above.<br />
+          Then say: "use keryx weather and exchange rates to plan my trip to Berlin".
+        </p>
+        <p style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+          One config. 17+ real paid tools. Agents pay per call in sub-cent USDC. No keys, no accounts.
         </p>
       </Section>
 
