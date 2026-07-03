@@ -23,6 +23,7 @@ interface ToolEvent {
   txHash?: string;
   settlementMode?: "gateway" | "local" | "demo";
   status: "pending" | "paid" | "failed";
+  error?: string;
 }
 
 interface Session {
@@ -153,6 +154,7 @@ type Parsed =
       cost?: number;
       txHash?: string;
       settlementMode?: "gateway" | "local" | "demo";
+      error?: string;
     }
   | { kind: "done" }
   | { kind: "error"; msg: string }
@@ -188,7 +190,11 @@ function parseLine(line: string): Parsed {
         result && typeof result === "object" && "settlementMode" in result && typeof result.settlementMode === "string"
           ? (result.settlementMode as "gateway" | "local" | "demo")
           : undefined;
-      return { kind: "toolResult", callId, name, ok, cost, txHash, settlementMode };
+      const errorDetail =
+        result && typeof result === "object" && "error" in result
+          ? (typeof (result as any).detail === "string" ? (result as any).detail : (result as any).error)
+          : undefined;
+      return { kind: "toolResult", callId, name, ok, cost, txHash, settlementMode, error: errorDetail };
     }
     if (tag === "d") return { kind: "done" };
     if (tag === "3") return { kind: "error", msg: typeof data === "string" ? data : "stream_error" };
@@ -381,6 +387,7 @@ export default function AskClient() {
                 cost: evt.cost,
                 txHash: evt.txHash,
                 settlementMode: evt.settlementMode,
+                error: evt.error,
               };
               if (idx >= 0) {
                 const preservedName =
@@ -389,7 +396,12 @@ export default function AskClient() {
               } else {
                 next.push({ callId: evt.callId, name: evt.name, ...patch });
               }
-              return { ...m, toolEvents: next };
+              const updated = { ...m, toolEvents: next };
+              // If the tool failed and we have no explanatory text yet, surface it.
+              if (!evt.ok && evt.error && !updated.content?.trim()) {
+                updated.content = `Tool "${evt.name}" failed: ${evt.error}`;
+              }
+              return updated;
             }),
           );
         } else if (evt.kind === "error") {
@@ -416,7 +428,7 @@ export default function AskClient() {
             ? {
                 ...m,
                 toolEvents: (m.toolEvents ?? []).map((e) =>
-                  e.status === "pending" ? { ...e, status: "paid" as const } : e,
+                  e.status === "pending" ? { ...e, status: e.error ? ("failed" as const) : ("paid" as const) } : e,
                 ),
               }
             : m,
@@ -944,64 +956,81 @@ function ToolCard({ tool }: { tool: ToolEvent }) {
     <div
       style={{
         display: "flex",
-        alignItems: "center",
-        gap: 10,
+        flexDirection: "column",
+        gap: 4,
         padding: "8px 12px",
         borderRadius: 8,
         border: "1px solid var(--border)",
         background: "var(--surface-2)",
         fontSize: 12,
+        maxWidth: "100%",
       }}
     >
-      <span
-        style={{
-          width: 6,
-          height: 6,
-          borderRadius: 999,
-          background: statusColor,
-          display: "inline-block",
-          animation: tool.status === "pending" ? "keryx-pulse 900ms ease-in-out infinite" : "none",
-        }}
-      />
-      <span className="text-mono" style={{ color: "var(--text-primary)" }}>
-        {label}
-      </span>
-      <span style={{ color: "var(--text-muted)" }}>·</span>
-      <span
-        style={{
-          fontVariantNumeric: "tabular-nums",
-          color: "var(--text-primary)",
-          fontWeight: 600,
-        }}
-      >
-        {typeof tool.cost === "number" ? `$${tool.cost.toFixed(4)}` : "…"}
-      </span>
-      <span style={{ color: "var(--text-muted)" }}>·</span>
-      <span style={{ color: "var(--text-secondary)" }}>{statusText}</span>
-      {cleanHash && (
-        <>
-          <span style={{ color: "var(--text-muted)" }}>·</span>
-          {isReal ? (
-            <a
-              href={`https://testnet.arcscan.app/tx/${cleanHash}`}
-              target="_blank"
-              rel="noreferrer"
-              className="text-mono"
-              style={{
-                color: "var(--text-secondary)",
-                textDecoration: "underline",
-                textUnderlineOffset: 2,
-                fontSize: 11,
-              }}
-            >
-              {cleanHash.slice(0, 6)}…{cleanHash.slice(-4)}
-            </a>
-          ) : (
-            <span className="text-mono" style={{ color: "var(--text-muted)", fontSize: 11 }}>
-              demo
-            </span>
-          )}
-        </>
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <span
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: 999,
+            background: statusColor,
+            display: "inline-block",
+            flexShrink: 0,
+            animation: tool.status === "pending" ? "keryx-pulse 900ms ease-in-out infinite" : "none",
+          }}
+        />
+        <span className="text-mono" style={{ color: "var(--text-primary)" }}>
+          {label}
+        </span>
+        <span style={{ color: "var(--text-muted)" }}>·</span>
+        <span
+          style={{
+            fontVariantNumeric: "tabular-nums",
+            color: "var(--text-primary)",
+            fontWeight: 600,
+          }}
+        >
+          {typeof tool.cost === "number" ? `$${tool.cost.toFixed(4)}` : "…"}
+        </span>
+        <span style={{ color: "var(--text-muted)" }}>·</span>
+        <span style={{ color: "var(--text-secondary)" }}>{statusText}</span>
+        {cleanHash && (
+          <>
+            <span style={{ color: "var(--text-muted)" }}>·</span>
+            {isReal ? (
+              <a
+                href={`https://testnet.arcscan.app/tx/${cleanHash}`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-mono"
+                style={{
+                  color: "var(--text-secondary)",
+                  textDecoration: "underline",
+                  textUnderlineOffset: 2,
+                  fontSize: 11,
+                }}
+              >
+                {cleanHash.slice(0, 6)}…{cleanHash.slice(-4)}
+              </a>
+            ) : (
+              <span className="text-mono" style={{ color: "var(--text-muted)", fontSize: 11 }}>
+                demo
+              </span>
+            )}
+          </>
+        )}
+      </div>
+      {tool.status === "failed" && tool.error && (
+        <div
+          style={{
+            fontSize: 11,
+            color: "#f59e0b",
+            opacity: 0.9,
+            paddingLeft: 16,
+            wordBreak: "break-word",
+          }}
+        >
+          {tool.error}
+        </div>
       )}
     </div>
   );

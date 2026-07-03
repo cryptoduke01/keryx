@@ -32,6 +32,8 @@ export default function PublishClient() {
   const [summary, setSummary] = useState("");
   const [category, setCategory] = useState<Category>("compute");
   const [priceUsd, setPriceUsd] = useState("0.005");
+  const [handlerUrl, setHandlerUrl] = useState("");
+  const [argsJson, setArgsJson] = useState('{}');
   const [publisherName, setPublisherName] = useState("");
   const [status, setStatus] = useState<
     | { kind: "idle" }
@@ -47,6 +49,7 @@ export default function PublishClient() {
     slug.trim().length > 2 &&
     summary.trim().length > 8 &&
     Number(priceUsd) > 0 &&
+    handlerUrl.trim().length > 8 &&
     status.kind !== "step";
 
   async function submit(e: React.FormEvent) {
@@ -68,6 +71,13 @@ export default function PublishClient() {
       const signature = await signMessageAsync({ message: nonceRes.message });
 
       setStatus({ kind: "step", step: "submitting" });
+      let parsedArgs: Record<string, any> = {};
+      try {
+        parsedArgs = argsJson.trim() ? JSON.parse(argsJson) : {};
+      } catch {
+        setStatus({ kind: "err", msg: "args_json_invalid — must be a JSON object describing the args" });
+        return;
+      }
       const r = await fetch("/api/publishers/tools", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -77,6 +87,9 @@ export default function PublishClient() {
           summary: summary.trim(),
           category,
           priceUsd: Number(priceUsd),
+          handlerUrl: handlerUrl.trim(),
+          args: parsedArgs,
+          sampleArgs: {},
           publisherWallet: address,
           publisherName: publisherName.trim() || "Anonymous",
           nonce: nonceRes.nonce,
@@ -241,6 +254,32 @@ export default function PublishClient() {
         </Field>
       </div>
 
+      <Field
+        label="Handler URL"
+        hint="Public HTTPS endpoint Kēryx will call with the args after the agent pays. Must return JSON."
+      >
+        <input
+          type="url"
+          value={handlerUrl}
+          onChange={(e) => setHandlerUrl(e.target.value)}
+          placeholder="https://your-api.com/tools/skimflow"
+          style={{ ...inputStyle, fontFamily: "var(--font-mono)" }}
+        />
+      </Field>
+
+      <Field
+        label="Args schema (JSON, optional)"
+        hint='E.g. { "url": { "type": "string", "required": true, "description": "Article to fetch" } }'
+      >
+        <textarea
+          value={argsJson}
+          onChange={(e) => setArgsJson(e.target.value)}
+          rows={3}
+          placeholder='{"url":{"type":"string","required":true,"description":"..."}}'
+          style={{ ...inputStyle, fontFamily: "var(--font-mono)", resize: "vertical" }}
+        />
+      </Field>
+
       <Field label="Publisher display name (optional)">
         <input
           type="text"
@@ -285,9 +324,8 @@ export default function PublishClient() {
             Published as <code style={{ fontFamily: "var(--font-mono)" }}>{status.toolId}</code>
           </div>
           <div style={{ fontSize: 12.5, color: "var(--text-secondary)", lineHeight: 1.55 }}>
-            The tool is live in the registry now. Signed and stored — any agent hitting
-            {" "}<code style={{ fontFamily: "var(--font-mono)" }}>GET /api/tools</code>{" "}
-            picks it up immediately.
+            Tool is live in the registry. With a handler URL, Kēryx will forward paid calls to it.
+            Agents (Claude Code via MCP, /ask, or direct <code>/api/call</code>) can now use it.
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <a

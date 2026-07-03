@@ -158,7 +158,7 @@ export const POST = withKeryxPrice({
         </div>
         <ul style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.8, paddingLeft: 20 }}>
           <li><code style={codeInline}>KeryxRegistry.sol</code> deployed to Arc testnet — every tool listing has an onchain publisher, price, and metadata URI</li>
-          <li>Externally-hosted publisher handlers (call the publisher's own server on paid hit)</li>
+          <li>Externally-hosted publisher handlers (publish with a handler URL; Kēryx forwards after payment)</li>
           <li>Circle Gateway credentials landing → real batched onchain USDC settlement</li>
           <li>OpenAPI spec + SDKs (Node, Python)</li>
         </ul>

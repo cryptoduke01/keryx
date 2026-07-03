@@ -24,10 +24,6 @@ export default function PitchPage() {
         />
         <div className="pitch-cover-scrim" />
         <div className="pitch-cover-content">
-          <div className="pitch-cover-mark">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/keryx-mark.png" alt="Kēryx monogram" width={92} height={92} />
-          </div>
           <div className="pitch-cover-wordmark">Kēryx</div>
           <div className="pitch-cover-primary">
             Commerce at machine speed.
@@ -163,7 +159,7 @@ export default function PitchPage() {
           <Metric big="∞" small="Public tx hashes on Arcscan, anyone can verify" />
         </div>
         <SlideFoot light>
-          Onchain contract: <span className="pitch-mono">0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7</span> &nbsp;·&nbsp; toolCount() = 5 &nbsp;·&nbsp; GitHub: cryptoduke01/keryx
+          Onchain contract: <span className="pitch-mono">0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7</span> &nbsp;·&nbsp; toolCount() = 5
         </SlideFoot>
       </section>
 
@@ -303,10 +299,6 @@ export default function PitchPage() {
         <img src="/inspo/pitch-cover.png" alt="" className="pitch-cover-bg" />
         <div className="pitch-cover-scrim" />
         <div className="pitch-cover-content">
-          <div className="pitch-cover-mark">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/keryx-mark.png" alt="Kēryx monogram" width={72} height={72} />
-          </div>
           <div className="pitch-cover-wordmark" style={{ fontSize: 96 }}>Kēryx</div>
           <div className="pitch-cover-primary" style={{ marginBottom: 40 }}>
             Commerce at machine speed.
@@ -315,7 +307,6 @@ export default function PitchPage() {
             <div><span>Site</span> keryxhq.xyz</div>
             <div><span>Contact</span> team@keryxhq.xyz</div>
             <div><span>Contract</span> 0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7</div>
-            <div><span>Repo</span> github.com/cryptoduke01/keryx</div>
             <div><span>X</span> @keryxhq</div>
           </div>
           <div className="pitch-cover-meta">

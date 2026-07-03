@@ -169,8 +169,8 @@ export default async function Landing() {
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: 8,
-                  marginTop: 12,
+                  gap: 12,
+                  marginTop: 16,
                   fontSize: 13,
                   color: "rgba(245,244,240,0.75)",
                   textDecoration: "none",
@@ -189,7 +189,7 @@ export default async function Landing() {
                 >
                   MCP
                 </span>
-                <span>Or drop into Claude Code and Cursor <span aria-hidden>→</span></span>
+                <span style={{ opacity: 0.85 }}>Or drop into Claude Code and Cursor <span aria-hidden>→</span></span>
               </Link>
             </Reveal>
           </div>

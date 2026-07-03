@@ -14,5 +14,7 @@ export async function GET(
     return NextResponse.json({ error: "tool_not_found", id }, { status: 404 });
   }
   const quote = quoteCall(tool.priceUsd);
-  return NextResponse.json({ tool, quote });
+  // Never leak internal handlerUrl to callers.
+  const { handlerUrl: _h, ...safeTool } = tool as any;
+  return NextResponse.json({ tool: safeTool, quote });
 }

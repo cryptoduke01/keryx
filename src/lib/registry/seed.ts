@@ -43,6 +43,13 @@ export interface ToolDefinition {
   verified: boolean;
   /** Approximate latency in ms (for agent budgeting). */
   latencyMs: number;
+  /**
+   * For community-published tools: the publisher's HTTPS endpoint that Kēryx
+   * will POST the args to (after payment settles). Kēryx forwards the call
+   * server-to-server and returns whatever the handler returns.
+   * Seeded tools do not use this.
+   */
+  handlerUrl?: string;
 }
 
 export const SEEDED_TOOLS: ToolDefinition[] = [

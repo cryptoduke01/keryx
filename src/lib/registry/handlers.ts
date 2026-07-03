@@ -50,6 +50,29 @@ async function fetchJson<T>(url: string, timeoutMs = 8000): Promise<T> {
   }
 }
 
+async function postJson<T>(url: string, body: unknown, timeoutMs = 15000): Promise<T> {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      signal: ctrl.signal,
+      headers: {
+        "content-type": "application/json",
+        "user-agent": "keryxhq.xyz (+https://keryxhq.xyz)",
+      },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(`handler_${res.status}${text ? `: ${text.slice(0, 200)}` : ""}`);
+    }
+    return (await res.json()) as T;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
 // ---------------------------------------------------------------------------
 // solana.token-activity
 // ---------------------------------------------------------------------------
@@ -293,6 +316,25 @@ async function handleTrending(ctx: CallContext) {
 }
 
 // ---------------------------------------------------------------------------
+/** Generic proxy for externally-hosted publisher handlers.
+ *  After Kēryx has taken payment, we forward the args to the publisher's URL.
+ */
+async function handleExternal(ctx: CallContext) {
+  const url = ctx.tool.handlerUrl;
+  if (!url) {
+    throw new Error(`No handlerUrl configured for tool "${ctx.tool.id}"`);
+  }
+  // Forward exactly the args the agent supplied.
+  const result = await postJson<unknown>(url, ctx.args);
+  return {
+    ...((typeof result === "object" && result !== null) ? result : { result }),
+    source: "publisher",
+    via: "keryx-external",
+    handler: url,
+  };
+}
+
+// ---------------------------------------------------------------------------
 // dispatcher
 // ---------------------------------------------------------------------------
 
@@ -304,13 +346,29 @@ const HANDLERS: Record<string, (ctx: CallContext) => Promise<unknown>> = {
   "crypto.trending": handleTrending,
 };
 
+export function isSeededExecutableTool(id: string): boolean {
+  return id in HANDLERS;
+}
+
+/** A tool is executable in Kēryx if either:
+ *  - it is one of the built-in seeded handlers, or
+ *  - it is a published tool that supplied a handlerUrl at publish time.
+ */
+export function isExecutableTool(tool: ToolDefinition): boolean {
+  if (isSeededExecutableTool(tool.id)) return true;
+  return !!tool.handlerUrl;
+}
+
 export async function executeTool(
   tool: ToolDefinition,
   args: Record<string, unknown>,
 ): Promise<unknown> {
   const handler = HANDLERS[tool.id];
-  if (!handler) {
-    throw new Error(`No handler registered for tool "${tool.id}"`);
+  if (handler) {
+    return handler({ tool, args });
   }
-  return handler({ tool, args });
+  if (tool.handlerUrl) {
+    return handleExternal({ tool, args });
+  }
+  throw new Error(`No handler registered for tool "${tool.id}"`);
 }

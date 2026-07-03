@@ -40,6 +40,10 @@ const PublishSchema = z.object({
     .string()
     .regex(/^0x[a-fA-F0-9]{40}$/, { message: "publisherWallet must be a 0x address" }),
   publisherName: z.string().min(1).max(60),
+  /** Optional but required for the tool to be executable by Kēryx agents.
+   *  The public HTTPS URL of the publisher's handler. Kēryx will POST the
+   *  args object to this URL after payment verification/settlement. */
+  handlerUrl: z.string().url().optional(),
   /** Server-issued nonce from POST /api/publishers/nonce. */
   nonce: z.string().min(1).max(64),
   /** UTC timestamp the nonce was issued at (echoed back by the client). */
@@ -48,6 +52,9 @@ const PublishSchema = z.object({
   signature: z
     .string()
     .regex(/^0x[a-fA-F0-9]+$/, { message: "signature must be 0x-hex" }),
+  /** Optional JSON-schema style arg spec from publisher. */
+  args: z.record(z.any()).optional(),
+  sampleArgs: z.record(z.any()).optional(),
 });
 
 export async function POST(req: Request) {
@@ -116,10 +123,11 @@ export async function POST(req: Request) {
     priceUsd: data.priceUsd,
     publisherWallet: data.publisherWallet as `0x${string}`,
     publisherName: data.publisherName,
-    args: {},
-    sampleArgs: {},
+    args: (data as any).args ?? {},
+    sampleArgs: (data as any).sampleArgs ?? {},
     verified: false,
     latencyMs: 1000,
+    handlerUrl: data.handlerUrl,
   };
 
   try {

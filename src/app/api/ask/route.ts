@@ -23,7 +23,7 @@ const groqClient = createOpenAI({
 });
 import { z } from "zod";
 import { listTools } from "@/lib/registry/store";
-import { executeTool } from "@/lib/registry/handlers";
+import { executeTool, isExecutableTool } from "@/lib/registry/handlers";
 import { quoteCall } from "@/lib/x402-price";
 import { recordEntry } from "@/lib/ledger";
 import { getTool } from "@/lib/registry/store";
@@ -39,14 +39,9 @@ interface IncomingMessage {
   content: string;
 }
 
-const SYSTEM_PROMPT = `You are Kēryx — a helpful AI assistant. You happen to have access to five paid tools that call real APIs and settle real USDC on Arc per call. Use them when they help. Answer from your own knowledge when they don't.
+const SYSTEM_PROMPT = `You are Kēryx — a helpful AI assistant. You have access to paid tools (seeded + community-published) that call real APIs and settle real USDC on Arc per call. Use the available tools when they help. Answer from your own knowledge when they don't.
 
-Your tools:
-- solana_token-activity(mintOrSymbol): DexScreener pair data — 24h volume, buy/sell counts, liquidity, market cap for any Solana token. Pair-level, not wallet-level.
-- solana_launches(limit): Newest Solana token profiles from DexScreener.
-- solana_rug-check(mint): rugcheck.xyz risk report for a Solana mint.
-- search_web(query, limit): Wikipedia summaries — great for concepts, companies, historical facts.
-- crypto_trending(limit): Trending coins on CoinGecko right now.
+The tools you are given (via function calling) each have a price and arg schema in their definition. Prefer the right tool for the job.
 
 How to be helpful:
 
@@ -89,6 +84,13 @@ export async function POST(req: Request) {
 
   const registryTools = await listTools();
 
+  /** Only expose tools that the playground (and the unified executor) can run.
+   *  This now includes:
+   *   - Kēryx-seeded tools (hardcoded real handlers)
+   *   - Published community tools that provided a handlerUrl at publish time
+   */
+  const playableTools = registryTools.filter((t) => isExecutableTool(t));
+
   /** Build the tool map the AI SDK expects. Each tool id is normalized
    *  from dotted (solana.token-activity) to underscored (solana_token_activity)
    *  because OpenAI's function names disallow dots.
@@ -96,7 +98,7 @@ export async function POST(req: Request) {
    *  narrow cleanly across a heterogeneous record. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tools: Record<string, any> = {};
-  for (const t of registryTools) {
+  for (const t of playableTools) {
     const fnName = t.id.replace(/\./g, "_");
     tools[fnName] = tool({
       description: `[$${t.priceUsd.toFixed(3)} · ${t.publisherName}] ${t.summary}`,
@@ -145,6 +147,7 @@ export async function POST(req: Request) {
             result,
           };
         } catch (err) {
+          const msg = err instanceof Error ? err.message : String(err);
           await recordEntry({
             toolId: tool.id,
             toolName: tool.name,
@@ -157,9 +160,12 @@ export async function POST(req: Request) {
             status: "failed",
             settlementMode: getFacilitator().mode,
           });
+          const isNoHandler = /no handler registered|no handlerurl/i.test(msg);
           return {
             error: "handler_failed",
-            detail: err instanceof Error ? err.message : String(err),
+            detail: isNoHandler
+              ? `Tool "${tool.id}" is listed but has no executable handler configured. The publisher must provide a handlerUrl when publishing (or re-publish).`
+              : msg,
           };
         }
       },
