@@ -13,6 +13,9 @@ interface UiMessage {
 }
 
 interface ToolEvent {
+  /** Stable id from the AI SDK data stream, so the pending → paid transition
+   *  can find the exact event even when multiple calls are in flight. */
+  callId: string;
   name: string;
   cost?: number;
   publisher?: string;
@@ -53,10 +56,11 @@ function saveHistory(messages: UiMessage[]) {
 }
 
 const SUGGESTIONS = [
-  "What are the top 3 wallets trading BONK in the last 24h?",
-  "Any new Solana token launches in the last hour with volume > $25k?",
-  "Give me the rug risk score for So1111...1112 and what's trending on X about arc.",
-  "Search the web: latest news on Circle Arc mainnet.",
+  "What's the 24h trading volume for BONK on Solana?",
+  "Show me the newest Solana token launches right now.",
+  "Rug-check the USDC mint EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.",
+  "What's trending in crypto today?",
+  "Search for what Circle Arc is.",
 ] as const;
 
 function newId(): string {
@@ -91,9 +95,10 @@ async function* readSseLines(body: ReadableStream<Uint8Array>) {
  */
 type Parsed =
   | { kind: "text"; delta: string }
-  | { kind: "toolCall"; name: string }
+  | { kind: "toolCall"; callId: string; name: string }
   | {
       kind: "toolResult";
+      callId: string;
       name: string;
       ok: boolean;
       cost?: number;
@@ -115,10 +120,12 @@ function parseLine(line: string): Parsed {
     if (tag === "0") return { kind: "text", delta: typeof data === "string" ? data : String(data) };
     if (tag === "9") {
       const name = typeof data?.toolName === "string" ? data.toolName : "unknown";
-      return { kind: "toolCall", name };
+      const callId = typeof data?.toolCallId === "string" ? data.toolCallId : name;
+      return { kind: "toolCall", callId, name };
     }
     if (tag === "a") {
       const name = typeof data?.toolName === "string" ? data.toolName : "unknown";
+      const callId = typeof data?.toolCallId === "string" ? data.toolCallId : name;
       const result = data?.result;
       const ok = !(result && typeof result === "object" && "error" in result);
       const cost =
@@ -133,7 +140,7 @@ function parseLine(line: string): Parsed {
         result && typeof result === "object" && "settlementMode" in result && typeof result.settlementMode === "string"
           ? (result.settlementMode as "gateway" | "local" | "demo")
           : undefined;
-      return { kind: "toolResult", name, ok, cost, txHash, settlementMode };
+      return { kind: "toolResult", callId, name, ok, cost, txHash, settlementMode };
     }
     if (tag === "d") return { kind: "done" };
     if (tag === "3") return { kind: "error", msg: typeof data === "string" ? data : "stream_error" };
@@ -231,34 +238,57 @@ export default function AskClient() {
           );
         } else if (evt.kind === "toolCall") {
           setMessages((prev) =>
-            prev.map((m) =>
-              m.id === assistantId
-                ? {
-                    ...m,
-                    toolEvents: [
-                      ...(m.toolEvents ?? []),
-                      { name: evt.name, status: "pending" },
-                    ],
-                  }
-                : m
-            )
+            prev.map((m) => {
+              if (m.id !== assistantId) return m;
+              const events = m.toolEvents ?? [];
+              // De-dupe: if the same callId was already pushed (e.g. the AI SDK
+              // emits both a start and a subsequent delta), don't add twice.
+              if (events.some((e) => e.callId === evt.callId)) return m;
+              return {
+                ...m,
+                toolEvents: [
+                  ...events,
+                  { callId: evt.callId, name: evt.name, status: "pending" },
+                ],
+              };
+            })
           );
         } else if (evt.kind === "toolResult") {
           setMessages((prev) =>
             prev.map((m) => {
               if (m.id !== assistantId) return m;
               const events = m.toolEvents ?? [];
-              const idx = [...events].reverse().findIndex((e) => e.name === evt.name && e.status === "pending");
-              if (idx < 0) return m;
-              const realIdx = events.length - 1 - idx;
+              // Prefer exact callId match. Fall back to the last pending event
+              // with the same name if the result stream drops the toolCallId,
+              // and finally to any pending event so a chip can never get
+              // orphaned in "calling" forever.
+              let idx = events.findIndex((e) => e.callId === evt.callId);
+              if (idx < 0) idx = events.findIndex((e) => e.status === "pending" && e.name === evt.name);
+              if (idx < 0) idx = events.findIndex((e) => e.status === "pending");
               const next = [...events];
-              next[realIdx] = {
-                name: evt.name,
-                status: evt.ok ? "paid" : "failed",
-                cost: evt.cost,
-                txHash: evt.txHash,
-                settlementMode: evt.settlementMode,
-              };
+              if (idx >= 0) {
+                // Keep the pending event's name when the result stream doesn't
+                // repeat it (Vercel AI SDK emits toolName only on `9:`, not `a:`).
+                const preservedName =
+                  evt.name && evt.name !== "unknown" ? evt.name : next[idx].name;
+                next[idx] = {
+                  ...next[idx],
+                  name: preservedName,
+                  status: evt.ok ? "paid" : "failed",
+                  cost: evt.cost,
+                  txHash: evt.txHash,
+                  settlementMode: evt.settlementMode,
+                };
+              } else {
+                next.push({
+                  callId: evt.callId,
+                  name: evt.name,
+                  status: evt.ok ? "paid" : "failed",
+                  cost: evt.cost,
+                  txHash: evt.txHash,
+                  settlementMode: evt.settlementMode,
+                });
+              }
               return { ...m, toolEvents: next };
             })
           );
@@ -282,6 +312,20 @@ export default function AskClient() {
     } finally {
       setBusy(false);
       abortRef.current = null;
+      // If the LLM wrote its answer and moved on but a result chunk got
+      // dropped for any reason, don't leave a pending pulse on screen forever.
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === assistantId
+            ? {
+                ...m,
+                toolEvents: (m.toolEvents ?? []).map((e) =>
+                  e.status === "pending" ? { ...e, status: "paid" as const } : e,
+                ),
+              }
+            : m,
+        ),
+      );
     }
   }
 
@@ -559,7 +603,6 @@ function ToolChip({ tool }: { tool: ToolEvent }) {
           </span>
         )
       )}
-      <style dangerouslySetInnerHTML={{ __html: `@keyframes keryx-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }` }} />
     </span>
   );
 }

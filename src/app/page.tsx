@@ -680,6 +680,7 @@ export default async function Landing() {
               <FooterLink href="/registry">Registry</FooterLink>
               <FooterLink href="/publish">Publish a tool</FooterLink>
               <FooterLink href="/live">Live ledger</FooterLink>
+              <FooterLink href="/try">Testing guide</FooterLink>
             </div>
 
             <div>

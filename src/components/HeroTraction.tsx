@@ -110,21 +110,6 @@ export default function HeroTraction() {
         {stats.callCount.toLocaleString()} paid call
         {stats.callCount === 1 ? "" : "s"}
       </span>
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-            @keyframes keryx-traction-pulse {
-              0%, 100% { opacity: 1; transform: scale(1); }
-              50% { opacity: 0.5; transform: scale(0.85); }
-            }
-            @keyframes keryx-traction-flash {
-              0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16,185,129,0.7); }
-              50% { transform: scale(1.4); box-shadow: 0 0 0 8px rgba(16,185,129,0); }
-              100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16,185,129,0); }
-            }
-          `,
-        }}
-      />
     </div>
   );
 }

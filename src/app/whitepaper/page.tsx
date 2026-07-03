@@ -7,47 +7,139 @@ export const metadata = {
     "How Kēryx prices, executes, and settles paid tool calls between developers and AI agents on Arc.",
 };
 
+const TOC_SECTIONS: Array<{ id: string; label: string }> = [
+  { id: "abstract", label: "Abstract" },
+  { id: "problem", label: "The problem" },
+  { id: "design", label: "Design principle" },
+  { id: "mechanics", label: "Protocol mechanics" },
+  { id: "settlement", label: "Settlement" },
+  { id: "trust", label: "Trust & verification" },
+  { id: "economics", label: "Economics" },
+  { id: "roadmap", label: "Roadmap" },
+  { id: "risks", label: "Known limitations" },
+];
+
 export default function WhitepaperPage() {
   return (
-    <div className="container-narrow" style={{ paddingTop: 40, paddingBottom: 96 }}>
-      <div style={{ marginBottom: 32 }}>
-        <ArtPanel
-          src="/inspo/whitepaper-hero.png"
-          alt="A classical loggia opening onto a reflecting pool"
-          aspectRatio="16 / 6"
-          position="50% 55%"
-          variant="raw"
-          overlayText="A LIVING SPECIFICATION FOR A REGISTRY BUILT FOR AGENTS, NOT ACCOUNTS."
-        />
-      </div>
-      <div className="text-eyebrow" style={{ marginBottom: 12 }}>
-        Whitepaper · v0.1, July 2026
-      </div>
-      <h1 className="text-headline" style={{ marginBottom: 16 }}>
-        Kēryx: a paid tool registry for AI agents
-      </h1>
-      <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.65, marginBottom: 40 }}>
-        This document describes the problem Kēryx solves, how the registry
-        prices and executes a call, and how the x402 protocol layer settles
-        USDC on Arc via Circle Gateway. It is a living specification, not
-        a funding pitch. Where a mechanism is not yet live, that is stated
-        plainly.
-      </p>
+    <div
+      style={{
+        maxWidth: 1180,
+        margin: "0 auto",
+        padding: "40px 20px 96px",
+      }}
+    >
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "220px minmax(0, 720px)",
+          gap: 56,
+          alignItems: "start",
+        }}
+        className="whitepaper-grid"
+      >
+        <aside
+          className="whitepaper-toc"
+          style={{
+            position: "sticky",
+            top: 88,
+            alignSelf: "start",
+            fontSize: 13,
+            color: "var(--text-secondary)",
+          }}
+        >
+          <div className="text-eyebrow" style={{ marginBottom: 14 }}>
+            Whitepaper · v0.1
+          </div>
+          <ol
+            style={{
+              listStyle: "none",
+              padding: 0,
+              margin: 0,
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+              borderLeft: "1px solid var(--border)",
+            }}
+          >
+            {TOC_SECTIONS.map((s) => (
+              <li key={s.id}>
+                <a
+                  href={`#${s.id}`}
+                  style={{
+                    display: "block",
+                    padding: "3px 0 3px 14px",
+                    color: "var(--text-secondary)",
+                    textDecoration: "none",
+                    borderLeft: "2px solid transparent",
+                    marginLeft: -1,
+                    fontSize: 13,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {s.label}
+                </a>
+              </li>
+            ))}
+          </ol>
 
-      <nav style={{ marginBottom: 48, padding: 16, border: "1px solid var(--border)", borderRadius: 10, background: "var(--surface-2)" }}>
-        <div className="text-eyebrow" style={{ marginBottom: 10 }}>Contents</div>
-        <ol style={{ fontSize: 13.5, lineHeight: 2, color: "var(--text-secondary)", paddingLeft: 20 }}>
-          <li><a href="#abstract">Abstract</a></li>
-          <li><a href="#problem">The problem: software built for humans, not callers</a></li>
-          <li><a href="#design">Design principle: pay per call, not per account</a></li>
-          <li><a href="#mechanics">Protocol mechanics</a></li>
-          <li><a href="#settlement">Settlement: x402 on Arc, batched through Circle Gateway</a></li>
-          <li><a href="#trust">Trust and verification</a></li>
-          <li><a href="#economics">Economics</a></li>
-          <li><a href="#roadmap">Roadmap</a></li>
-          <li><a href="#risks">Known limitations</a></li>
-        </ol>
-      </nav>
+          <div
+            style={{
+              marginTop: 24,
+              paddingTop: 20,
+              borderTop: "1px solid var(--border)",
+              fontSize: 11.5,
+              color: "var(--text-muted)",
+              lineHeight: 1.55,
+            }}
+          >
+            Onchain contract:{" "}
+            <a
+              href="https://testnet.arcscan.app/address/0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7"
+              target="_blank"
+              rel="noreferrer"
+              className="text-mono"
+              style={{ color: "var(--text-secondary)", textDecoration: "underline", textUnderlineOffset: 2 }}
+            >
+              0x7eA3…8bA7
+            </a>
+          </div>
+        </aside>
+
+        <div>
+          <div style={{ marginBottom: 32 }}>
+            <ArtPanel
+              src="/inspo/whitepaper-hero.png"
+              alt="A classical loggia opening onto a reflecting pool"
+              aspectRatio="16 / 6"
+              position="50% 55%"
+              variant="raw"
+              overlayText="A LIVING SPECIFICATION FOR A REGISTRY BUILT FOR AGENTS, NOT ACCOUNTS."
+            />
+          </div>
+          <div className="text-eyebrow" style={{ marginBottom: 12 }}>
+            Whitepaper · v0.1, July 2026
+          </div>
+          <h1 className="text-headline" style={{ marginBottom: 16 }}>
+            Kēryx: a paid tool registry for AI agents
+          </h1>
+          <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.65, marginBottom: 40 }}>
+            This document describes the problem Kēryx solves, how the registry
+            prices and executes a call, and how the x402 protocol layer settles
+            USDC on Arc via Circle Gateway. It is a living specification, not
+            a funding pitch. Where a mechanism is not yet live, that is stated
+            plainly.
+          </p>
+
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
+                @media (max-width: 900px) {
+                  .whitepaper-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+                  .whitepaper-toc { position: static !important; border: 1px solid var(--border); border-radius: 10px; padding: 16px; background: var(--surface-2); }
+                }
+              `,
+            }}
+          />
 
       <Section id="abstract" title="Abstract">
         <P>
@@ -308,16 +400,18 @@ export default function WhitepaperPage() {
         </P>
       </Section>
 
-      <div style={{ marginTop: 48, paddingTop: 24, borderTop: "1px solid var(--border)", display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center" }}>
-        <Link href="/docs" style={{ fontSize: 13.5, color: "var(--text-secondary)", textDecoration: "underline", textUnderlineOffset: 3 }}>
-          Read the integration docs
-        </Link>
-        <Link href="/live" style={{ fontSize: 13.5, color: "var(--text-secondary)", textDecoration: "underline", textUnderlineOffset: 3 }}>
-          Watch the live ledger
-        </Link>
-        <a href="https://github.com/cryptoduke01/keryx" style={{ fontSize: 13.5, color: "var(--text-secondary)", textDecoration: "underline", textUnderlineOffset: 3 }}>
-          View source
-        </a>
+          <div style={{ marginTop: 48, paddingTop: 24, borderTop: "1px solid var(--border)", display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center" }}>
+            <Link href="/docs" style={{ fontSize: 13.5, color: "var(--text-secondary)", textDecoration: "underline", textUnderlineOffset: 3 }}>
+              Read the integration docs
+            </Link>
+            <Link href="/live" style={{ fontSize: 13.5, color: "var(--text-secondary)", textDecoration: "underline", textUnderlineOffset: 3 }}>
+              Watch the live ledger
+            </Link>
+            <a href="https://github.com/cryptoduke01/keryx" style={{ fontSize: 13.5, color: "var(--text-secondary)", textDecoration: "underline", textUnderlineOffset: 3 }}>
+              View source
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );
