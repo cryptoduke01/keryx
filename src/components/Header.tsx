@@ -11,7 +11,6 @@ const NAV = [
   { href: "/registry", label: "Registry" },
   { href: "/publish", label: "Publish" },
   { href: "/live", label: "Live" },
-  { href: "/try", label: "Try it" },
   { href: "/docs", label: "Docs" },
 ] as const;
 
@@ -93,6 +92,36 @@ export default function Header() {
           className="hidden md:flex"
           style={{ alignItems: "center", gap: 10 }}
         >
+          <Link
+            href="/try"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "6px 12px",
+              borderRadius: 999,
+              border: "1px solid var(--border)",
+              background: isActive(path, "/try") ? "var(--surface-3)" : "var(--surface-2)",
+              color: "var(--text-primary)",
+              fontSize: 12.5,
+              fontWeight: 600,
+              letterSpacing: "0.01em",
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: 999,
+                background: "#10b981",
+                display: "inline-block",
+                animation: "keryx-pulse 2000ms ease-in-out infinite",
+              }}
+            />
+            Try it live
+          </Link>
           <a
             href="https://github.com/cryptoduke01/keryx"
             target="_blank"
@@ -160,6 +189,36 @@ export default function Header() {
             gap: 2,
           }}
         >
+          <Link
+            href="/try"
+            onClick={() => setOpen(false)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "12px 14px",
+              margin: "6px 0 10px",
+              borderRadius: 999,
+              border: "1px solid var(--border)",
+              background: "var(--surface-2)",
+              color: "var(--text-primary)",
+              fontSize: 14,
+              fontWeight: 600,
+              justifyContent: "center",
+            }}
+          >
+            <span
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: 999,
+                background: "#10b981",
+                display: "inline-block",
+                animation: "keryx-pulse 2000ms ease-in-out infinite",
+              }}
+            />
+            Try it live
+          </Link>
           {NAV.map(({ href, label }) => {
             const active = isActive(path, href);
             return (

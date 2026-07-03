@@ -33,20 +33,19 @@ export default function WhitepaperPage() {
           display: "grid",
           gridTemplateColumns: "220px minmax(0, 720px)",
           gap: 56,
-          alignItems: "start",
         }}
         className="whitepaper-grid"
       >
-        <aside
-          className="whitepaper-toc"
-          style={{
-            position: "sticky",
-            top: 88,
-            alignSelf: "start",
-            fontSize: 13,
-            color: "var(--text-secondary)",
-          }}
-        >
+        <aside className="whitepaper-toc">
+          <div
+            className="whitepaper-toc-inner"
+            style={{
+              position: "sticky",
+              top: 88,
+              fontSize: 13,
+              color: "var(--text-secondary)",
+            }}
+          >
           <div className="text-eyebrow" style={{ marginBottom: 14 }}>
             Whitepaper · v0.1
           </div>
@@ -103,6 +102,7 @@ export default function WhitepaperPage() {
               0x7eA3…8bA7
             </a>
           </div>
+          </div>
         </aside>
 
         <div>
@@ -135,7 +135,7 @@ export default function WhitepaperPage() {
               __html: `
                 @media (max-width: 900px) {
                   .whitepaper-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
-                  .whitepaper-toc { position: static !important; border: 1px solid var(--border); border-radius: 10px; padding: 16px; background: var(--surface-2); }
+                  .whitepaper-toc-inner { position: static !important; border: 1px solid var(--border); border-radius: 10px; padding: 16px; background: var(--surface-2); }
                 }
               `,
             }}
