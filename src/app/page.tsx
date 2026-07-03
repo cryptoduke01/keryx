@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { listTools } from "@/lib/registry/store";
 import Reveal from "@/components/motion/Reveal";
-import HeroTraction from "@/components/HeroTraction";
 
 export const dynamic = "force-dynamic";
 
@@ -165,11 +164,6 @@ export default async function Landing() {
               </div>
             </Reveal>
             <Reveal immediate delay={0.32}>
-              <div style={{ marginTop: 20 }}>
-                <HeroTraction />
-              </div>
-            </Reveal>
-            <Reveal immediate delay={0.4}>
               <Link
                 href="/docs#mcp"
                 style={{

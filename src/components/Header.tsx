@@ -90,16 +90,17 @@ export default function Header() {
 
         <div
           className="hidden md:flex"
-          style={{ alignItems: "center", gap: 10 }}
+          style={{ alignItems: "center", gap: 8 }}
         >
           <Link
             href="/try"
             style={{
               display: "inline-flex",
               alignItems: "center",
-              gap: 6,
-              padding: "6px 12px",
-              borderRadius: 999,
+              gap: 7,
+              height: 32,
+              padding: "0 12px",
+              borderRadius: 8,
               border: "1px solid var(--border)",
               background: isActive(path, "/try") ? "var(--surface-3)" : "var(--surface-2)",
               color: "var(--text-primary)",
@@ -122,27 +123,6 @@ export default function Header() {
             />
             Try it live
           </Link>
-          <a
-            href="https://github.com/cryptoduke01/keryx"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="GitHub repository"
-            style={{
-              width: 32,
-              height: 32,
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 8,
-              border: "1px solid var(--border)",
-              background: "var(--surface-2)",
-              color: "var(--text-secondary)",
-            }}
-          >
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden>
-              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.22.48-2.69-1.07-2.69-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.81.06 1.23.83 1.23.83.72 1.23 1.88.88 2.34.67.07-.52.28-.88.51-1.08-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0016 8c0-4.42-3.58-8-8-8z" />
-            </svg>
-          </a>
           <ThemeToggle />
         </div>
 
@@ -198,7 +178,7 @@ export default function Header() {
               gap: 8,
               padding: "12px 14px",
               margin: "6px 0 10px",
-              borderRadius: 999,
+              borderRadius: 8,
               border: "1px solid var(--border)",
               background: "var(--surface-2)",
               color: "var(--text-primary)",
@@ -238,26 +218,6 @@ export default function Header() {
               </Link>
             );
           })}
-          <a
-            href="https://github.com/cryptoduke01/keryx"
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => setOpen(false)}
-            style={{
-              marginTop: 14,
-              padding: "12px 4px",
-              fontSize: 13,
-              color: "var(--text-muted)",
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden>
-              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.22.48-2.69-1.07-2.69-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.81.06 1.23.83 1.23.83.72 1.23 1.88.88 2.34.67.07-.52.28-.88.51-1.08-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0016 8c0-4.42-3.58-8-8-8z" />
-            </svg>
-            View on GitHub
-          </a>
         </div>
       )}
     </header>
