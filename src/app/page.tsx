@@ -140,7 +140,7 @@ export default async function Landing() {
                 Every API on the internet was built for a person. Kēryx is
                 built for the moment the caller stops being human. Developers
                 publish paid tools. AI agents discover, pay, and use them.
-                One call, one payment, in USDC on Arc.
+                Nanopayments in USDC on Arc, one call at a time.
               </p>
             </Reveal>
             <Reveal immediate delay={0.22}>
@@ -627,7 +627,7 @@ export default async function Landing() {
                 Kēryx
               </div>
               <p style={{ fontSize: 13.5, color: "var(--text-secondary)", lineHeight: 1.55, maxWidth: 260, marginBottom: 20 }}>
-                The toll booth for the agent economy. Any developer publishes a paid tool. Any AI agent pays to use it. USDC on Arc.
+                The toll booth for the agent economy. Any developer publishes a paid tool. Any AI agent pays to use it. USDC nanopayments on Arc.
               </p>
               <div style={{ display: "flex", gap: 10 }}>
                 <a
