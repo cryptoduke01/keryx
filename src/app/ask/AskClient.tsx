@@ -993,6 +993,7 @@ function ToolCard({ tool }: { tool: ToolEvent }) {
         </span>
         <span style={{ color: "var(--text-muted)" }}>·</span>
         <span style={{ color: "var(--text-secondary)" }}>{statusText}</span>
+        {tool.publisher && <span style={{ color: "var(--text-muted)", marginLeft: 6 }}>→ {tool.publisher}</span>}
         {cleanHash && (
           <>
             <span style={{ color: "var(--text-muted)" }}>·</span>
