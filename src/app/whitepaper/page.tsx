@@ -321,13 +321,13 @@ export default function WhitepaperPage() {
         </P>
         <P>
           Kēryx distinguishes tools by a{" "}
-          <code style={codeInline}>verified</code> flag: tools seeded by
-          the Kēryx team are marked verified; community-submitted tools
-          are not, until the team promotes them. Handler execution is
-          currently Kēryx-controlled rather than delegated to arbitrary
-          externally-hosted handlers &mdash; a submitted listing cannot
-          yet point at a publisher's own server and have Kēryx call it
-          directly. That's the next unlock on top of wallet verification.
+          <code style={codeInline}>verified</code> flag. Seeded tools
+          (Kēryx runs the handler against live public APIs) are verified
+          and immediately executable. Community tools are listed right away;
+          they become executable when the publisher provides a simple
+          POST handler URL (Kēryx forwards after payment). The seeded catalog
+          focuses on everyday micro-tasks (weather, finance, geo, dns, web data,
+          crypto, utilities).
         </P>
         <P>
           A companion contract,{" "}
@@ -347,9 +347,8 @@ export default function WhitepaperPage() {
           >
             <code style={codeInline}>0x7eA3…8bA7</code>
           </a>
-          , owned by the Kēryx treasury, and all five seeded tools are
-          already listed onchain &mdash; visible as <b>On Arc</b> badges
-          on the <code style={codeInline}>/registry</code> page.
+          , owned by the Kēryx treasury, and seeded tools are mirrored onchain
+          (visible as <b>On Arc</b> badges on the <code style={codeInline}>/registry</code> page).
         </P>
       </Section>
 
@@ -373,7 +372,7 @@ export default function WhitepaperPage() {
 
       <Section id="roadmap" title="Roadmap">
         <Ul items={[
-          <>Externally-hosted publisher handlers &mdash; a listing points at the publisher's own URL and Kēryx forwards the paid call.</>,
+          <>Rich seeded catalog (20+ everyday tools) + clear handler contract for community publishers</>,
           <>Provisioning a Circle Gateway account and flipping the default facilitator from demo to gateway in production.</>,
           <>OpenAPI spec and first-party SDKs for Node and Python.</>,
         ]} />
@@ -392,11 +391,11 @@ export default function WhitepaperPage() {
           Gateway credentials landing. Persistence falls back to
           in-memory storage when Redis is not configured, meaning
           registry and ledger state can reset on a cold start in that
-          mode. Publisher-submitted tool handlers are still
-          Kēryx-controlled &mdash; a listing cannot yet point at the
-          publisher's own server. Wallet verification is enforced; the
-          externally-hosted execution path is next on the roadmap
-          above rather than hidden.
+          mode.           Seeded tools are Kēryx-controlled (we call public APIs). Community
+          tools can point at a publisher handler URL today; Kēryx forwards
+          after payment. The seeded set is intentionally practical and growing
+          (weather, finance, geo, dns, utilities, web data). Not every
+          interesting source has a free machine-friendly endpoint yet.
         </P>
       </Section>
 

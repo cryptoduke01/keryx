@@ -21,7 +21,20 @@ import { buildMessage, consumeNonce, type PublisherAction } from "@/lib/publishe
 
 export const runtime = "nodejs";
 
-const CATEGORY = z.enum(["solana", "search", "scrape", "memory", "compute", "social"]);
+const CATEGORY = z.enum([
+  "solana",
+  "search",
+  "scrape",
+  "memory",
+  "compute",
+  "social",
+  "weather",
+  "finance",
+  "geo",
+  "dns",
+  "utility",
+  "web",
+]);
 
 const PublishSchema = z.object({
   id: z

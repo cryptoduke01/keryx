@@ -85,8 +85,8 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
         >
           <span>When</span>
           <span>Tool</span>
-          <span>Publisher</span>
-          <span style={{ textAlign: "right" }}>Paid</span>
+            <span>Publisher (gets 95%)</span>
+            <span style={{ textAlign: "right" }}>Total paid (Kēryx 5%)</span>
           <span>Settlement</span>
           <span style={{ textAlign: "right" }}>Status</span>
         </div>
@@ -141,6 +141,9 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
             </span>
             <span className="cell-publisher" style={{ fontSize: 12, color: "var(--text-primary)" }}>
               {e.publisherName}
+              {e.netToPublisherUsd != null && (
+                <div style={{ fontSize: 10, color: "#10b981" }}>+${e.netToPublisherUsd.toFixed(4)}</div>
+              )}
             </span>
             <span
               className="cell-price"
@@ -153,6 +156,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
               }}
             >
               ${e.priceUsd.toFixed(4)}
+              <div style={{ fontSize: 9, color: "var(--text-muted)" }}>Kēryx 5%</div>
             </span>
             <span className="cell-settlement">
               <SettlementCell mode={e.settlementMode} txHash={e.txHash} />

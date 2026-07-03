@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { listTools } from "@/lib/registry/store";
 import type { ToolCategory } from "@/lib/registry/seed";
+import { isSeededExecutableTool } from "@/lib/registry/handlers";
 import {
   arcscanAddressUrl,
   getOnchainTool,
@@ -17,6 +18,12 @@ const CATEGORY_LABEL: Record<ToolCategory, string> = {
   memory: "Memory",
   compute: "Compute",
   social: "Social",
+  weather: "Weather",
+  finance: "Finance",
+  geo: "Geo & IP",
+  dns: "DNS & Domains",
+  utility: "Utilities",
+  web: "Web & Content",
 };
 
 export default async function RegistryPage() {
@@ -103,7 +110,10 @@ export default async function RegistryPage() {
               gap: 14,
             }}
           >
-            {byCategory[cat]?.map((tool) => (
+            {byCategory[cat]?.map((tool) => {
+              const isExecutable = isSeededExecutableTool(tool.id) || !!tool.handlerUrl;
+              const isKeryxTreasury = tool.publisherWallet === "0x8F47aE9eC148903C8535b9289ad8efA400e026B6";
+              return (
               <div key={tool.id} className="card" style={{ padding: 20 }}>
                 <div
                   style={{
@@ -165,9 +175,9 @@ export default async function RegistryPage() {
                   }}
                 >
                   <div>
-                    <div className="text-eyebrow" style={{ marginBottom: 2 }}>Price</div>
+                    <div className="text-eyebrow" style={{ marginBottom: 2 }}>Price per call</div>
                     <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}>
-                      ${tool.priceUsd.toFixed(3)}
+                      ${tool.priceUsd.toFixed(3)} <span style={{ fontSize: 10, fontWeight: 400, color: "var(--text-muted)" }}>(95% to publisher)</span>
                     </div>
                   </div>
                   <div>
@@ -181,10 +191,22 @@ export default async function RegistryPage() {
                     <div style={{ color: "var(--text-primary)" }}>
                       {tool.publisherName}
                     </div>
+                    {!isKeryxTreasury && (
+                      <div style={{ fontSize: 9, color: "#10b981", fontFamily: "var(--font-mono)" }}>
+                        external • gets paid
+                      </div>
+                    )}
                   </div>
                 </div>
+                <div style={{ marginTop: 8 }}>
+                  {isExecutable ? (
+                    <span style={{ fontSize: 10, padding: "1px 6px", borderRadius: 3, background: "var(--surface-3)", color: "var(--text-secondary)" }}>Kēryx executes • real settlement</span>
+                  ) : (
+                    <span style={{ fontSize: 10, padding: "1px 6px", borderRadius: 3, background: "var(--surface-3)", color: "var(--text-muted)" }}>Discovery only • add handlerUrl to execute</span>
+                  )}
+                </div>
               </div>
-            ))}
+            )})}
           </div>
         </section>
       ))}

@@ -86,18 +86,22 @@ export default function DocsPage() {
           or POST directly. Your Arc wallet gets credited on every call,
           minus a 5% platform fee.
         </p>
+        <p style={pStyle}>
+          <b>Seeded tools</b> (Kēryx runs the handler) are executable out of the box by /ask, MCP, and /api/call.
+          Community tools are listed immediately. To make a published tool executable by Kēryx today, provide a simple HTTPS POST endpoint that returns JSON (see publish form for exact contract).
+        </p>
         <CodeBlock
           lang="bash"
           code={`curl -X POST https://keryxhq.xyz/api/publishers/tools \\
   -H "content-type: application/json" \\
   -d '{
-    "id": "search.web",
-    "name": "Grounded Web Search",
-    "summary": "Web search that returns clean snippets + source URLs.",
-    "category": "search",
-    "priceUsd": 0.004,
+    "id": "my.tool",
+    "name": "My Tool",
+    "summary": "Does one useful thing for agents.",
+    "category": "utility",
+    "priceUsd": 0.003,
     "publisherWallet": "0xYourArcWallet…",
-    "publisherName": "Your handle"
+    "publisherName": "You"
   }'`}
         />
       </Section>
@@ -154,13 +158,13 @@ export const POST = withKeryxPrice({
 
       <div style={{ marginTop: 32, padding: 16, borderTop: "1px solid var(--border)" }}>
         <div className="text-eyebrow" style={{ marginBottom: 8 }}>
-          Coming this week
+          Live today
         </div>
         <ul style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.8, paddingLeft: 20 }}>
-          <li><code style={codeInline}>KeryxRegistry.sol</code> deployed to Arc testnet — every tool listing has an onchain publisher, price, and metadata URI</li>
-          <li>Externally-hosted publisher handlers (publish with a handler URL; Kēryx forwards after payment)</li>
-          <li>Circle Gateway credentials landing → real batched onchain USDC settlement</li>
-          <li>OpenAPI spec + SDKs (Node, Python)</li>
+          <li>~17 seeded executable tools (weather, finance, geo, dns, web, crypto, utility) — all real public data, Kēryx runs the handlers</li>
+          <li>Anyone can publish tools (discovery + payment). Handler URL makes them executable by Kēryx agents.</li>
+          <li>Full x402 402 + X-PAYMENT flow, public ledger, MCP server for Claude/Cursor</li>
+          <li>Onchain registry contract + publisher EIP-191 ownership</li>
         </ul>
       </div>
 

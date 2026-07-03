@@ -103,17 +103,29 @@ Full schemas and agent SDK snippets live in the [docs](https://keryxhq.xyz/docs)
 
 ---
 
-## Seeded Tools (all real data)
+## Seeded Tools (all real data, executable by Kēryx)
 
 | id | Source | Price |
 |----|--------|-------|
-| `solana.token-activity` | DexScreener — volume, pairs, liquidity, buy/sell counts | $0.005 |
-| `solana.launches` | DexScreener — newly boosted tokens | $0.003 |
-| `solana.rug-check` | rugcheck.xyz — risk score + flags | $0.002 |
-| `search.web` | Wikipedia — grounded summaries + URLs | $0.004 |
-| `crypto.trending` | CoinGecko — trending coins + market data | $0.001 |
+| `solana.token-activity` | DexScreener | $0.005 |
+| `solana.launches` | DexScreener | $0.003 |
+| `solana.rug-check` | rugcheck.xyz | $0.002 |
+| `search.web` | Wikipedia | $0.004 |
+| `crypto.trending` | CoinGecko | $0.001 |
+| `weather.current` / `weather.forecast` | Open-Meteo | $0.002–0.003 |
+| `finance.exchange-rates` / `finance.convert` | Public currency APIs | $0.002 |
+| `geo.ip-lookup` | ipapi.co | $0.002 |
+| `dns.domain-whois` | Public RDAP/WHOIS | $0.003 |
+| `web.hacker-news` | HN Firebase | $0.001 |
+| `web.github-repo` | GitHub (public) | $0.002 |
+| `crypto.price` | CoinGecko simple price | $0.002 |
+| `utility.qr` | QR code generator | $0.001 |
+| `geo.country` | RestCountries | $0.001 |
+
+~17 seeded executable tools today. More added regularly (everyday micro-tasks for agents and people). Community tools can be published by anyone; only those with a handler are auto-executable by Kēryx surfaces.
 
 Additional community tools (with `verified: false`) can be published by anyone.
+Kēryx's goal is a large, always-on catalog (50–100+) of micro-tasks an average web2 or web3 user/agent reaches for daily: weather, rates, geo, domain info, HN, repo facts, prices, QR, country data, and many more. Seeded tools are implemented and maintained by the Kēryx team against real public endpoints.
 
 ---
 

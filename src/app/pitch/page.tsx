@@ -154,7 +154,7 @@ export default function PitchPage() {
         </SlideHead>
         <div className="pitch-metrics">
           <Metric big="1" small="Solidity contract on Arc testnet" />
-          <Metric big="5" small="Tools published onchain" />
+          <Metric big="17+" small="Seeded executable tools (real data)" />
           <Metric big="4" small="Live surfaces (site, /api/call, /api/mcp, /ask)" />
           <Metric big="∞" small="Public tx hashes on Arcscan, anyone can verify" />
         </div>
@@ -242,7 +242,7 @@ export default function PitchPage() {
             when="Now"
             items={[
               "KeryxRegistry.sol on Arc testnet",
-              "5 seeded tools onchain",
+              "17+ seeded executable tools (weather, finance, geo, dns, utilities...)",
               "Real x402 endpoint",
               "MCP server for Claude Code + Cursor",
               "Publisher wallet verification (EIP-191)",
@@ -252,7 +252,7 @@ export default function PitchPage() {
           <RoadmapCol
             when="Next 30 days"
             items={[
-              "Externally-hosted publisher handlers",
+              "Growing seeded catalog + explicit handler contract for publishers",
               "Circle Gateway credentials → onchain batched settlement",
               "First 20 verified publishers",
               "OpenAPI spec + Node + Python SDKs",

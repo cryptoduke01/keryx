@@ -95,7 +95,6 @@ export default function PublishClient() {
     slug.trim().length > 2 &&
     summary.trim().length > 8 &&
     Number(priceUsd) > 0 &&
-    handlerUrl.trim().length > 8 &&
     status.kind !== "step";
 
   async function submit(e: React.FormEvent) {
@@ -474,8 +473,8 @@ export default function PublishClient() {
             Published as <code style={{ fontFamily: "var(--font-mono)" }}>{status.toolId}</code>
           </div>
           <div style={{ fontSize: 12.5, color: "var(--text-secondary)", lineHeight: 1.55 }}>
-            Tool is live in the registry. With a handler URL, Kēryx will forward paid calls to it.
-            Agents (Claude Code via MCP, /ask, or direct <code>/api/call</code>) can now use it.
+            Tool is live in the registry. Seeded tools (Kēryx-run) are executable immediately.
+            If you provided a Handler URL, Kēryx will forward paid calls to it.
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <a

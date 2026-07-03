@@ -15,7 +15,13 @@ export type ToolCategory =
   | "scrape"
   | "memory"
   | "compute"
-  | "social";
+  | "social"
+  | "weather"
+  | "finance"
+  | "geo"
+  | "dns"
+  | "utility"
+  | "web";
 
 export interface ToolDefinition {
   /** URL-safe id: e.g. "solana.token-activity", "search.web". Also the API slug. */
@@ -155,6 +161,214 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     sampleArgs: { limit: 7 },
     verified: true,
     latencyMs: 500,
+  },
+
+  // --- Weather (Open-Meteo, free no-key) ---
+  {
+    id: "weather.current",
+    name: "Current Weather",
+    summary: "Live current weather for any lat/lon: temperature, wind, humidity, conditions.",
+    category: "weather",
+    priceUsd: 0.002,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Kēryx",
+    args: {
+      latitude: { type: "number", required: true, description: "Latitude, e.g. 40.71" },
+      longitude: { type: "number", required: true, description: "Longitude, e.g. -74.00" },
+      units: { type: "string", description: "celsius or fahrenheit (default celsius)" },
+    },
+    sampleArgs: { latitude: 40.71, longitude: -74.0, units: "fahrenheit" },
+    verified: true,
+    latencyMs: 420,
+  },
+  {
+    id: "weather.forecast",
+    name: "Weather Forecast",
+    summary: "Hourly + daily forecast for a location (up to 7 days). Temperature, precipitation, wind.",
+    category: "weather",
+    priceUsd: 0.003,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Kēryx",
+    args: {
+      latitude: { type: "number", required: true, description: "Latitude" },
+      longitude: { type: "number", required: true, description: "Longitude" },
+      days: { type: "number", description: "Forecast days, 1-7 (default 3)" },
+    },
+    sampleArgs: { latitude: 52.52, longitude: 13.41, days: 3 },
+    verified: true,
+    latencyMs: 480,
+  },
+
+  // --- Finance / Currency (public currency APIs, no key) ---
+  {
+    id: "finance.exchange-rates",
+    name: "Exchange Rates",
+    summary: "Live fiat + crypto exchange rates for any base currency (200+ currencies).",
+    category: "finance",
+    priceUsd: 0.002,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Kēryx",
+    args: {
+      base: { type: "string", required: true, description: "Base currency code, e.g. usd, eur, btc" },
+    },
+    sampleArgs: { base: "usd" },
+    verified: true,
+    latencyMs: 380,
+  },
+  {
+    id: "finance.convert",
+    name: "Currency Converter",
+    summary: "Convert an amount from one currency to another using live rates.",
+    category: "finance",
+    priceUsd: 0.002,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Kēryx",
+    args: {
+      amount: { type: "number", required: true, description: "Amount to convert" },
+      from: { type: "string", required: true, description: "From currency code (usd, eur...)" },
+      to: { type: "string", required: true, description: "To currency code" },
+    },
+    sampleArgs: { amount: 100, from: "usd", to: "eur" },
+    verified: true,
+    latencyMs: 400,
+  },
+
+  // --- Geo / IP (free public geolocation) ---
+  {
+    id: "geo.ip-lookup",
+    name: "IP Geolocation",
+    summary: "Location, ISP, ASN, timezone and security flags for an IP address (or your own).",
+    category: "geo",
+    priceUsd: 0.002,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Kēryx",
+    args: {
+      ip: { type: "string", description: "IPv4 or IPv6. Omit to lookup the caller's IP (best effort)." },
+    },
+    sampleArgs: { ip: "8.8.8.8" },
+    verified: true,
+    latencyMs: 350,
+  },
+
+  // --- DNS / Domain (free whois) ---
+  {
+    id: "dns.domain-whois",
+    name: "Domain WHOIS",
+    summary: "Registrar, creation/expiry dates, name servers and status for a domain name.",
+    category: "dns",
+    priceUsd: 0.003,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Kēryx",
+    args: {
+      domain: { type: "string", required: true, description: "Domain name, e.g. example.com" },
+    },
+    sampleArgs: { domain: "keryxhq.xyz" },
+    verified: true,
+    latencyMs: 620,
+  },
+
+  // --- Web / Everyday (HN, GitHub public) ---
+  {
+    id: "web.hacker-news",
+    name: "Hacker News Top",
+    summary: "Top stories from Hacker News: title, url, score, comments, time.",
+    category: "web",
+    priceUsd: 0.001,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Kēryx",
+    args: {
+      limit: { type: "number", description: "How many stories (default 10, max 30)" },
+    },
+    sampleArgs: { limit: 8 },
+    verified: true,
+    latencyMs: 380,
+  },
+  {
+    id: "web.github-repo",
+    name: "GitHub Repo Info",
+    summary: "Public repo metadata: stars, forks, description, language, license, last push.",
+    category: "web",
+    priceUsd: 0.002,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Kēryx",
+    args: {
+      owner: { type: "string", required: true, description: "GitHub org or user" },
+      repo: { type: "string", required: true, description: "Repository name" },
+    },
+    sampleArgs: { owner: "vercel", repo: "next.js" },
+    verified: true,
+    latencyMs: 450,
+  },
+
+  // --- Crypto prices (CoinGecko free) ---
+  {
+    id: "crypto.price",
+    name: "Crypto Prices",
+    summary: "Real-time price, market cap, 24h change for one or more coins (CoinGecko).",
+    category: "finance",
+    priceUsd: 0.002,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Kēryx",
+    args: {
+      ids: { type: "string", required: true, description: "Comma-separated coin ids or symbols, e.g. bitcoin,ethereum,solana" },
+      vs: { type: "string", description: "vs currency, default usd" },
+    },
+    sampleArgs: { ids: "bitcoin,ethereum,solana", vs: "usd" },
+    verified: true,
+    latencyMs: 520,
+  },
+
+  // --- Utility ---
+  {
+    id: "utility.qr",
+    name: "QR Code",
+    summary: "Generate a QR code image URL for any text (URL, text, wallet address, etc.).",
+    category: "utility",
+    priceUsd: 0.001,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Kēryx",
+    args: {
+      text: { type: "string", required: true, description: "The content to encode (url, address, text)" },
+      size: { type: "number", description: "Pixel size (default 200, 100-1000)" },
+    },
+    sampleArgs: { text: "https://keryxhq.xyz", size: 256 },
+    verified: true,
+    latencyMs: 280,
+  },
+
+  // Demo "external community publisher" examples (for hackathon proof that real publishers get paid)
+  // In a real publish these would come from /publish with the creator's wallet.
+  {
+    id: "demo.content-block",
+    name: "Demo: Paid Content Snippet",
+    summary: "Returns a short paid knowledge snippet (demo of creator-published tool). Pays a test external publisher.",
+    category: "web",
+    priceUsd: 0.004,
+    publisherWallet: "0x1111111111111111111111111111111111111111" as const,
+    publisherName: "DemoCreator (external)",
+    args: {
+      topic: { type: "string", required: true, description: "Topic for the snippet" },
+    },
+    sampleArgs: { topic: "what is x402" },
+    verified: false,
+    latencyMs: 200,
+  },
+
+  // --- Countries / Geo data ---
+  {
+    id: "geo.country",
+    name: "Country Info",
+    summary: "Basic country data: capital, population, currencies, languages, region for a country name or code.",
+    category: "geo",
+    priceUsd: 0.001,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Kēryx",
+    args: {
+      query: { type: "string", required: true, description: "Country name or ISO code (e.g. Brazil, BR, usa)" },
+    },
+    sampleArgs: { query: "japan" },
+    verified: true,
+    latencyMs: 410,
   },
 ];
 
