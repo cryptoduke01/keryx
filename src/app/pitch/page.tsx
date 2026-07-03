@@ -18,7 +18,7 @@ export default function PitchPage() {
       <section className="pitch-slide pitch-cover pitch-cover-hero">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/inspo/pitch-cover.jpg"
+          src="/inspo/pitch-cover.png"
           alt=""
           className="pitch-cover-bg"
         />
@@ -26,7 +26,7 @@ export default function PitchPage() {
         <div className="pitch-cover-content">
           <div className="pitch-cover-mark">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/keryx-mark.svg" alt="Kēryx monogram" width={92} height={92} />
+            <img src="/keryx-mark.png" alt="Kēryx monogram" width={92} height={92} />
           </div>
           <div className="pitch-cover-wordmark">Kēryx</div>
           <div className="pitch-cover-primary">
@@ -300,12 +300,12 @@ export default function PitchPage() {
       {/* -------------------- SLIDE 13 · Close ----------------- */}
       <section className="pitch-slide pitch-cover pitch-cover-hero">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/inspo/pitch-cover.jpg" alt="" className="pitch-cover-bg" />
+        <img src="/inspo/pitch-cover.png" alt="" className="pitch-cover-bg" />
         <div className="pitch-cover-scrim" />
         <div className="pitch-cover-content">
           <div className="pitch-cover-mark">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/keryx-mark.svg" alt="Kēryx monogram" width={72} height={72} />
+            <img src="/keryx-mark.png" alt="Kēryx monogram" width={72} height={72} />
           </div>
           <div className="pitch-cover-wordmark" style={{ fontSize: 96 }}>Kēryx</div>
           <div className="pitch-cover-primary" style={{ marginBottom: 40 }}>
