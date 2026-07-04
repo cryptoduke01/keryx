@@ -117,24 +117,27 @@ export default function DocsPage() {
           Add the MCP server once and the agent gets the full catalog (20+ seeded tools + any community-published tools) as native tools.
         </p>
 
-        <div style={{ margin: "16px 0 20px", padding: "12px 16px", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 10 }}>
-          <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 8, letterSpacing: "0.04em" }}>
-            AVAILABLE IN THE AGENTS YOU ALREADY USE
+        <div style={{ margin: "16px 0 20px", padding: "14px 18px", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 12 }}>
+          <div style={{ fontSize: 11, color: "var(--text-muted)", marginBottom: 10, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+            Available in the agents you already use
           </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <img src="https://cursor.com/favicon.png" alt="" width="18" height="18" />
-              <span style={{ fontSize: 13, fontWeight: 600 }}>Cursor</span>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 18, alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <img src="/logos/cursor.svg" alt="Cursor" width="22" height="22" style={{ objectFit: "contain" }} />
+              <span style={{ fontSize: 14, fontWeight: 600 }}>Cursor</span>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Claude_AI_logo.svg" alt="" width="18" height="18" />
-              <span style={{ fontSize: 13, fontWeight: 600 }}>Claude</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <img src="/logos/claude.svg" alt="Claude" width="22" height="22" style={{ objectFit: "contain" }} />
+              <span style={{ fontSize: 14, fontWeight: 600 }}>Claude</span>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <img src="https://github.githubassets.com/favicons/favicon.svg" alt="" width="18" height="18" />
-              <span style={{ fontSize: 13, fontWeight: 600 }}>GitHub Copilot</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <img src="/logos/copilot.svg" alt="GitHub Copilot" width="22" height="22" style={{ objectFit: "contain" }} />
+              <span style={{ fontSize: 14, fontWeight: 600 }}>GitHub Copilot</span>
             </div>
-            <div style={{ fontSize: 12, color: "var(--text-muted)" }}>+ any MCP client</div>
+            <div style={{ fontSize: 13, color: "var(--text-muted)" }}>+ any MCP client</div>
+          </div>
+          <div style={{ marginTop: 10, fontSize: 12, color: "var(--text-muted)" }}>
+            Logos from official sources: Cursor (cursor.com/brand), Anthropic press kit, GitHub Brand Toolkit.
           </div>
         </div>
 
@@ -158,7 +161,7 @@ export default function DocsPage() {
         <h3 style={{ fontSize: 15, marginTop: 24, marginBottom: 8 }}>Cursor</h3>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
           {/* Official Cursor logos available at https://cursor.com/brand */}
-          <img src="https://cursor.com/favicon.png" alt="Cursor" width="20" height="20" />
+          <img src="/logos/cursor.svg" alt="Cursor" width="20" height="20" style={{ objectFit: "contain" }} />
           <span style={{ fontWeight: 600 }}>Cursor</span>
         </div>
         <p style={pStyle}>
@@ -170,7 +173,7 @@ export default function DocsPage() {
         <h3 style={{ fontSize: 15, marginTop: 20, marginBottom: 8 }}>Claude (Claude.ai, Claude Code, Claude Desktop)</h3>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
           {/* Official Anthropic / Claude assets: anthropic.com/news → Media assets / press kit */}
-          <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Claude_AI_logo.svg" alt="Claude" width="20" height="20" />
+          <img src="/logos/claude.svg" alt="Claude" width="20" height="20" style={{ objectFit: "contain" }} />
           <span style={{ fontWeight: 600 }}>Claude by Anthropic</span>
         </div>
         <p style={pStyle}>
@@ -188,7 +191,7 @@ export default function DocsPage() {
         <h3 style={{ fontSize: 15, marginTop: 20, marginBottom: 8 }}>GitHub Copilot (VS Code / Copilot CLI)</h3>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
           {/* GitHub Copilot lockups: brand.github.com/brand-identity/copilot (note: as of 2025, prefers product lockups over standalone icon) */}
-          <img src="https://github.githubassets.com/favicons/favicon.svg" alt="GitHub Copilot" width="20" height="20" />
+          <img src="/logos/copilot.svg" alt="GitHub Copilot" width="20" height="20" style={{ objectFit: "contain" }} />
           <span style={{ fontWeight: 600 }}>GitHub Copilot</span>
         </div>
         <p style={pStyle}>
@@ -213,6 +216,17 @@ export default function DocsPage() {
           One config. 20 real seeded tools + community-published tools. 
           Direct calls (outside MCP) are paid per call in sub-cent USDC on Arc.
         </p>
+
+        <div style={{ marginTop: 24, paddingTop: 16, borderTop: "1px solid var(--border)" }}>
+          <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>OpenAI Codex</div>
+          <p style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+            Kēryx tools can be exposed to OpenAI Codex agents. See the official build guide:
+            {" "}
+            <a href="https://developers.openai.com/codex/plugins/build" target="_blank" rel="noreferrer" style={{ textDecoration: "underline" }}>
+              developers.openai.com/codex/plugins/build
+            </a>
+          </p>
+        </div>
       </Section>
 
       <Section title="For publishers · integrate x402 yourself (SDKs planned)">
