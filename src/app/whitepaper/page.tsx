@@ -371,6 +371,17 @@ export default function WhitepaperPage() {
       </Section>
 
       <Section id="roadmap" title="Roadmap">
+        <p style={{ fontSize: 14, color: "var(--text-secondary)", marginBottom: 12 }}>
+          Status as of July 2026 (hackathon delivery):
+        </p>
+        <Ul items={[
+          <>✓ Clear handler contract for community publishers (publish a <code>handlerUrl</code>; Kēryx forwards after payment). Seeded catalog at 17 practical tools and growing (weather, finance, geo, Solana onchain, search, utilities, etc.).</>,
+          <>○ Circle Gateway: code supports it fully (set <code>CIRCLE_GATEWAY_API_URL</code> to switch from demo/local). Deployed site still runs in demo mode with synthetic hashes. Real Gateway flip is the next production step once credentials are provisioned.</>,
+          <>○ OpenAPI spec + first-party SDKs (Node/Python) — not started.</>,
+        ]} />
+        <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 8 }}>
+          The three bullets below are the original aspirational list; the checkmarks above reflect what actually shipped.
+        </p>
         <Ul items={[
           <>Rich seeded catalog (20+ everyday tools) + clear handler contract for community publishers</>,
           <>Provisioning a Circle Gateway account and flipping the default facilitator from demo to gateway in production.</>,
