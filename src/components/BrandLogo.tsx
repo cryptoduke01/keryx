@@ -18,14 +18,19 @@ const LETTERS: Record<Brand, string> = {
 
 export function BrandLogo({ name, size = 20 }: { name: Brand; size?: number }) {
   const [src, setSrc] = useState(`/logos/${name}.png`);
-  const [attempt, setAttempt] = useState<0 | 1 | 2>(0); // 0=local, 1=external, 2=badge
+  const [attempt, setAttempt] = useState<0 | 1 | 2 | 3>(0); // 0=png, 1=svg, 2=external, 3=badge
 
   const handleError = () => {
     if (attempt === 0) {
+      // Try SVG next (Cursor ships as .svg)
       setAttempt(1);
-      setSrc(FALLBACK_URLS[name]);
+      setSrc(`/logos/${name}.svg`);
     } else if (attempt === 1) {
+      // Then public mirrors
       setAttempt(2);
+      setSrc(FALLBACK_URLS[name]);
+    } else if (attempt === 2) {
+      setAttempt(3);
     }
   };
 
