@@ -287,8 +287,8 @@ export default function PublishClient() {
   }
 
   return (
-    <>
-      <div style={{ marginBottom: 12 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div>
         <div className="text-eyebrow" style={{ marginBottom: 6 }}>
           Quick examples — click to prefill
         </div>
@@ -367,7 +367,7 @@ export default function PublishClient() {
       <form
         onSubmit={submit}
         className="card"
-        style={{ maxWidth: 640, display: "flex", flexDirection: "column", gap: 16 }}
+        style={{ display: "flex", flexDirection: "column", gap: 16 }}
       >
       <WalletHeader
         address={address}
@@ -629,7 +629,7 @@ export default function PublishClient() {
         </div>
       )}
     </form>
-    </>
+    </div>
   );
 }
 

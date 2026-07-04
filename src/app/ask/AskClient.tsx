@@ -342,7 +342,10 @@ export default function AskClient() {
     setBusy(true);
 
     // Build the request payload from the transcript we're about to send.
-    const priorTranscript = [...messages, userMsg];
+    // Cap history at the last 12 turns so Groq's context doesn't blow up
+    // after a few large tool results — the follow-up 400/500 that surfaces
+    // as "request_failed" in the UI comes from over-long transcripts.
+    const priorTranscript = [...messages, userMsg].slice(-12);
 
     const controller = new AbortController();
     abortRef.current = controller;
@@ -358,9 +361,17 @@ export default function AskClient() {
         signal: controller.signal,
       });
       if (!res.ok) {
-        const errText = await res.text();
+        const errText = await res.text().catch(() => "");
+        let friendly = "The model hit an error on that turn. Try rephrasing or start a new conversation.";
+        try {
+          const j = JSON.parse(errText);
+          if (j?.hint) friendly = j.hint;
+          else if (j?.error) friendly = `${j.error}. Try rephrasing or start a new conversation.`;
+        } catch {
+          /* not JSON */
+        }
         patchSession(sid, (prev) =>
-          prev.map((m) => (m.id === assistantId ? { ...m, content: `⚠ ${errText || "request_failed"}` } : m)),
+          prev.map((m) => (m.id === assistantId ? { ...m, content: `⚠ ${friendly}` } : m)),
         );
         setBusy(false);
         return;
