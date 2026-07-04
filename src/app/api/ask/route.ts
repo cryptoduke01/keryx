@@ -124,48 +124,17 @@ export async function POST(req: Request) {
         const tool = await getTool(t.id);
         if (!tool) return { error: "tool_disappeared", id: t.id };
         const quote = quoteCall(tool.priceUsd);
+        // Run the *actual* tool handler first so we can return data to the LLM immediately.
+        // Settlement + ledger write are intentionally fire-and-forget so that the /ask
+        // chat stays responsive even when using the real Circle Gateway (which can take
+        // several seconds per call). The live ledger and /live still fill with real txs.
+        let handlerResult: unknown;
         try {
-          const result = await executeTool(tool, rawArgs as Record<string, unknown>);
-          // Route the playground call through the same facilitator the real
-          // x402 route uses, so /live shows the same badge for ask-driven
-          // activity as for direct API callers. In `local` mode Kēryx signs
-          // a self-authorization from its facilitator wallet so the payment
-          // moves onchain — real tx hash on Arc lands on the ledger row.
-          // In `demo` mode we leave payload undefined and get a synthetic
-          // hash; in `gateway` mode Circle handles both.
-          const facilitator = getFacilitator();
-          const requirements = requirementsForTool(tool, "https://keryxhq.xyz");
-          const payload =
-            facilitator.mode === "local"
-              ? await signSelfAuthorization({
-                  payTo: tool.publisherWallet,
-                  atomicUsdc: BigInt(Math.round(tool.priceUsd * 1_000_000)),
-                })
-              : undefined;
-          const settle = await facilitator.settle(payload, requirements);
-          await recordEntry({
-            toolId: tool.id,
-            toolName: tool.name,
-            publisherName: tool.publisherName,
-            publisherWallet: tool.publisherWallet,
-            callerId,
-            priceUsd: quote.priceUsd,
-            platformFeeUsd: quote.platformFeeUsd,
-            netToPublisherUsd: quote.netToPublisherUsd,
-            status: "paid",
-            txHash: settle.txHash,
-            settlementMode: facilitator.mode,
-          });
-          return {
-            toolId: tool.id,
-            paid: quote,
-            settlementMode: facilitator.mode,
-            txHash: settle.txHash,
-            result,
-          };
+          handlerResult = await executeTool(tool, rawArgs as Record<string, unknown>);
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);
-          await recordEntry({
+          // Record the failure (non-blocking for the model).
+          void recordEntry({
             toolId: tool.id,
             toolName: tool.name,
             publisherName: tool.publisherName,
@@ -185,6 +154,61 @@ export async function POST(req: Request) {
               : msg,
           };
         }
+
+        // Return the fresh data to the model right away (no settlement latency).
+        const provisional = {
+          toolId: tool.id,
+          paid: quote,
+          settlementMode: getFacilitator().mode,
+          result: handlerResult,
+        };
+
+        // Fire settlement + ledger in the background. This is what makes /live tick.
+        // We do not await it, so the stream to the user stays fast.
+        void (async () => {
+          try {
+            const facilitator = getFacilitator();
+            const requirements = requirementsForTool(tool, "https://keryxhq.xyz");
+            const payload =
+              facilitator.mode === "local"
+                ? await signSelfAuthorization({
+                    payTo: tool.publisherWallet,
+                    atomicUsdc: BigInt(Math.round(tool.priceUsd * 1_000_000)),
+                  })
+                : undefined;
+            const settle = await facilitator.settle(payload, requirements);
+            await recordEntry({
+              toolId: tool.id,
+              toolName: tool.name,
+              publisherName: tool.publisherName,
+              publisherWallet: tool.publisherWallet,
+              callerId,
+              priceUsd: quote.priceUsd,
+              platformFeeUsd: quote.platformFeeUsd,
+              netToPublisherUsd: quote.netToPublisherUsd,
+              status: "paid",
+              txHash: settle.txHash,
+              settlementMode: facilitator.mode,
+            });
+          } catch {
+            // If settlement fails we still recorded the call attempt above in some paths;
+            // best-effort is acceptable for the playground.
+            await recordEntry({
+              toolId: tool.id,
+              toolName: tool.name,
+              publisherName: tool.publisherName,
+              publisherWallet: tool.publisherWallet,
+              callerId,
+              priceUsd: quote.priceUsd,
+              platformFeeUsd: quote.platformFeeUsd,
+              netToPublisherUsd: quote.netToPublisherUsd,
+              status: "failed",
+              settlementMode: getFacilitator().mode,
+            });
+          }
+        })();
+
+        return provisional;
       },
     });
   }
