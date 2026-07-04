@@ -137,10 +137,9 @@ export default async function Landing() {
                   textShadow: "0 2px 16px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.6)",
                 }}
               >
-                Every API on the internet was built for a person. Kēryx is
-                built for the moment the caller stops being human. Developers
-                publish paid tools. AI agents discover, pay, and use them.
-                Nanopayments in USDC on Arc, one call at a time.
+                Web scrapes break. Kēryx tools don&rsquo;t &mdash; because their
+                publishers get paid to keep them working. Fresh, structured,
+                attributable data at fractions of a cent per call, in USDC on Arc.
               </p>
             </Reveal>
             <Reveal immediate delay={0.22}>
@@ -681,7 +680,6 @@ export default async function Landing() {
               <FooterLink href="/whitepaper">Whitepaper</FooterLink>
               <FooterExternal href="https://x.com/keryxhq">@keryxhq</FooterExternal>
               <FooterExternal href="https://www.arc.network">Runs on Arc</FooterExternal>
-              <FooterExternal href="https://lepton.thecanteenapp.com">Lepton Agents Hackathon</FooterExternal>
             </div>
           </div>
 

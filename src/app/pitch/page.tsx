@@ -4,7 +4,7 @@ import PrintButton from "./PrintButton";
 
 export const metadata = {
   title: "Kēryx · Pitch deck",
-  description: "The toll booth for the agent economy. Deck for the Lepton Agents Hackathon.",
+  description: "The toll booth for the agent economy.",
 };
 
 export default function PitchPage() {

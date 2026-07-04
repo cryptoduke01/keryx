@@ -20,8 +20,6 @@ Kēryx is the **paid tool registry for AI agents**.
 
 Developers publish tools. Agents discover them, pay per call in sub-cent USDC on [Arc](https://www.arc.network/), and get results instantly. No accounts, no API keys, no subscriptions, no human gatekeepers.
 
-Built for the **Lepton Agents Hackathon** (Canteen × Circle × Arc).
-
 ---
 
 ## Why Kēryx
@@ -184,7 +182,7 @@ See `.env.example` for Redis, WalletConnect, and real Circle Gateway settlement.
 
 ## Status & Roadmap notes
 
-This started as a hackathon build, but the payment rail is real.
+v0.1. The payment rail is real.
 
 - `POST /api/call` correctly returns HTTP 402 + machine-readable payment requirements.
 - Publisher ownership is enforced with EIP-191 signatures.

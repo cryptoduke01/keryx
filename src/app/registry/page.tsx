@@ -27,7 +27,10 @@ const CATEGORY_LABEL: Record<ToolCategory, string> = {
 };
 
 export default async function RegistryPage() {
-  const tools = await listTools();
+  const allTools = await listTools();
+  // Hide demo/example tools from the public registry UI. They remain callable
+  // via the API for demonstrations, but shouldn't clutter the browsable list.
+  const tools = allTools.filter((t) => !t.id.startsWith("demo."));
   const byCategory: Partial<Record<ToolCategory, typeof tools>> = {};
   for (const t of tools) {
     (byCategory[t.category] ??= []).push(t);

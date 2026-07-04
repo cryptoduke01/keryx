@@ -33,9 +33,9 @@ const KEY_LEDGER = "keryx:ledger";
 const KEY_TOTAL_CALLS = "keryx:ledger:total";
 /**
  * Ring buffer size for the visible live list.
- * Raised from 200 so that traction scripts (50 calls/run) and real usage
- * can accumulate a convincing volume before eviction. Stats "Calls" below
- * prefers the persistent total when available.
+ * Raised from 200 so real usage can accumulate a convincing volume
+ * before eviction. Stats "Calls" below prefers the persistent total
+ * when available.
  */
 const MAX_ENTRIES = 2000;
 
@@ -79,8 +79,8 @@ export async function ledgerStats(): Promise<{
   const totalPaidUsd = entries.reduce((sum, e) => sum + e.priceUsd, 0);
 
   // Prefer a persistent counter (incr'd on every recordEntry) so the
-  // displayed call volume keeps climbing when we run traction scripts,
-  // instead of being capped by the ring buffer size.
+  // displayed call volume keeps climbing instead of being capped by
+  // the ring buffer size.
   let callCount = entries.length;
   if (redis) {
     try {

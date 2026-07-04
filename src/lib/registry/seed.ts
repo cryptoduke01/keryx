@@ -336,12 +336,12 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     latencyMs: 280,
   },
 
-  // Real external-creator demo. The publisher wallet is a genuine second
+  // Real external-creator example. The publisher wallet is a genuine second
   // wallet Kēryx controls (funded from treasury with a small USDC float),
   // NOT the treasury itself and NOT a burner. When an agent pays for this
   // tool, real USDC lands in that external wallet onchain — provably not
-  // going to Kēryx, verifiable on Arcscan. This is the "creator gets paid"
-  // proof the hackathon rubric explicitly asks for.
+  // going to Kēryx, verifiable on Arcscan. This demonstrates the
+  // publisher-payout flow end-to-end for external creators.
   {
     id: "demo.content-block",
     name: "Paid Creator Snippet",

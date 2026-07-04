@@ -123,13 +123,46 @@ export default function WhitepaperPage() {
           <h1 className="text-headline" style={{ marginBottom: 16 }}>
             Kēryx: a paid tool registry for AI agents
           </h1>
-          <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.65, marginBottom: 40 }}>
-            This document describes the problem Kēryx solves, how the registry
-            prices and executes a call, and how the x402 protocol layer settles
-            USDC on Arc via Circle Gateway. It is a living specification, not
-            a funding pitch. Where a mechanism is not yet live, that is stated
-            plainly.
+          <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.65, marginBottom: 24 }}>
+            How Kēryx prices, executes, and settles a paid tool call between
+            developers and AI agents. Where a mechanism is not yet live, this
+            document says so plainly.
           </p>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 20,
+              padding: "14px 18px",
+              marginBottom: 40,
+              border: "1px solid var(--border)",
+              borderRadius: 10,
+              background: "var(--surface-1)",
+              fontSize: 12.5,
+              color: "var(--text-secondary)",
+            }}
+          >
+            <span>
+              <span className="text-eyebrow" style={{ marginRight: 6 }}>Contract</span>
+              <a
+                href="https://testnet.arcscan.app/address/0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7"
+                target="_blank"
+                rel="noreferrer"
+                className="text-mono"
+                style={{ color: "var(--text-primary)", textDecoration: "underline", textUnderlineOffset: 2 }}
+              >
+                0x7eA3…8bA7
+              </a>
+            </span>
+            <span>
+              <span className="text-eyebrow" style={{ marginRight: 6 }}>Chain</span>
+              <span className="text-mono">Arc testnet · 5042002</span>
+            </span>
+            <span>
+              <span className="text-eyebrow" style={{ marginRight: 6 }}>Tools live</span>
+              <span className="text-mono">20 · executable</span>
+            </span>
+          </div>
 
           <style
             dangerouslySetInnerHTML={{
@@ -384,12 +417,12 @@ export default function WhitepaperPage() {
 
       <Section id="roadmap" title="Roadmap">
         <p style={{ fontSize: 14, color: "var(--text-secondary)", marginBottom: 12 }}>
-          Status as of July 2026 (hackathon delivery):
+          Status as of July 2026:
         </p>
         <Ul items={[
           <>✓ Clear handler contract for community publishers (publish a <code>handlerUrl</code>; Kēryx forwards after payment). Seeded catalog at 20 practical tools (Solana onchain research, weather, finance/rates, geo, search, crypto market signals, utilities, time/uuid, etc.).</>,
           <>○ Circle Gateway: fully implemented in code (prefers <code>CIRCLE_GATEWAY_API_URL</code> → real batched Gateway; falls back to local facilitator if private key present; otherwise demo). The production deployment at keryxhq.xyz is currently on demo (synthetic hashes). Nothing in the code prevents flipping — it is waiting on provisioning a real Circle Gateway account/URL.</>,
-          <>✓ Basic OpenAPI spec published at /keryx-openapi.json. First-party SDKs (Node/Python middleware) — not started (planned post-hackathon).</>,
+          <>✓ Basic OpenAPI spec published at /keryx-openapi.json. First-party SDKs (Node/Python middleware) — not started (planned next).</>,
         ]} />
         <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 8 }}>
           The three bullets below are the original aspirational list; the checkmarks above reflect what actually shipped.
@@ -403,18 +436,18 @@ export default function WhitepaperPage() {
 
       <Section id="risks" title="Known limitations">
         <P>
-          This is a hackathon-stage build, and this document is written to
-          be honest about that rather than to oversell it. The x402
-          protocol path (402 + signed X-PAYMENT retry + verify/execute/settle)
-          is real end-to-end. The deployed site currently runs in <b>demo</b>
-          mode (synthetic hashes). When <code>CIRCLE_GATEWAY_API_URL</code> is
-          set it uses real batched Circle Gateway; when a local facilitator
-          key is configured it broadcasts directly on Arc. Persistence is
-          Redis when configured, otherwise in-memory (resets on cold start).
+          This is a v0.1 build, and this document is written to be honest
+          about it rather than to oversell it. The x402 protocol path (402 +
+          signed X-PAYMENT retry + verify/execute/settle) is real end-to-end.
+          The deployed site currently runs in <b>demo</b> mode (synthetic
+          hashes). When <code>CIRCLE_GATEWAY_API_URL</code> is set it uses
+          real batched Circle Gateway; when a local facilitator key is
+          configured it broadcasts directly on Arc. Persistence is Redis
+          when configured, otherwise in-memory (resets on cold start).
           20 seeded tools are implemented and executable (Kēryx calls real
           public APIs). Community tools are executable when the publisher
-          supplies a <code>handlerUrl</code>. Not every interesting data source
-          has a cheap, machine-friendly public endpoint yet.
+          supplies a <code>handlerUrl</code>. Not every interesting data
+          source has a cheap, machine-friendly public endpoint yet.
         </P>
       </Section>
 
