@@ -1,7 +1,7 @@
 {
   "name": "keryx",
   "description": "Kēryx — registry of paid tools for AI agents. 20+ real executable tools via MCP. Direct API calls use x402 + real USDC settlement on Arc. Current MCP connections for agents (Cursor, Claude, etc.) are subsidized in demo mode while wallets are not yet native to MCP. 95% of paid calls go to publishers.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Kēryx",
     "url": "https://keryxhq.xyz"

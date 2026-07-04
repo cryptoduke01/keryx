@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ArtPanel from "@/components/ArtPanel";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export const metadata = {
   title: "Whitepaper · Kēryx",
@@ -233,9 +234,9 @@ export default function WhitepaperPage() {
         </P>
         <div style={{ display: "flex", gap: 16, alignItems: "center", margin: "12px 0", flexWrap: "wrap" }}>
           <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Native in:</span>
-          <img src="/logos/cursor.png" alt="Cursor" width="18" height="18" />
-          <img src="/logos/claude.png" alt="Claude" width="18" height="18" />
-          <img src="/logos/copilot.png" alt="GitHub Copilot" width="18" height="18" />
+          <BrandLogo name="cursor" size={18} />
+          <BrandLogo name="claude" size={18} />
+          <BrandLogo name="copilot" size={18} />
           <span style={{ fontSize: 12, color: "var(--text-muted)" }}>+ Codex plugins (developers.openai.com/codex/plugins/build)</span>
         </div>
         <H3>2. Discover</H3>

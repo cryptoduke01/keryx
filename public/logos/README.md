@@ -20,8 +20,14 @@ Place the official brand assets here for consistent use across docs, pitch, and 
 
 ## Usage
 
-The site references `/logos/cursor.png`, `/logos/claude.png`, `/logos/copilot.png`.
+We use a small `BrandLogo` component (`src/components/BrandLogo.tsx`) that prefers `/logos/{name}.png`.
 
-Place the downloaded files with exactly those basenames (png or svg both work if you adjust the img src or just use .png).
+- If the local file is present, it loads it (self-hosted, crisp).
+- If missing (404), it silently falls back to the public favicon/SVG mirrors so the UI never shows broken images.
 
-Keep files small and respect brand clear space. Do not recolor or distort.
+Drop your downloaded files as:
+- `public/logos/cursor.png`
+- `public/logos/claude.png`
+- `public/logos/copilot.png`
+
+Keep them small, respect brand clear space, no distortion.
