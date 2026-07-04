@@ -44,3 +44,8 @@ product-inspo/
 demo.mp4
 *.mp4
 
+# npm-publishable packages: source + package.json committed, build artifacts not.
+# Publishers run `pnpm build` in the package before `npm publish`.
+packages/*/dist
+packages/*/node_modules
+

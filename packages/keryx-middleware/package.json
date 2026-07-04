@@ -1,0 +1,67 @@
+{
+  "name": "@keryx/middleware",
+  "version": "0.1.0",
+  "description": "Turn any HTTP handler into a paid tool for AI agents. Speaks x402, settles USDC on Arc.",
+  "keywords": [
+    "x402",
+    "mcp",
+    "agents",
+    "usdc",
+    "arc",
+    "circle",
+    "kēryx",
+    "keryx",
+    "paid-api",
+    "nanopayments"
+  ],
+  "author": "Kēryx",
+  "license": "MIT",
+  "homepage": "https://keryxhq.xyz",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cryptoduke01/keryx.git",
+    "directory": "packages/keryx-middleware"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./next": {
+      "types": "./dist/next.d.ts",
+      "import": "./dist/next.js"
+    },
+    "./express": {
+      "types": "./dist/express.d.ts",
+      "import": "./dist/express.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "pnpm build"
+  },
+  "peerDependencies": {
+    "viem": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "viem": "^2.21.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -12,19 +12,39 @@ import {
 export const dynamic = "force-dynamic";
 
 const CATEGORY_LABEL: Record<ToolCategory, string> = {
-  solana: "Solana",
+  solana: "Solana onchain",
+  finance: "Crypto & finance",
+  social: "Market signals",
   search: "Search",
+  web: "Web & content",
+  weather: "Weather",
+  geo: "Geo & IP",
+  dns: "DNS & domains",
+  utility: "Utilities",
   scrape: "Scrape",
   memory: "Memory",
   compute: "Compute",
-  social: "Social",
-  weather: "Weather",
-  finance: "Finance",
-  geo: "Geo & IP",
-  dns: "DNS & Domains",
-  utility: "Utilities",
-  web: "Web & Content",
 };
+
+// Explicit ordering: trading-agent-relevant categories come first so the
+// story on /registry reads "this is where trading agents pay for fresh
+// onchain data" before drifting into everyday utilities.
+const CATEGORY_ORDER: ToolCategory[] = [
+  "solana",
+  "finance",
+  "social",
+  "search",
+  "web",
+  "weather",
+  "geo",
+  "dns",
+  "utility",
+  "scrape",
+  "memory",
+  "compute",
+];
+
+const TRADING_CATEGORIES = new Set<ToolCategory>(["solana", "finance", "social"]);
 
 export default async function RegistryPage() {
   const allTools = await listTools();
@@ -35,6 +55,7 @@ export default async function RegistryPage() {
   for (const t of tools) {
     (byCategory[t.category] ??= []).push(t);
   }
+  const tradingToolCount = tools.filter((t) => TRADING_CATEGORIES.has(t.category)).length;
 
   // Enrich with onchain state when the KeryxRegistry contract is configured.
   // Requests run in parallel; each one has its own try/catch so a single
@@ -58,12 +79,14 @@ export default async function RegistryPage() {
           {tools.length} tools live on Kēryx.
         </h1>
         <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.6 }}>
-          Every tool is a real HTTP endpoint. Every call pays the publisher in
-          USDC. Discover by capability, call by id.
+          <b style={{ color: "var(--text-primary)" }}>{tradingToolCount} of them are for trading agents</b>
+          {" "}&mdash; live Solana onchain data, rug scoring, market signals, price feeds.
+          Every tool is a real HTTP endpoint; every call pays the publisher in USDC.
         </p>
         <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.55, marginTop: 8 }}>
-          Some tools wrap high-quality public data sources (always-on, structured, settled). Others are paid creator or proprietary content.
-          Kēryx is the payment, discovery, and settlement layer — not a replacement for free web browsing.
+          The rest wrap high-quality public sources for general agent tasks
+          (weather, geo, search, web). Kēryx is the payment, discovery, and
+          settlement layer &mdash; not a replacement for free web browsing.
         </p>
         <div style={{ display: "flex", gap: 8, marginTop: 20, flexWrap: "wrap" }}>
           <Link href="/publish" style={{ textDecoration: "none" }}>
@@ -93,7 +116,7 @@ export default async function RegistryPage() {
         )}
       </div>
 
-      {(Object.keys(byCategory) as ToolCategory[]).map((cat) => (
+      {CATEGORY_ORDER.filter((cat) => byCategory[cat]?.length).map((cat) => (
         <section key={cat} style={{ marginBottom: 40 }}>
           <div
             style={{
