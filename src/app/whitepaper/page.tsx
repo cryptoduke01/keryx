@@ -406,8 +406,8 @@ export default function WhitepaperPage() {
             <Link href="/live" style={{ fontSize: 13.5, color: "var(--text-secondary)", textDecoration: "underline", textUnderlineOffset: 3 }}>
               Watch the live ledger
             </Link>
-            <a href="https://github.com/cryptoduke01/keryx" style={{ fontSize: 13.5, color: "var(--text-secondary)", textDecoration: "underline", textUnderlineOffset: 3 }}>
-              View source
+            <a href="https://testnet.arcscan.app/address/0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7" target="_blank" rel="noreferrer" style={{ fontSize: 13.5, color: "var(--text-secondary)", textDecoration: "underline", textUnderlineOffset: 3 }}>
+              Verify contract on Arcscan
             </a>
           </div>
         </div>

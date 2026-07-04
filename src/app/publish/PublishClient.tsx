@@ -12,7 +12,19 @@ import {
 } from "wagmi";
 import { arcTestnet } from "@/lib/chains";
 
-type Category = "solana" | "search" | "scrape" | "memory" | "compute" | "social";
+type Category =
+  | "solana"
+  | "search"
+  | "scrape"
+  | "memory"
+  | "compute"
+  | "social"
+  | "weather"
+  | "finance"
+  | "geo"
+  | "utility"
+  | "web"
+  | "dns";
 
 export default function PublishClient() {
   const router = useRouter();
@@ -251,12 +263,112 @@ export default function PublishClient() {
     return editingOwned ? "Updating…" : "Publishing…";
   })();
 
+  function loadExample(ex: {
+    name: string;
+    slug: string;
+    summary: string;
+    category: Category;
+    priceUsd: string;
+    handlerUrl?: string;
+    argsJson?: string;
+    publisherName?: string;
+  }) {
+    setName(ex.name);
+    setSlug(ex.slug);
+    setSummary(ex.summary);
+    setCategory(ex.category);
+    setPriceUsd(ex.priceUsd);
+    setHandlerUrl(ex.handlerUrl ?? "");
+    setArgsJson(ex.argsJson ?? "{}");
+    setPublisherName(ex.publisherName ?? "");
+    setEditingOwned(false);
+    setOwnedTool(null);
+    setStatus({ kind: "idle" });
+  }
+
   return (
-    <form
-      onSubmit={submit}
-      className="card"
-      style={{ maxWidth: 640, display: "flex", flexDirection: "column", gap: 16 }}
-    >
+    <>
+      <div style={{ marginBottom: 12 }}>
+        <div className="text-eyebrow" style={{ marginBottom: 6 }}>
+          Quick examples — click to prefill
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <button
+            type="button"
+            className="btn btn-sm"
+            onClick={() =>
+              loadExample({
+                name: "Solana Token Stats",
+                slug: "my.solana.stats",
+                summary: "Basic stats and recent activity for a Solana token mint.",
+                category: "solana",
+                priceUsd: "0.003",
+                argsJson: '{"mint":{"type":"string","required":true,"description":"Token mint address"}}',
+              })
+            }
+          >
+            Solana token stats
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm"
+            onClick={() =>
+              loadExample({
+                name: "Live Exchange Rates",
+                slug: "my.exchange.rates",
+                summary: "Live fiat + crypto exchange rates for any base.",
+                category: "compute",
+                priceUsd: "0.004",
+              })
+            }
+          >
+            Exchange rates
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm"
+            onClick={() =>
+              loadExample({
+                name: "Current Weather",
+                slug: "my.weather.now",
+                summary: "Live temperature, humidity and conditions for a location.",
+                category: "compute",
+                priceUsd: "0.002",
+                argsJson:
+                  '{"lat":{"type":"number","required":true},"lon":{"type":"number","required":true}}',
+              })
+            }
+          >
+            Weather lookup
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm"
+            onClick={() =>
+              loadExample({
+                name: "My Paid Article Reader",
+                slug: "my.article.reader",
+                summary: "Fetch and return content for a paid article URL.",
+                category: "compute",
+                priceUsd: "0.005",
+                handlerUrl: "https://your-api.example.com/tools/article",
+                argsJson: '{"url":{"type":"string","required":true,"description":"Article URL"}}',
+              })
+            }
+          >
+            Article reader (with handler)
+          </button>
+        </div>
+        <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>
+          Examples are pre-filled for fast publishing. Edit anything before signing.
+        </div>
+      </div>
+
+      <form
+        onSubmit={submit}
+        className="card"
+        style={{ maxWidth: 640, display: "flex", flexDirection: "column", gap: 16 }}
+      >
       <WalletHeader
         address={address}
         isConnected={isConnected}
@@ -371,6 +483,11 @@ export default function PublishClient() {
             <option value="memory">Memory</option>
             <option value="compute">Compute</option>
             <option value="social">Social</option>
+            <option value="weather">Weather</option>
+            <option value="finance">Finance</option>
+            <option value="geo">Geo</option>
+            <option value="utility">Utility</option>
+            <option value="web">Web</option>
           </select>
         </Field>
         <Field label="Price per call (USD)">
@@ -512,6 +629,7 @@ export default function PublishClient() {
         </div>
       )}
     </form>
+    </>
   );
 }
 

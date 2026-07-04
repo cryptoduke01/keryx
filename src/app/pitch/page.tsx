@@ -101,7 +101,9 @@ export default function PitchPage() {
             lines={[
               ["Contract", "0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7"],
               ["Chain", "Arc testnet (5042002)"],
-              ["Tools onchain", "5"],
+              ["Tools listed", "19 · executable"],
+              ["Onchain anchor", "5 · KeryxRegistry.sol"],
+              ["Off-chain registry", "14 · publisher-owned"],
               ["Facilitator", "0x8F47…26B6"],
               ["Site", "keryxhq.xyz"],
             ]}
@@ -154,13 +156,13 @@ export default function PitchPage() {
           Not aspirational. Shipped.
         </SlideHead>
         <div className="pitch-metrics">
-          <Metric big="1" small="Solidity contract on Arc testnet" />
-          <Metric big="17+" small="Seeded executable tools (real data)" />
+          <Metric big="19" small="Tools listed, executable end-to-end" />
+          <Metric big="5" small="Anchored onchain in KeryxRegistry.sol" />
           <Metric big="4" small="Live surfaces (site, /api/call, /api/mcp, /ask)" />
-          <Metric big="∞" small="Public tx hashes on Arcscan, anyone can verify" />
+          <Metric big="∞" small="Public tx hashes on Arcscan — verify any of them" />
         </div>
         <SlideFoot light>
-          Onchain contract: <span className="pitch-mono">0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7</span> &nbsp;·&nbsp; toolCount() = 5
+          <b>Hybrid model on purpose.</b> Five tools are anchored onchain in <span className="pitch-mono">KeryxRegistry.sol</span> at <span className="pitch-mono">0x7eA3…8bA7</span> as canonical, permissionless discovery. The rest live in the off-chain registry so publishers can iterate (price changes, arg schema updates) in a wallet-signed message instead of a gas-paying transaction. Every listed tool is executable today; the onchain anchor is opt-in.
         </SlideFoot>
       </section>
 

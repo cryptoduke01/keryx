@@ -50,11 +50,11 @@ interface LedgerEntry {
 // ---------------------------------------------------------------------------
 
 const SUGGESTIONS = [
-  "What's the 24h trading volume for BONK on Solana?",
-  "Show me the newest Solana token launches right now.",
-  "Rug-check EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.",
-  "What's trending in crypto today?",
-  "Search for what Circle Arc is.",
+  "What's the current price of ETH in USD?",
+  "Live weather right now in New York.",
+  "Convert 100 EUR to USDC using live rates.",
+  "Top Hacker News stories right now.",
+  "Recent Solana token launches with details.",
 ] as const;
 
 const SESSIONS_KEY = "keryx.ask.sessions.v2";
