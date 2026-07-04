@@ -1,0 +1,90 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Kēryx API",
+    "version": "0.1.0",
+    "description": "Paid tool registry for AI agents. Discovery, pricing, and execution over x402 with USDC settlement on Arc."
+  },
+  "servers": [
+    { "url": "https://keryxhq.xyz" }
+  ],
+  "paths": {
+    "/api/tools": {
+      "get": {
+        "summary": "List all tools",
+        "description": "Returns every published tool with price, schema, and metadata. Agents use this for discovery.",
+        "responses": {
+          "200": {
+            "description": "Array of tool definitions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ToolDefinition" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/call": {
+      "post": {
+        "summary": "Quote + execute a tool (x402)",
+        "description": "First call without X-PAYMENT returns 402 with requirements. Retry with signed payload to execute and settle.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "toolId": { "type": "string" },
+                  "args": { "type": "object" }
+                },
+                "required": ["toolId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Result + settlement info" },
+          "402": { "description": "Payment required — includes accepts requirements" }
+        }
+      }
+    },
+    "/api/mcp": {
+      "post": {
+        "summary": "MCP JSON-RPC endpoint",
+        "description": "Model Context Protocol server. Use for native tool use from Claude Code, Cursor, etc. Config: {\"mcpServers\":{\"keryx\":{\"type\":\"http\",\"url\":\"https://keryxhq.xyz/api/mcp\"}}}",
+        "responses": {
+          "200": { "description": "JSON-RPC response" }
+        }
+      }
+    },
+    "/api/publishers/tools": {
+      "post": {
+        "summary": "Publish or update a tool (EIP-191 signed)",
+        "responses": {
+          "200": { "description": "Tool registered" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ToolDefinition": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "summary": { "type": "string" },
+          "priceUsd": { "type": "number" },
+          "publisherName": { "type": "string" },
+          "args": { "type": "object" },
+          "verified": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

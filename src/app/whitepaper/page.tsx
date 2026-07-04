@@ -375,9 +375,9 @@ export default function WhitepaperPage() {
           Status as of July 2026 (hackathon delivery):
         </p>
         <Ul items={[
-          <>✓ Clear handler contract for community publishers (publish a <code>handlerUrl</code>; Kēryx forwards after payment). Seeded catalog at 17 practical tools and growing (weather, finance, geo, Solana onchain, search, utilities, etc.).</>,
-          <>○ Circle Gateway: code supports it fully (set <code>CIRCLE_GATEWAY_API_URL</code> to switch from demo/local). Deployed site still runs in demo mode with synthetic hashes. Real Gateway flip is the next production step once credentials are provisioned.</>,
-          <>○ OpenAPI spec + first-party SDKs (Node/Python) — not started.</>,
+          <>✓ Clear handler contract for community publishers (publish a <code>handlerUrl</code>; Kēryx forwards after payment). Seeded catalog at 20 practical tools (Solana onchain research, weather, finance/rates, geo, search, crypto market signals, utilities, time/uuid, etc.).</>,
+          <>○ Circle Gateway: fully implemented in code (prefers <code>CIRCLE_GATEWAY_API_URL</code> → real batched Gateway; falls back to local facilitator if private key present; otherwise demo). The production deployment at keryxhq.xyz is currently on demo (synthetic hashes). Nothing in the code prevents flipping — it is waiting on provisioning a real Circle Gateway account/URL.</>,
+          <>✓ Basic OpenAPI spec published at /keryx-openapi.json. First-party SDKs (Node/Python middleware) — not started (planned post-hackathon).</>,
         ]} />
         <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 8 }}>
           The three bullets below are the original aspirational list; the checkmarks above reflect what actually shipped.
@@ -393,20 +393,16 @@ export default function WhitepaperPage() {
         <P>
           This is a hackathon-stage build, and this document is written to
           be honest about that rather than to oversell it. The x402
-          protocol path is real end to end &mdash; a 402 response, a
-          machine-readable price tag, a signed retry, verify, execute,
-          settle &mdash; but the default facilitator in the deployed
-          demo is the local <b>demo</b> mode, which records synthetic
-          tx hashes rather than broadcasting onchain. Flipping to Circle
-          Gateway is a single environment variable, gated on our
-          Gateway credentials landing. Persistence falls back to
-          in-memory storage when Redis is not configured, meaning
-          registry and ledger state can reset on a cold start in that
-          mode.           Seeded tools are Kēryx-controlled (we call public APIs). Community
-          tools can point at a publisher handler URL today; Kēryx forwards
-          after payment. The seeded set is intentionally practical and growing
-          (weather, finance, geo, dns, utilities, web data). Not every
-          interesting source has a free machine-friendly endpoint yet.
+          protocol path (402 + signed X-PAYMENT retry + verify/execute/settle)
+          is real end-to-end. The deployed site currently runs in <b>demo</b>
+          mode (synthetic hashes). When <code>CIRCLE_GATEWAY_API_URL</code> is
+          set it uses real batched Circle Gateway; when a local facilitator
+          key is configured it broadcasts directly on Arc. Persistence is
+          Redis when configured, otherwise in-memory (resets on cold start).
+          20 seeded tools are implemented and executable (Kēryx calls real
+          public APIs). Community tools are executable when the publisher
+          supplies a <code>handlerUrl</code>. Not every interesting data source
+          has a cheap, machine-friendly public endpoint yet.
         </P>
       </Section>
 

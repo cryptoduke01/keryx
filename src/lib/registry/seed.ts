@@ -374,6 +374,47 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     verified: true,
     latencyMs: 410,
   },
+
+  // --- Simple high-utility tools (pure or cheap public data) ---
+  {
+    id: "time.current",
+    name: "Current Time",
+    summary: "Precise current time in unix seconds, ISO, and human formats. Call when the agent must not hallucinate the date or needs a fresh timestamp for logs, expiries, or time-based decisions.",
+    category: "utility",
+    priceUsd: 0.0005,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Kēryx",
+    args: {},
+    sampleArgs: {},
+    verified: true,
+    latencyMs: 5,
+  },
+  {
+    id: "utility.uuid",
+    name: "UUID v4",
+    summary: "Generate a random UUID v4. Useful when an agent needs a unique identifier for plans, sessions, or objects it is creating.",
+    category: "utility",
+    priceUsd: 0.0005,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Kēryx",
+    args: {},
+    sampleArgs: {},
+    verified: true,
+    latencyMs: 5,
+  },
+  {
+    id: "crypto.btc-dominance",
+    name: "BTC/ETH Market Dominance",
+    summary: "Live BTC and ETH dominance percentages plus total crypto market cap from CoinGecko. Worth calling when the agent needs a broad market regime signal before making allocation or timing decisions.",
+    category: "social",
+    priceUsd: 0.0015,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Kēryx",
+    args: {},
+    sampleArgs: {},
+    verified: true,
+    latencyMs: 650,
+  },
 ];
 
 /** Map for O(1) lookup by id. Rebuilt from SEEDED_TOOLS every call so

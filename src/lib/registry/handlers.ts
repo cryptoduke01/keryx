@@ -600,6 +600,9 @@ const HANDLERS: Record<string, (ctx: CallContext) => Promise<unknown>> = {
   "utility.qr": handleQr,
   "geo.country": handleCountry,
   "demo.content-block": handleDemoContentBlock,
+  "time.current": handleTimeCurrent,
+  "utility.uuid": handleUuid,
+  "crypto.btc-dominance": handleBtcDominance,
 };
 
 async function handleDemoContentBlock(ctx: CallContext) {
@@ -642,4 +645,48 @@ export async function executeTool(
     return handleExternal({ tool, args });
   }
   throw new Error(`No handler registered for tool "${tool.id}"`);
+}
+
+// ---------------------------------------------------------------------------
+// time.current — always-fresh timestamp for agents that must not hallucinate "now"
+// ---------------------------------------------------------------------------
+
+async function handleTimeCurrent(_ctx: CallContext) {
+  const now = new Date();
+  return {
+    unix: Math.floor(now.getTime() / 1000),
+    iso: now.toISOString(),
+    utc: now.toUTCString(),
+    local: now.toString(),
+    source: "system",
+  };
+}
+
+// ---------------------------------------------------------------------------
+// utility.uuid — generate a v4 uuid client-side (no external call)
+// ---------------------------------------------------------------------------
+
+async function handleUuid(_ctx: CallContext) {
+  const uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+  return { uuid };
+}
+
+// ---------------------------------------------------------------------------
+// crypto.btc-dominance — real market data worth paying a fraction of a cent for
+// ---------------------------------------------------------------------------
+
+async function handleBtcDominance(_ctx: CallContext) {
+  const raw = await fetchJson<any>("https://api.coingecko.com/api/v3/global");
+  const mc = raw?.data?.market_cap_percentage || {};
+  return {
+    btcDominance: typeof mc.btc === "number" ? mc.btc : null,
+    ethDominance: typeof mc.eth === "number" ? mc.eth : null,
+    totalMarketCapUsd: raw?.data?.total_market_cap?.usd ?? null,
+    updatedAt: new Date().toISOString(),
+    source: "coingecko",
+  };
 }

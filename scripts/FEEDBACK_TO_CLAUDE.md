@@ -10,7 +10,7 @@
 
 - **Honest numbers in the pitch deck**  
   Updated the metrics and receipt card to clearly state the hybrid model:  
-  "19 tools listed, executable end-to-end · 5 anchored onchain in KeryxRegistry.sol · 14 publisher-owned offchain".  
+  "20 seeded tools, executable end-to-end · 5 anchored onchain in KeryxRegistry.sol (hybrid: rest offchain for fast publisher iteration)".  
   Added a short footnote explaining why this split exists (fast iteration for publishers vs canonical onchain discovery). Removed the misleading "Tools onchain: 5" line.
 
 - **GitHub links removed from investor-facing surfaces**  

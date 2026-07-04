@@ -122,7 +122,7 @@ Full schemas and agent SDK snippets live in the [docs](https://keryxhq.xyz/docs)
 | `utility.qr` | QR code generator | $0.001 |
 | `geo.country` | RestCountries | $0.001 |
 
-~17 seeded executable tools today. More added regularly (everyday micro-tasks for agents and people). Community tools can be published by anyone; only those with a handler are auto-executable by Kēryx surfaces.
+20 seeded executable tools (Solana research, weather, finance, geo, crypto market signals, search, utilities, time, uuid, etc.). More added regularly. Community tools can be published by anyone; only those with a handlerUrl are auto-executable by Kēryx surfaces.
 
 Additional community tools (with `verified: false`) can be published by anyone.
 Kēryx's goal is a large, always-on catalog (50–100+) of micro-tasks an average web2 or web3 user/agent reaches for daily: weather, rates, geo, domain info, HN, repo facts, prices, QR, country data, and many more. Seeded tools are implemented and maintained by the Kēryx team against real public endpoints.

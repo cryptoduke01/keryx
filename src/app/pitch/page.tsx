@@ -101,7 +101,7 @@ export default function PitchPage() {
             lines={[
               ["Contract", "0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7"],
               ["Chain", "Arc testnet (5042002)"],
-              ["Tools listed", "19 · executable"],
+              ["Tools listed", "20 seeded + published (executable)"],
               ["Onchain anchor", "5 · KeryxRegistry.sol"],
               ["Off-chain registry", "14 · publisher-owned"],
               ["Facilitator", "0x8F47…26B6"],
@@ -156,7 +156,7 @@ export default function PitchPage() {
           Not aspirational. Shipped.
         </SlideHead>
         <div className="pitch-metrics">
-          <Metric big="19" small="Tools listed, executable end-to-end" />
+          <Metric big="20" small="Seeded tools (executable end-to-end)" />
           <Metric big="5" small="Anchored onchain in KeryxRegistry.sol" />
           <Metric big="4" small="Live surfaces (site, /api/call, /api/mcp, /ask)" />
           <Metric big="∞" small="Public tx hashes on Arcscan — verify any of them" />
@@ -245,7 +245,7 @@ export default function PitchPage() {
             when="Now"
             items={[
               "KeryxRegistry.sol on Arc testnet",
-              "17+ seeded executable tools (weather, finance, geo, dns, utilities...)",
+              "20 seeded executable tools (Solana, weather, finance, geo, search, crypto, utilities, time...)",
               "Real x402 endpoint",
               "MCP server for Claude Code + Cursor",
               "Publisher wallet verification (EIP-191)",

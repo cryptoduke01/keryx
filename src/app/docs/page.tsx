@@ -130,34 +130,23 @@ export default function DocsPage() {
         />
         <p style={pStyle}>
           Claude Code: <code>~/.claude/mcp.json</code><br />
-          Cursor / other MCP clients: add the block above.<br />
+          Cursor: add the block above, or install the repo as a Cursor plugin via <code>.cursor-plugin/plugin.json</code> (symlink to ~/.cursor/plugins/local/keryx or submit to Cursor Marketplace). Deeplink format supported.<br />
           Then say: "use keryx weather and exchange rates to plan my trip to Berlin".
         </p>
-        <p style={{ fontSize: 13, color: "var(--text-secondary)" }}>
-          One config. 17+ real paid tools. Agents pay per call in sub-cent USDC. No keys, no accounts.
+          <p style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+          One config. 20 real seeded tools + any community-published. Agents pay per call in sub-cent USDC. No keys, no accounts.
+          <br />Cursor users: the repo includes <code>.cursor-plugin/plugin.json</code> + <code>mcp.json</code> so you can install it as a plugin.
         </p>
       </Section>
 
-      <Section title="For coding agents · the SDK">
+      <Section title="For publishers · integrate x402 yourself (SDKs planned)">
         <p style={pStyle}>
-          The <code style={codeInline}>@keryx/middleware</code> package
-          wraps any Express / Next / Hono handler with x402 pricing and
-          Circle Gateway settlement.
+          First-party SDKs and an <code style={codeInline}>@keryx/*</code> middleware are planned.
+          Today you can implement the x402 flow directly (return 402 with price requirements, accept <code>X-PAYMENT</code>, settle via the same facilitator logic) or point a simple <code>handlerUrl</code> at your existing endpoint and let Kēryx handle payment + forwarding.
         </p>
-        <CodeBlock
-          lang="ts"
-          code={`import { withKeryxPrice } from "@keryx/middleware";
-
-export const POST = withKeryxPrice({
-  toolId: "search.web",
-  priceUsd: 0.004,
-  publisherWallet: process.env.KERYX_WALLET!,
-})(async (req) => {
-  const { query } = await req.json();
-  const results = await mySearch(query);
-  return Response.json({ results });
-});`}
-        />
+        <p style={pStyle}>
+          See the whitepaper for the settlement modes and the publish form for the exact contract when providing a <code>handlerUrl</code>.
+        </p>
       </Section>
 
       <div style={{ marginTop: 32, padding: 16, borderTop: "1px solid var(--border)" }}>
@@ -165,9 +154,10 @@ export const POST = withKeryxPrice({
           Live today
         </div>
         <ul style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.8, paddingLeft: 20 }}>
-          <li>~17 seeded executable tools (weather, finance, geo, dns, web, crypto, utility) — all real public data, Kēryx runs the handlers</li>
+          <li>20 seeded executable tools (Solana onchain, weather, finance, geo, search, crypto market data, utilities, time/uuid) — all real or fresh, Kēryx runs the handlers</li>
           <li>Anyone can publish tools (discovery + payment). Handler URL makes them executable by Kēryx agents.</li>
           <li>Full x402 402 + X-PAYMENT flow, public ledger, MCP server for Claude/Cursor</li>
+          <li>OpenAPI spec at <a href="/keryx-openapi.json" style={{ textDecoration: "underline" }}>/keryx-openapi.json</a></li>
           <li>Onchain registry contract + publisher EIP-191 ownership</li>
         </ul>
       </div>

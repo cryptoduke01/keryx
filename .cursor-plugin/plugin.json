@@ -1,0 +1,17 @@
+{
+  "name": "keryx",
+  "description": "Kēryx — paid tool registry for AI agents. MCP server exposing 20 seeded real priced tools (plus community) over x402/USDC on Arc. Agents discover and pay per call.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Kēryx",
+    "url": "https://keryxhq.xyz"
+  },
+  "homepage": "https://keryxhq.xyz",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cryptoduke01/keryx"
+  },
+  "categories": ["mcp", "tools", "payments"],
+  "keywords": ["mcp", "x402", "usdc", "arc", "agents", "tools", "payments"],
+  "license": "MIT"
+}

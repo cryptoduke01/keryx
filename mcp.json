@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "keryx": {
+      "type": "http",
+      "url": "https://keryxhq.xyz/api/mcp"
+    }
+  }
+}

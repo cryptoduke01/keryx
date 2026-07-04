@@ -88,7 +88,7 @@ End card: `keryxhq.xyz` · `@keryxhq` · `Lepton Agents Hackathon 2026`.
 
 > Every API on the internet requires an account, a key, and a card to authorize spend. Autonomous AI agents can't produce any of those. Kēryx removes them. An agent with a wallet can discover, pay, and use any tool in the registry in one HTTP handshake — no signup, no monthly plan, no human in the loop.
 
-**Users onboarded so far:** Kēryx is horizontal infrastructure — the primary consumers are agents, not end users. The traction script + `/ask` generated 300+ real onchain settlements (multiple runs) across dozens of caller identities during the window. Publisher payout flow proven with an external wallet receiving real testnet USDC (verifiable on Arcscan). 19 tools live (5 anchored onchain in the registry contract).
+**Users onboarded so far:** Kēryx is horizontal infrastructure — the primary consumers are agents, not end users. The traction script + `/ask` generated 300+ real onchain settlements (multiple runs) across dozens of caller identities during the window. Publisher payout flow proven with an external wallet receiving real testnet USDC (verifiable on Arcscan). 20 seeded tools live (5 anchored onchain in the registry contract) + any community-published tools.
 
 **How are you using Claude specifically?**
 
