@@ -117,6 +117,27 @@ export default function DocsPage() {
           Add the MCP server once and the agent gets the full catalog (20+ seeded tools + any community-published tools) as native tools.
         </p>
 
+        <div style={{ margin: "16px 0 20px", padding: "12px 16px", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 10 }}>
+          <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 8, letterSpacing: "0.04em" }}>
+            AVAILABLE IN THE AGENTS YOU ALREADY USE
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <img src="https://cursor.com/favicon.png" alt="" width="18" height="18" />
+              <span style={{ fontSize: 13, fontWeight: 600 }}>Cursor</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Claude_AI_logo.svg" alt="" width="18" height="18" />
+              <span style={{ fontSize: 13, fontWeight: 600 }}>Claude</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <img src="https://github.githubassets.com/favicons/favicon.svg" alt="" width="18" height="18" />
+              <span style={{ fontSize: 13, fontWeight: 600 }}>GitHub Copilot</span>
+            </div>
+            <div style={{ fontSize: 12, color: "var(--text-muted)" }}>+ any MCP client</div>
+          </div>
+        </div>
+
         <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 16 }}>
           <strong>Note on payments:</strong> Through MCP, tool calls are currently executed in <strong>demo/subsidized mode</strong> (Kēryx covers the cost while MCP clients do not yet support wallets). 
           For real paid calls with USDC settlement on Arc, use the direct <code>/api/call</code> endpoint or the <Link href="/ask">/ask</Link> playground (which now uses your configured Gateway).
@@ -136,7 +157,8 @@ export default function DocsPage() {
 
         <h3 style={{ fontSize: 15, marginTop: 24, marginBottom: 8 }}>Cursor</h3>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-          <img src="https://cursor.com/favicon.ico" alt="Cursor" width="18" height="18" />
+          {/* Official Cursor logos available at https://cursor.com/brand */}
+          <img src="https://cursor.com/favicon.png" alt="Cursor" width="20" height="20" />
           <span style={{ fontWeight: 600 }}>Cursor</span>
         </div>
         <p style={pStyle}>
@@ -147,7 +169,8 @@ export default function DocsPage() {
 
         <h3 style={{ fontSize: 15, marginTop: 20, marginBottom: 8 }}>Claude (Claude.ai, Claude Code, Claude Desktop)</h3>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-          <img src="https://claude.ai/favicon.ico" alt="Claude" width="18" height="18" />
+          {/* Official Anthropic / Claude assets: anthropic.com/news → Media assets / press kit */}
+          <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Claude_AI_logo.svg" alt="Claude" width="20" height="20" />
           <span style={{ fontWeight: 600 }}>Claude by Anthropic</span>
         </div>
         <p style={pStyle}>
@@ -164,7 +187,8 @@ export default function DocsPage() {
 
         <h3 style={{ fontSize: 15, marginTop: 20, marginBottom: 8 }}>GitHub Copilot (VS Code / Copilot CLI)</h3>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-          <img src="https://github.githubassets.com/favicons/favicon.svg" alt="GitHub" width="18" height="18" />
+          {/* GitHub Copilot lockups: brand.github.com/brand-identity/copilot (note: as of 2025, prefers product lockups over standalone icon) */}
+          <img src="https://github.githubassets.com/favicons/favicon.svg" alt="GitHub Copilot" width="20" height="20" />
           <span style={{ fontWeight: 600 }}>GitHub Copilot</span>
         </div>
         <p style={pStyle}>

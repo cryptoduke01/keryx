@@ -189,7 +189,7 @@ export default async function Landing() {
                 >
                   MCP
                 </span>
-                <span style={{ opacity: 0.85 }}>Or drop into Claude Code and Cursor <span aria-hidden>→</span></span>
+                <span style={{ opacity: 0.85 }}>Available in Cursor, Claude, GitHub Copilot <span aria-hidden>→</span></span>
               </Link>
             </Reveal>
           </div>

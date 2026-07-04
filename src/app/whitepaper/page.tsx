@@ -227,6 +227,11 @@ export default function WhitepaperPage() {
           <a href="#trust" style={linkStyle}>Trust and verification</a>{" "}
           for what that trade-off costs today).
         </P>
+        <P>
+          The same tools are instantly available to agents through the Model Context Protocol (MCP).
+          Cursor, Claude (via custom connectors), GitHub Copilot, and any MCP-compatible client can discover and call them natively with a one-line config.
+          Official logos and brand assets: Cursor at cursor.com/brand, Claude/Anthropic press kit at anthropic.com/news.
+        </P>
         <H3>2. Discover</H3>
         <P>
           <code style={codeInline}>GET /api/tools</code> returns every

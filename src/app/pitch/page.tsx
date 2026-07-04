@@ -91,7 +91,7 @@ export default function PitchPage() {
         <div className="pitch-two-col">
           <ul className="pitch-bullets">
             <li>Any developer publishes an HTTP endpoint at a price, points it at an Arc wallet, and it's live in a minute. No accounts.</li>
-            <li>Any AI agent &mdash; Claude Code, Cursor, custom &mdash; discovers it via MCP and pays per call in USDC on Circle Arc.</li>
+            <li>Any AI agent — <strong>Cursor, Claude, GitHub Copilot, custom</strong> — discovers it via MCP and pays per call in USDC on Circle Arc.</li>
             <li>The unit of access is the call, not the account. 95% to the publisher, 5% to Kēryx, no listing fee, no minimum.</li>
             <li>Every payment settles onchain in under half a second. Every settlement has a real Arcscan tx hash.</li>
             <li><i>Not</i> "pay for things that are free on the web". Kēryx is the payment + discovery layer for capabilities agents are willing to pay for — today public data with reliability, tomorrow paid creator tools and proprietary sources.</li>
@@ -247,7 +247,7 @@ export default function PitchPage() {
               "KeryxRegistry.sol on Arc testnet",
               "20 seeded executable tools (Solana, weather, finance, geo, search, crypto, utilities, time...)",
               "Real x402 endpoint",
-              "MCP server for Claude Code + Cursor",
+              "MCP server — native in Cursor, Claude, GitHub Copilot + any MCP client",
               "Publisher wallet verification (EIP-191)",
               "Public ledger with real Arcscan hashes",
             ]}
