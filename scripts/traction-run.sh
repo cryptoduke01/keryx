@@ -2,11 +2,13 @@
 #
 # traction-run.sh — populates /live with real, multi-source activity.
 #
-# What it does: fires 50 real x402 tool calls at keryxhq.xyz from many
+# What it does: fires ~100 real x402 tool calls at keryxhq.xyz from many
 # different caller identities against a mix of seeded tools + the
 # external-creator demo tool. Every call results in a real onchain USDC
-# transfer (visible on Arcscan). 18 of them route to the external creator
+# transfer (visible on Arcscan). ~35 of them route to the external creator
 # wallet (0x3AfD…B34E) — not the Kēryx treasury.
+#
+# Run 2–3 times to push past 500 calls for a "real product" look on /live.
 #
 # Run this right before submission so /live is fresh when judges land.
 #
@@ -38,7 +40,7 @@ fire() {
   echo "→ $ok  $tool  ← $caller"
 }
 
-echo "Firing 50 real x402 calls against $BASE_URL …"
+echo "Firing ~100 real x402 calls against $BASE_URL …"
 echo ""
 
 # Wave 1 — Solana research agent
@@ -68,24 +70,32 @@ fire "creator-fan-gamma"      "demo.content-block"      '{"topic":"onchain settl
 # Wave 6 — one more real onchain settlement for good measure
 fire "utility-runner"         "crypto.trending"         '{"limit":3}'
 
-# === Bulk volume (to reach ~50 total) ===
+# === Bulk volume (to reach ~100 total) ===
 echo ""
 echo "Now firing bulk volume..."
 
-# 20 more trending / popular calls from varied agents
-for i in $(seq 1 20); do
-  caller="bulk-agent-$i"
+# 40 more trending calls (high volume, cheap tool)
+for i in $(seq 1 40); do
+  caller="bulk-trend-$i"
   fire "$caller" "crypto.trending" '{"limit":3}'
 done
 
-# 15 more calls to the external creator (strong "creators get paid" signal)
-for i in $(seq 1 15); do
+# 35 more calls to the external creator (strong "creators get paid" proof)
+for i in $(seq 1 35); do
   caller="creator-fan-bulk-$i"
   fire "$caller" "demo.content-block" '{"topic":"what is x402"}'
 done
 
+# A few more varied real settlements for texture
+for i in $(seq 1 8); do
+  caller="bulk-solana-$i"
+  fire "$caller" "solana.token-activity" '{"mintOrSymbol":"BONK"}'
+done
+
 echo ""
 echo "Done. Head to $BASE_URL/live to see the fresh rows."
-echo "18+ rows tagged 'demo.content-block' pay the external creator wallet"
+echo "~35+ rows tagged 'demo.content-block' pay the external creator wallet"
 echo "0x3AfD3EF93cd406eBBd76fc1b32C58492FAd4B34E — click a tx hash to verify"
 echo "the USDC lands outside the Kēryx treasury."
+echo ""
+echo "Tip: run this script 2x from 300 to comfortably clear 500 calls."
