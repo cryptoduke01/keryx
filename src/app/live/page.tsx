@@ -9,7 +9,9 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function LivePage() {
-  const [entries, stats] = await Promise.all([readEntries(40), ledgerStats()]);
+  // Show a healthy chunk of recent activity so /live demonstrates real volume
+  // instead of a tiny 40-row tail.
+  const [entries, stats] = await Promise.all([readEntries(120), ledgerStats()]);
   return (
     <div className="container-page" style={{ paddingTop: 40, paddingBottom: 80 }}>
       <div style={{ marginBottom: 24, maxWidth: 720 }}>

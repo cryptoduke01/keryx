@@ -33,7 +33,9 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
     const clock = setInterval(() => setNow(Date.now()), 1000);
     const poll = setInterval(async () => {
       try {
-        const r = await fetch("/api/ledger", { cache: "no-store" });
+        // Ask for enough rows to make the live ledger table look substantial
+        // when lots of traction calls are fired.
+        const r = await fetch("/api/ledger?limit=120", { cache: "no-store" });
         if (!r.ok) return;
         const data = (await r.json()) as { stats: Stats; entries: LedgerEntry[] };
         setStats(data.stats);

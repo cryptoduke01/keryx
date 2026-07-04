@@ -54,19 +54,19 @@ CRITICAL ECONOMIC RULES:
   • IP geolocation "just in case" or for hypothetical future use
 - Before ANY tool call, you must internally answer: "Is this specific piece of data worth ~$X right now for this user?"
 - If in doubt, answer from knowledge and do not spend.
-- When you do call: say ONE short line "Calling <tool> ($price) — <precise reason this data is worth paying for>".
-- Cite only the tools you actually called: "Sources: weather.current (Kēryx, $0.002)".
+- When you do call: say ONE short line using the canonical dotted id "Calling <tool> ($price) — <precise reason this data is worth paying for>". Example: "Calling solana.rug-check ($0.002) — to assess rug risk on this mint before any decision."
+- Cite ONLY with the exact canonical dotted id: "Sources: solana.rug-check (Kēryx, $0.002)".
 - Be concise. Never fabricate.
 
-HIGH-STAKES ONCHAIN / CRYPTO DECISIONS (the exact reason people pay):
-Queries that mention real money moving right now ("$50K just aped", "fresh launch with big buys", "is it safe or a rug?", "should I follow this wallet?", "what did this wallet just buy") are the core use case for Kēryx.
-- These are almost always worth the $0.00x fee because the data is minutes old and can save or make the user serious money.
-- Call the matching solana.* or crypto.* tool(s) right away.
-- After the tool returns, give a DIRECT, specific, data-driven take using the numbers. Examples:
-  - "Rug score 18/100 (normalised 1.2). LP is 0% locked. Largest holder 22%. High risk — unlocked liquidity + concentration."
-  - "Rug score 91/100, 94% LP locked, no major flags. For a mint that just took $50k, the onchain metrics look clean so far, but size is still small."
-- Do NOT fall back to "I can't give financial advice" or "this is not investment advice" boilerplate. The user paid real money (via Kēryx) for this exact fresh data so you can give them a clear read. Frame it as paid onchain research: "Here's what the live data says."
-- If the data is inconclusive or the tool doesn't fully answer, say exactly what is missing instead of hedging.
+HIGH-STAKES ONCHAIN / CRYPTO DECISIONS (the exact reason people pay for Kēryx):
+When the query involves real money moving onchain right now ("$50K just aped into mint X", "fresh launch", "is it a rug?", "should I ape or follow this wallet?"), this is THE use case.
+- Immediately call the right solana.* / crypto.* tool(s). The tiny fee is economically trivial compared to the decision.
+- After the tool result arrives, give a DIRECT, blunt, numbers-first read. Use the actual scores, %, holders, liquidity, etc.
+  Good style:
+  - "Rug score 1/100 (normalised 1). LP 0% locked. Top holder 22%. Unlocked liquidity + concentration = high risk. Walk away."
+  - "Rug score 91/100, 94% LP locked, clean flags. For a mint that took $50k, metrics look ok so far. Still small book though."
+- NEVER append disclaimers, "not financial advice", "do your own research", "exercise caution", "crucial to note higher risk", "consult professionals", or similar lawyer text. The user paid for the fresh data precisely to get a clear read instead of generic hedging. End on the data + implication.
+- If data is partial, say exactly "missing X" and stop. No moralizing.
 
 You have high-quality paid tools for weather, finance, geo, crypto, onchain, search, etc. Use them sparingly and intelligently. Most queries can be answered well without spending.`;
 
@@ -107,16 +107,18 @@ export async function POST(req: Request) {
   const playableTools = registryTools.filter((t) => isExecutableTool(t));
 
   /** Build the tool map the AI SDK expects. Each tool id is normalized
-   *  from dotted (solana.token-activity) to underscored (solana_token_activity)
-   *  because OpenAI's function names disallow dots.
+   *  from dotted (solana.token-activity) to dashed (solana-token-activity)
+   *  because OpenAI's function names disallow dots (dashes are allowed).
+   *  We tell the model in the system prompt + per-tool description to cite
+   *  using the canonical dotted form (solana.rug-check) in text.
    *  Typed as `any` because the AI SDK's tool<>execute generic doesn't
    *  narrow cleanly across a heterogeneous record. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tools: Record<string, any> = {};
   for (const t of playableTools) {
-    const fnName = t.id.replace(/\./g, "_");
+    const fnName = t.id.replace(/\./g, "-");
     tools[fnName] = tool({
-      description: `[$${t.priceUsd.toFixed(3)} paid via Kēryx to ${t.publisherName}] ${t.summary} — only call if the fresh/structured result is worth the cost vs answering from knowledge.`,
+      description: `[$${t.priceUsd.toFixed(3)} paid via Kēryx to ${t.publisherName}] Canonical id: ${t.id}. ${t.summary} — only call if the fresh/structured result is worth the cost vs answering from knowledge. When writing "Calling ..." or "Sources:", always use the dotted canonical id "${t.id}".`,
       parameters: argsToZod(t.args),
       execute: async (rawArgs) => {
         const tool = await getTool(t.id);
