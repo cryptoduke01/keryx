@@ -20,14 +20,18 @@ Place the official brand assets here for consistent use across docs, pitch, and 
 
 ## Usage
 
-We use a small `BrandLogo` component (`src/components/BrandLogo.tsx`) that prefers `/logos/{name}.png`.
+We use `<BrandLogo name="cursor" />` (and claude / copilot) from `src/components/BrandLogo.tsx`.
 
-- If the local file is present, it loads it (self-hosted, crisp).
-- If missing (404), it silently falls back to the public favicon/SVG mirrors so the UI never shows broken images.
+Behavior:
+1. Tries `/logos/cursor.png` (etc.) first — drop your official downloads here for crisp self-hosted logos.
+2. If the file is missing or fails to load, it tries a couple of public mirrors.
+3. If everything fails, it shows a clean monogram badge ("Cu", "Cl", "Co") so the page never looks broken.
 
-Drop your downloaded files as:
-- `public/logos/cursor.png`
-- `public/logos/claude.png`
-- `public/logos/copilot.png`
+Drop the files you downloaded (from Cursor brand kit, Anthropic press kit, GitHub brand) as exactly:
+- public/logos/cursor.png
+- public/logos/claude.png
+- public/logos/copilot.png
 
-Keep them small, respect brand clear space, no distortion.
+(You can also use .svg if you update the component or just rename to .png for simplicity.)
+
+Keep files small (under ~10kB), respect each brand's clear space and usage rules. No heavy effects.
