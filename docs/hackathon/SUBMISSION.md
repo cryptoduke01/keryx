@@ -10,7 +10,7 @@ Run the traction script (now ~100 calls per invocation, including ~35 that
 pay the external creator wallet).
 
 ```bash
-bash scripts/traction-run.sh
+bash docs/hackathon/traction-run.sh
 ```
 
 Run it 2–3× if you want 500+ visible settlements. Then load
