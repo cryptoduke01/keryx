@@ -50,11 +50,11 @@ interface LedgerEntry {
 // ---------------------------------------------------------------------------
 
 const SUGGESTIONS = [
+  "A wallet just aped $50K into this Solana mint right now: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v. Should I follow?",
+  "A fresh Solana token just launched with big buys. Is it safe or a rug? Check the latest data.",
   "What's the current price of ETH in USD?",
   "Live weather right now in New York.",
   "Convert 100 EUR to USDC using live rates.",
-  "Top Hacker News stories right now.",
-  "Recent Solana token launches with details.",
 ] as const;
 
 const SESSIONS_KEY = "keryx.ask.sessions.v2";
@@ -362,17 +362,31 @@ export default function AskClient() {
             prev.map((m) => (m.id === assistantId ? { ...m, content: m.content + evt.delta } : m)),
           );
         } else if (evt.kind === "toolCall") {
-          patchSession(sid, (prev) =>
-            prev.map((m) => {
-              if (m.id !== assistantId) return m;
-              const events = m.toolEvents ?? [];
-              if (events.some((e) => e.callId === evt.callId)) return m;
-              return {
-                ...m,
-                toolEvents: [...events, { callId: evt.callId, name: evt.name, status: "pending" }],
-              };
-            }),
-          );
+          // Capture whether this is the first tool for this assistant message
+          // so we can delay showing the tool card (makes the "I decided to pay" reasoning visible).
+          const currentMsg = prevSession.find(m => m.id === assistantId);
+          const isFirstTool = !currentMsg?.toolEvents?.length;
+
+          const addTool = () => {
+            patchSession(sid, (prev) =>
+              prev.map((m) => {
+                if (m.id !== assistantId) return m;
+                const events = m.toolEvents ?? [];
+                if (events.some((e) => e.callId === evt.callId)) return m;
+                return {
+                  ...m,
+                  toolEvents: [...events, { callId: evt.callId, name: evt.name, status: "pending" }],
+                };
+              }),
+            );
+          };
+
+          if (isFirstTool) {
+            // Hold the LLM's "Calling X ($price) — reason" text for ~1.8s before the tool card appears.
+            setTimeout(addTool, 1800);
+          } else {
+            addTool();
+          }
         } else if (evt.kind === "toolResult") {
           patchSession(sid, (prev) =>
             prev.map((m) => {
