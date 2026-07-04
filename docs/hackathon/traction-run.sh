@@ -1,23 +1,17 @@
 #!/usr/bin/env bash
 #
-# traction-run.sh — populates /live with real, multi-source activity.
+# traction-run.sh — LOCAL ONLY script to generate realistic onchain activity.
 #
-# What it does: fires ~100 real x402 tool calls at keryxhq.xyz from many
-# different caller identities against a mix of seeded tools + the
-# external-creator demo tool. Every call results in a real onchain USDC
-# transfer (visible on Arcscan). ~35 of them route to the external creator
-# wallet (0x3AfD…B34E) — not the Kēryx treasury.
+# IMPORTANT: This is for local development / hackathon prep only.
+# Run it against your own test deployment or keryxhq.xyz from your machine.
+# Do NOT commit large volumes of artificial calls without clear disclosure.
 #
-# Run 2–3 times to push past 500 calls for a "real product" look on /live.
+# What it does: fires ~100 real x402 tool calls (mix of seeded + external creator payouts).
 #
-# Run this right before submission so /live is fresh when judges land.
-#
-# Requirements: bash, curl, node (for base64-encoding the auth payload).
-# No credentials needed — /api/mcp signs on behalf of the Kēryx
-# facilitator wallet in the same way it does for /ask visitors.
+# Requirements: bash, curl, node.
 #
 # Usage:
-#   bash scripts/traction-run.sh
+#   bash docs/hackathon/traction-run.sh
 #
 # Output: each line reports "→ ok toolId caller" so you can see the run.
 
@@ -98,4 +92,4 @@ echo "~35+ rows tagged 'demo.content-block' pay the external creator wallet"
 echo "0x3AfD3EF93cd406eBBd76fc1b32C58492FAd4B34E — click a tx hash to verify"
 echo "the USDC lands outside the Kēryx treasury."
 echo ""
-echo "Tip: run this script 2x from 300 to comfortably clear 500 calls."
+echo "This script is intended to be run locally for testing/demo prep."

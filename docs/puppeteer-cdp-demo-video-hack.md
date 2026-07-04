@@ -80,7 +80,7 @@ We combined this with a companion script that populates real onchain activity fi
 
 ```bash
 # 1. Make the ledger look alive (real calls, real external payouts)
-bash scripts/traction-run.sh
+bash docs/hackathon/traction-run.sh
 
 # 2. Record the browser
 node scripts/record-demo.mjs
@@ -125,7 +125,7 @@ Use the manual method (still very usable):
 
 1. Open your site in Chrome at exactly 1280×720.
 2. `Cmd + Shift + 5` → "Record Selected Portion".
-3. Follow a timed shot list (we printed the exact one in `scripts/SUBMISSION.md`).
+3. Follow a timed shot list (we printed the exact one in `docs/hackathon/SUBMISSION.md`).
 4. Speak the script while recording.
 5. It will be a little lower fps, but perfectly acceptable.
 
@@ -149,8 +149,8 @@ If this helped you ship a better demo, feel free to quote or link it.
 
 **Files we actually used:**
 
-- `scripts/traction-run.sh` – populates real data
+- `docs/hackathon/traction-run.sh` – populates real data (run locally only)
 - `scripts/record-demo.mjs` – the CDP recorder
-- `scripts/SUBMISSION.md` – full shot list + voice script + form answers
+- `docs/hackathon/SUBMISSION.md` – full shot list + voice script + form answers
 
 Happy shipping. Your demos will look way more professional than the laggy screen recordings everyone else is posting.

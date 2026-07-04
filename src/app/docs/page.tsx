@@ -111,12 +111,17 @@ export default function DocsPage() {
         />
       </Section>
 
-      <Section title="For Claude Code, Cursor, Codex, and any MCP client" id="mcp">
+      <Section title="For Claude Code, Cursor, GitHub Copilot, and any MCP client" id="mcp">
         <p style={pStyle}>
-          <b>Real agents do not use our /ask chat.</b> They talk directly to Kēryx.
-          Add the MCP server once and your agent gets the entire catalog (seeded + community) as native tools.
-          Kēryx handles discovery, x402 payment, settlement, and execution.
+          <b>Real agents do not use our /ask chat.</b> They talk directly to Kēryx via the Model Context Protocol.
+          Add the MCP server once and the agent gets the full catalog (20+ seeded tools + any community-published tools) as native tools.
         </p>
+
+        <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 16 }}>
+          <strong>Note on payments:</strong> Through MCP, tool calls are currently executed in <strong>demo/subsidized mode</strong> (Kēryx covers the cost while MCP clients do not yet support wallets). 
+          For real paid calls with USDC settlement on Arc, use the direct <code>/api/call</code> endpoint or the <Link href="/ask">/ask</Link> playground (which now uses your configured Gateway).
+        </p>
+
         <CodeBlock
           lang="json"
           code={`{
@@ -128,14 +133,61 @@ export default function DocsPage() {
   }
 }`}
         />
+
+        <h3 style={{ fontSize: 15, marginTop: 24, marginBottom: 8 }}>Cursor</h3>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+          <img src="https://cursor.com/favicon.ico" alt="Cursor" width="18" height="18" />
+          <span style={{ fontWeight: 600 }}>Cursor</span>
+        </div>
         <p style={pStyle}>
-          Claude Code: <code>~/.claude/mcp.json</code><br />
-          Cursor: add the block above, or install the repo as a Cursor plugin via <code>.cursor-plugin/plugin.json</code> (symlink to ~/.cursor/plugins/local/keryx or submit to Cursor Marketplace). Deeplink format supported.<br />
-          Then say: "use keryx weather and exchange rates to plan my trip to Berlin".
+          Add the JSON block above to your Cursor settings (Tools &amp; MCP) or project <code>.cursor/mcp.json</code>.
+          <br />
+          Or install the repo as a plugin: symlink to <code>~/.cursor/plugins/local/keryx</code> or submit to the Cursor Marketplace.
         </p>
-          <p style={{ fontSize: 13, color: "var(--text-secondary)" }}>
-          One config. 20 real seeded tools + any community-published. Agents pay per call in sub-cent USDC. No keys, no accounts.
-          <br />Cursor users: the repo includes <code>.cursor-plugin/plugin.json</code> + <code>mcp.json</code> so you can install it as a plugin.
+
+        <h3 style={{ fontSize: 15, marginTop: 20, marginBottom: 8 }}>Claude (Claude.ai, Claude Code, Claude Desktop)</h3>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+          <img src="https://claude.ai/favicon.ico" alt="Claude" width="18" height="18" />
+          <span style={{ fontWeight: 600 }}>Claude by Anthropic</span>
+        </div>
+        <p style={pStyle}>
+          Add as a custom connector:
+        </p>
+        <ul style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 8, paddingLeft: 20 }}>
+          <li>Go to <strong>Settings → Connectors</strong> (or "Add custom connector")</li>
+          <li>Use the URL: <code>https://keryxhq.xyz/api/mcp</code></li>
+          <li>Paste the config block above if your client asks for it.</li>
+        </ul>
+        <p style={{ fontSize: 12.5, color: "var(--text-muted)" }}>
+          Note: The official Claude Connectors Directory requires a Team or Enterprise plan. With a Pro plan you can still add it manually using the URL.
+        </p>
+
+        <h3 style={{ fontSize: 15, marginTop: 20, marginBottom: 8 }}>GitHub Copilot (VS Code / Copilot CLI)</h3>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+          <img src="https://github.githubassets.com/favicons/favicon.svg" alt="GitHub" width="18" height="18" />
+          <span style={{ fontWeight: 600 }}>GitHub Copilot</span>
+        </div>
+        <p style={pStyle}>
+          Add to <code>.vscode/mcp.json</code> (project) or your user MCP config:
+        </p>
+        <CodeBlock
+          lang="json"
+          code={`{
+  "servers": {
+    "keryx": {
+      "type": "http",
+      "url": "https://keryxhq.xyz/api/mcp"
+    }
+  }
+}`}
+        />
+        <p style={{ fontSize: 12.5, color: "var(--text-muted)" }}>
+          Or via CLI: <code>copilot mcp add keryx --transport http --url https://keryxhq.xyz/api/mcp</code>
+        </p>
+
+        <p style={{ fontSize: 13, color: "var(--text-secondary)", marginTop: 16 }}>
+          One config. 20 real seeded tools + community-published tools. 
+          Direct calls (outside MCP) are paid per call in sub-cent USDC on Arc.
         </p>
       </Section>
 
@@ -154,11 +206,11 @@ export default function DocsPage() {
           Live today
         </div>
         <ul style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.8, paddingLeft: 20 }}>
-          <li>20 seeded executable tools (Solana onchain, weather, finance, geo, search, crypto market data, utilities, time/uuid) — all real or fresh, Kēryx runs the handlers</li>
-          <li>Anyone can publish tools (discovery + payment). Handler URL makes them executable by Kēryx agents.</li>
-          <li>Full x402 402 + X-PAYMENT flow, public ledger, MCP server for Claude/Cursor</li>
+          <li>20 seeded executable tools (Solana onchain research, weather, finance/rates, geo, search, crypto signals, utilities, time, uuid) — real public data or fresh computation</li>
+          <li>Anyone can publish tools. Provide a <code>handlerUrl</code> to make them executable by Kēryx surfaces.</li>
+          <li>Full x402 flow + public ledger. MCP server works with Claude, Cursor, GitHub Copilot, and any MCP client.</li>
           <li>OpenAPI spec at <a href="/keryx-openapi.json" style={{ textDecoration: "underline" }}>/keryx-openapi.json</a></li>
-          <li>Onchain registry contract + publisher EIP-191 ownership</li>
+          <li>Onchain registry contract (KeryxRegistry.sol) + EIP-191 publisher ownership</li>
         </ul>
       </div>
 
