@@ -116,6 +116,18 @@ for (const [i, shot] of SHOTS.entries()) {
       console.log(`   ⚠ action failed: ${err instanceof Error ? err.message : err}`);
     }
   } else {
+    // Small natural mouse movement during longer shots so it doesn't feel dead
+    if (shot.wait > 8000) {
+      try {
+        const box = await page.evaluate(() => ({
+          w: window.innerWidth,
+          h: window.innerHeight,
+        }));
+        await page.mouse.move(box.w * 0.3, box.h * 0.35, { steps: 8 });
+        await new Promise(r => setTimeout(r, 600));
+        await page.mouse.move(box.w * 0.65, box.h * 0.55, { steps: 12 });
+      } catch {}
+    }
     await new Promise((r) => setTimeout(r, shot.wait));
   }
 }

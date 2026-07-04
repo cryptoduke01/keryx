@@ -77,8 +77,8 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
             padding: "12px 20px",
             borderBottom: "1px solid var(--border)",
             display: "grid",
-            gridTemplateColumns: "0.9fr 1.6fr 1.2fr 1fr 1.3fr 0.8fr",
-            gap: 14,
+            gridTemplateColumns: "0.85fr 2fr 1.4fr 1.15fr 1.5fr 0.85fr",
+            gap: 16,
             alignItems: "center",
           }}
           className="text-eyebrow ledger-header"
@@ -117,8 +117,8 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
               borderBottom:
                 i < entries.length - 1 ? "1px solid var(--border)" : "none",
               display: "grid",
-              gridTemplateColumns: "0.9fr 1.6fr 1.2fr 1fr 1.3fr 0.8fr",
-              gap: 14,
+              gridTemplateColumns: "0.85fr 2fr 1.4fr 1.15fr 1.5fr 0.85fr",
+              gap: 16,
               alignItems: "center",
               background:
                 flashId === e.id ? "rgba(255,255,255,0.06)" : "transparent",
