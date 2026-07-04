@@ -169,14 +169,19 @@ function parseLine(line: string): Parsed {
     const data = JSON.parse(rest);
     if (tag === "0") return { kind: "text", delta: typeof data === "string" ? data : String(data) };
     if (tag === "9") {
-      const name = typeof data?.toolName === "string" ? data.toolName : "unknown";
+      const name = pickToolName(data) ?? "unknown";
       const callId = typeof data?.toolCallId === "string" ? data.toolCallId : name;
       return { kind: "toolCall", callId, name };
     }
     if (tag === "a") {
-      const name = typeof data?.toolName === "string" ? data.toolName : "unknown";
-      const callId = typeof data?.toolCallId === "string" ? data.toolCallId : name;
       const result = data?.result;
+      // Result chunks from the AI SDK often lack top-level toolName.
+      // Prefer any name on the chunk, then toolId from the execute return value (we always return it).
+      let name = pickToolName(data);
+      if (!name || name === "unknown") {
+        name = pickToolName(result) ?? "unknown";
+      }
+      const callId = typeof data?.toolCallId === "string" ? data.toolCallId : name;
       const ok = !(result && typeof result === "object" && "error" in result);
       const cost =
         result && typeof result === "object" && "paid" in result && result.paid?.priceUsd
@@ -202,6 +207,16 @@ function parseLine(line: string): Parsed {
     return null;
   }
   return null;
+}
+
+function pickToolName(x: unknown): string | undefined {
+  if (!x || typeof x !== "object") return undefined;
+  const o = x as Record<string, unknown>;
+  const candidates = [o.toolName, o.tool_name, o.name, o.toolId, o.tool_id];
+  for (const c of candidates) {
+    if (typeof c === "string" && c.trim()) return c.trim();
+  }
+  return undefined;
 }
 
 // ---------------------------------------------------------------------------
@@ -405,11 +420,12 @@ export default function AskClient() {
                 error: evt.error,
               };
               if (idx >= 0) {
-                const preservedName =
-                  evt.name && evt.name !== "unknown" ? evt.name : next[idx].name;
+                const existing = next[idx].name;
+                const fromEvt = evt.name && evt.name !== "unknown" ? evt.name : undefined;
+                const preservedName = fromEvt || existing || evt.name || "unknown";
                 next[idx] = { ...next[idx], name: preservedName, ...patch };
               } else {
-                next.push({ callId: evt.callId, name: evt.name, ...patch });
+                next.push({ callId: evt.callId, name: evt.name || "unknown", ...patch });
               }
               const updated = { ...m, toolEvents: next };
               // If the tool failed and we have no explanatory text yet, surface it.
@@ -959,7 +975,8 @@ function MessageBubble({ msg }: { msg: UiMessage }) {
 }
 
 function ToolCard({ tool }: { tool: ToolEvent }) {
-  const label = tool.name.replace(/_/g, ".");
+  // Normalize to dotted form for display (solana_rug_check or solana.rug-check -> solana.rug.check)
+  const label = tool.name.replace(/[._]/g, ".");
   const isReal =
     tool.settlementMode === "local" || tool.settlementMode === "gateway";
   const cleanHash = tool.txHash?.replace(/^demo_/, "");
