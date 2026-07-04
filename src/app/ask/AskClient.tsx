@@ -309,6 +309,7 @@ export default function AskClient() {
     if (!text.trim() || busy) return;
     const userMsg: UiMessage = { id: newId(), role: "user", content: text.trim() };
     const assistantId = newId();
+    let firstToolForAssistant = false; // used to delay the first tool card (~1.8s) so the "why I paid" reasoning is visible
     setInput("");
 
     // Lock in the session id up front. If we're starting fresh, create one
@@ -362,10 +363,10 @@ export default function AskClient() {
             prev.map((m) => (m.id === assistantId ? { ...m, content: m.content + evt.delta } : m)),
           );
         } else if (evt.kind === "toolCall") {
-          // Capture whether this is the first tool for this assistant message
-          // so we can delay showing the tool card (makes the "I decided to pay" reasoning visible).
-          const currentMsg = prevSession.find(m => m.id === assistantId);
-          const isFirstTool = !currentMsg?.toolEvents?.length;
+          // First tool for this assistant response gets a short delay so the streamed
+          // "Calling X because..." reasoning stays on screen long enough to be seen.
+          const isFirstTool = !firstToolForAssistant;
+          if (isFirstTool) firstToolForAssistant = true;
 
           const addTool = () => {
             patchSession(sid, (prev) =>
@@ -674,7 +675,7 @@ function ChatColumn({
         {messages.length === 0 && (
           <div style={{ margin: "auto", textAlign: "center", maxWidth: 460 }}>
             <div className="text-eyebrow" style={{ marginBottom: 10 }}>
-              Try one
+              Try one · designed to force a paid decision
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {SUGGESTIONS.map((s) => (
