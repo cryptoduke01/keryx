@@ -982,8 +982,8 @@ function MessageBubble({ msg }: { msg: UiMessage }) {
 }
 
 function ToolCard({ tool }: { tool: ToolEvent }) {
-  // Normalize to dotted form for display (solana_rug_check or solana.rug-check -> solana.rug.check)
-  const label = tool.name.replace(/[._]/g, ".");
+  // Best effort to show something like "solana.rug-check"
+  const label = tool.name.replace(/_/g, ".").replace(/\.([a-z])/gi, ".$1");
   const isReal =
     tool.settlementMode === "local" || tool.settlementMode === "gateway";
   const cleanHash = tool.txHash?.replace(/^demo_/, "");
