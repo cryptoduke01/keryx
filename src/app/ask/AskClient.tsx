@@ -389,9 +389,16 @@ export default function AskClient() {
                 if (m.id !== assistantId) return m;
                 const events = m.toolEvents ?? [];
                 if (events.some((e) => e.callId === evt.callId)) return m;
+                // If the structured event gave us "unknown", try to fish the name out of the
+                // "Calling xxx ($price) — reason" text the model just streamed. Looks much better in UI.
+                let displayName = evt.name;
+                if (!displayName || displayName === "unknown") {
+                  const match = m.content.match(/Calling\s+([a-zA-Z0-9_.-]+)/i);
+                  if (match) displayName = match[1];
+                }
                 return {
                   ...m,
-                  toolEvents: [...events, { callId: evt.callId, name: evt.name, status: "pending" }],
+                  toolEvents: [...events, { callId: evt.callId, name: displayName || "tool", status: "pending" }],
                 };
               }),
             );
