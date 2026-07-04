@@ -123,15 +123,15 @@ export default function DocsPage() {
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 18, alignItems: "center" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <img src="/logos/cursor.svg" alt="Cursor" width="22" height="22" style={{ objectFit: "contain" }} />
+              <img src="/logos/cursor.png" alt="Cursor" width="22" height="22" style={{ objectFit: "contain" }} />
               <span style={{ fontSize: 14, fontWeight: 600 }}>Cursor</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <img src="/logos/claude.svg" alt="Claude" width="22" height="22" style={{ objectFit: "contain" }} />
+              <img src="/logos/claude.png" alt="Claude" width="22" height="22" style={{ objectFit: "contain" }} />
               <span style={{ fontSize: 14, fontWeight: 600 }}>Claude</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <img src="/logos/copilot.svg" alt="GitHub Copilot" width="22" height="22" style={{ objectFit: "contain" }} />
+              <img src="/logos/copilot.png" alt="GitHub Copilot" width="22" height="22" style={{ objectFit: "contain" }} />
               <span style={{ fontSize: 14, fontWeight: 600 }}>GitHub Copilot</span>
             </div>
             <div style={{ fontSize: 13, color: "var(--text-muted)" }}>+ any MCP client</div>
@@ -161,7 +161,7 @@ export default function DocsPage() {
         <h3 style={{ fontSize: 15, marginTop: 24, marginBottom: 8 }}>Cursor</h3>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
           {/* Official Cursor logos available at https://cursor.com/brand */}
-          <img src="/logos/cursor.svg" alt="Cursor" width="20" height="20" style={{ objectFit: "contain" }} />
+          <img src="/logos/cursor.png" alt="Cursor" width="20" height="20" style={{ objectFit: "contain" }} />
           <span style={{ fontWeight: 600 }}>Cursor</span>
         </div>
         <p style={pStyle}>
@@ -173,7 +173,7 @@ export default function DocsPage() {
         <h3 style={{ fontSize: 15, marginTop: 20, marginBottom: 8 }}>Claude (Claude.ai, Claude Code, Claude Desktop)</h3>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
           {/* Official Anthropic / Claude assets: anthropic.com/news → Media assets / press kit */}
-          <img src="/logos/claude.svg" alt="Claude" width="20" height="20" style={{ objectFit: "contain" }} />
+          <img src="/logos/claude.png" alt="Claude" width="20" height="20" style={{ objectFit: "contain" }} />
           <span style={{ fontWeight: 600 }}>Claude by Anthropic</span>
         </div>
         <p style={pStyle}>
@@ -191,7 +191,7 @@ export default function DocsPage() {
         <h3 style={{ fontSize: 15, marginTop: 20, marginBottom: 8 }}>GitHub Copilot (VS Code / Copilot CLI)</h3>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
           {/* GitHub Copilot lockups: brand.github.com/brand-identity/copilot (note: as of 2025, prefers product lockups over standalone icon) */}
-          <img src="/logos/copilot.svg" alt="GitHub Copilot" width="20" height="20" style={{ objectFit: "contain" }} />
+          <img src="/logos/copilot.png" alt="GitHub Copilot" width="20" height="20" style={{ objectFit: "contain" }} />
           <span style={{ fontWeight: 600 }}>GitHub Copilot</span>
         </div>
         <p style={pStyle}>

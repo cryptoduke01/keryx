@@ -5,29 +5,23 @@ Place the official brand assets here for consistent use across docs, pitch, and 
 ## Sources (download and rename)
 
 - **Cursor**: https://cursor.com/brand  
-  Recommended: horizontal lockup or cube (2D or 2.5D). Use light/dark variants as needed.  
-  Suggested file: `cursor.svg` or `cursor.png`
+  Recommended: horizontal lockup or cube.  
+  Drop as `cursor.png` (or .svg).
 
 - **Claude (Anthropic)**:  
-  Official press kit: https://www.anthropic.com/news (Media assets → Download press kit)  
-  Or Brandfolder: https://brandfolder.com/anthropic/newsroom  
-  Public domain wordmark SVG also available on Wikimedia.  
-  Suggested: `claude.svg` (wordmark) or the symbol.
+  Official press kit from the Anthropic folder / https://www.anthropic.com/news (Media assets).  
+  Drop as `claude.png` (or .svg).
 
 - **GitHub Copilot**:  
-  Official: https://brand.github.com/brand-identity/copilot  
-  Main toolkit: https://brand.github.com/  
-  Note: As of 2025+, GitHub prefers product lockups integrated with the GitHub brand rather than a standalone big Copilot icon.  
-  Suggested: `copilot.svg` (lockup)
+  https://brand.github.com/ (or the Copilot section in the toolkit).  
+  Drop as `copilot.png` (or .svg).
 
-- **OpenAI / Codex** (if using for Codex plugins):  
-  Use official OpenAI assets where available. Third-party mirrors exist for legacy Codex marks.  
-  For current coding agents, Copilot lockup is often more relevant.
+- **OpenAI / Codex** (optional): Use official OpenAI marks if showing a Codex badge.
 
 ## Usage
 
-All pages reference these from `/logos/`.
+The site references `/logos/cursor.png`, `/logos/claude.png`, `/logos/copilot.png`.
 
-Keep the files small, optimized, and with proper clear space per brand guidelines.
+Place the downloaded files with exactly those basenames (png or svg both work if you adjust the img src or just use .png).
 
-Do not modify the marks (no effects, stretching, etc.).
+Keep files small and respect brand clear space. Do not recolor or distort.
