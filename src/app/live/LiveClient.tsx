@@ -77,8 +77,8 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
             padding: "12px 20px",
             borderBottom: "1px solid var(--border)",
             display: "grid",
-            gridTemplateColumns: "0.8fr 1.3fr 0.8fr 0.7fr 1.1fr 0.7fr",
-            gap: 12,
+            gridTemplateColumns: "0.9fr 1.6fr 1.2fr 1fr 1.3fr 0.8fr",
+            gap: 14,
             alignItems: "center",
           }}
           className="text-eyebrow ledger-header"
@@ -117,8 +117,8 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
               borderBottom:
                 i < entries.length - 1 ? "1px solid var(--border)" : "none",
               display: "grid",
-              gridTemplateColumns: "0.8fr 1.3fr 0.8fr 0.7fr 1.1fr 0.7fr",
-              gap: 12,
+              gridTemplateColumns: "0.9fr 1.6fr 1.2fr 1fr 1.3fr 0.8fr",
+              gap: 14,
               alignItems: "center",
               background:
                 flashId === e.id ? "rgba(255,255,255,0.06)" : "transparent",
@@ -142,7 +142,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
             <span className="cell-publisher" style={{ fontSize: 12, color: "var(--text-primary)" }}>
               {e.publisherName}
               {e.netToPublisherUsd != null && (
-                <div style={{ fontSize: 10, color: "#10b981" }}>+${e.netToPublisherUsd.toFixed(4)}</div>
+                <div style={{ fontSize: 9.5, color: "#10b981", lineHeight: 1.1, marginTop: 1 }}>+${e.netToPublisherUsd.toFixed(4)}</div>
               )}
             </span>
             <span
@@ -156,7 +156,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
               }}
             >
               ${e.priceUsd.toFixed(4)}
-              <div style={{ fontSize: 9, color: "var(--text-muted)" }}>Kēryx 5%</div>
+              <div style={{ fontSize: 9, color: "var(--text-muted)", lineHeight: 1.1 }}>Kēryx 5%</div>
             </span>
             <span className="cell-settlement">
               <SettlementCell mode={e.settlementMode} txHash={e.txHash} />

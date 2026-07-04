@@ -27,6 +27,13 @@
 import puppeteer from "puppeteer";
 import { PuppeteerScreenRecorder } from "puppeteer-screen-recorder";
 
+// Auto-install Chrome if missing (helps on fresh machines)
+try {
+  // This is a no-op if already present
+  const { execSync } = await import("child_process");
+  execSync("npx puppeteer browsers install chrome", { stdio: "inherit" });
+} catch {}
+
 const BASE = process.env.KERYX_BASE_URL ?? "https://keryxhq.xyz";
 const OUT = process.env.OUT ?? "./demo.mp4";
 
