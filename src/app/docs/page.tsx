@@ -141,7 +141,7 @@ export default function DocsPage() {
 
         <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 16 }}>
           <strong>Note on payments:</strong> Through MCP, tool calls are currently executed in <strong>demo/subsidized mode</strong> (Kēryx covers the cost while MCP clients do not yet support wallets). 
-          For real paid calls with USDC settlement on Arc, use the direct <code>/api/call</code> endpoint or the <Link href="/ask">/ask</Link> playground (which now uses your configured Gateway).
+          For real paid calls with USDC settlement on Arc, use the direct <code>/api/call</code> endpoint. The current deployment runs the facilitator in demo mode; setting <code>CIRCLE_GATEWAY_API_URL</code> or a local facilitator private key flips it to real onchain settlement without any code change.
         </p>
 
         <CodeBlock
