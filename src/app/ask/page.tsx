@@ -8,25 +8,49 @@ export const metadata = {
 
 export default function AskPage() {
   return (
-    <div className="container-page" style={{ paddingTop: 40, paddingBottom: 80 }}>
-      <div style={{ marginBottom: 28, maxWidth: 720 }}>
-        <div className="text-eyebrow" style={{ marginBottom: 12 }}>
-          The playground
+    <div className="container-page" style={{ paddingTop: 16, paddingBottom: 48 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "baseline",
+          justifyContent: "space-between",
+          gap: 16,
+          flexWrap: "wrap",
+          marginBottom: 12,
+          paddingBottom: 10,
+          borderBottom: "1px solid var(--border)",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "baseline", gap: 14, flexWrap: "wrap" }}>
+          <h1
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(1.6rem, 2.8vw, 2rem)",
+              lineHeight: 1.1,
+              fontWeight: 500,
+              letterSpacing: "-0.02em",
+              margin: 0,
+              color: "var(--text-primary)",
+            }}
+          >
+            Ask Kēryx
+          </h1>
+          <span className="text-eyebrow" style={{ color: "var(--text-muted)" }}>
+            The playground
+          </span>
         </div>
-        <h1 className="text-headline" style={{ marginBottom: 12 }}>
-          Ask Kēryx
-        </h1>
-        <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.6 }}>
-          Every question is answered with real tool calls. Every call becomes a real
-          USDC transaction on Arc. Watch the ledger fill on{" "}
-          <a href="/live" style={{ textDecoration: "underline", textUnderlineOffset: 3 }}>
-            /live
-          </a>{" "}
-          while you chat.
-        </p>
-        <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 8 }}>
-          The agent has a tiny budget and is instructed to only spend when the fresh data is worth the cost.
-          For many general questions it will answer from knowledge without calling paid tools.
+        <p
+          style={{
+            fontSize: 12.5,
+            color: "var(--text-muted)",
+            lineHeight: 1.4,
+            maxWidth: 460,
+            margin: 0,
+          }}
+        >
+          Real tool calls, real USDC on Arc. The agent only spends when fresh data
+          is worth the cost &mdash; watch the ledger fill on{" "}
+          <a href="/live" style={{ color: "var(--text-secondary)", textDecoration: "underline", textUnderlineOffset: 3 }}>/live</a>.
         </p>
       </div>
 

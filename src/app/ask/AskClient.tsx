@@ -493,9 +493,10 @@ export default function AskClient() {
       className="ask-shell"
       style={{
         display: "grid",
-        gridTemplateColumns: "240px minmax(0, 1fr) 300px",
+        gridTemplateColumns: "200px minmax(0, 620px) 260px",
         gap: 14,
         alignItems: "start",
+        justifyContent: "center",
       }}
     >
       <SessionRail
@@ -530,7 +531,7 @@ export default function AskClient() {
           __html: `
             @media (max-width: 1080px) {
               .ask-shell {
-                grid-template-columns: 220px minmax(0, 1fr) !important;
+                grid-template-columns: 180px minmax(0, 1fr) !important;
               }
               .ask-activity { display: none !important; }
             }

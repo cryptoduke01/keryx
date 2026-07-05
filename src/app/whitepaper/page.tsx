@@ -1,6 +1,5 @@
 import Link from "next/link";
 import ArtPanel from "@/components/ArtPanel";
-import { BrandLogo } from "@/components/BrandLogo";
 
 export const metadata = {
   title: "Whitepaper · Kēryx",
@@ -265,12 +264,8 @@ export default function WhitepaperPage() {
           The same tools are instantly available to agents through the Model Context Protocol (MCP).
           Cursor, Claude (via custom connectors), GitHub Copilot, and any MCP-compatible client can discover and call them natively with a one-line config.
         </P>
-        <div style={{ display: "flex", gap: 16, alignItems: "center", margin: "12px 0", flexWrap: "wrap" }}>
-          <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Native in:</span>
-          <BrandLogo name="cursor" size={18} />
-          <BrandLogo name="claude" size={18} />
-          <BrandLogo name="copilot" size={18} />
-          <span style={{ fontSize: 12, color: "var(--text-muted)" }}>+ Codex plugins (developers.openai.com/codex/plugins/build)</span>
+        <div style={{ fontSize: 13, color: "var(--text-secondary)", margin: "8px 0" }}>
+          Native in Cursor, Claude, GitHub Copilot, Codex + any MCP client.
         </div>
         <H3>2. Discover</H3>
         <P>

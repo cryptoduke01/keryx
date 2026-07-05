@@ -37,6 +37,7 @@ export default function PublishClient() {
 
   const [connectError, setConnectError] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [manualAddress, setManualAddress] = useState("");
   const wrongNetwork = isConnected && chainId !== arcTestnet.id;
 
   const [name, setName] = useState("");
@@ -149,7 +150,7 @@ export default function PublishClient() {
           handlerUrl: handlerUrl.trim(),
           args: parsedArgs,
           sampleArgs: {},
-          publisherWallet: address,
+          publisherWallet: address || (manualAddress || undefined),
           publisherName: publisherName.trim() || "Anonymous",
           nonce: nonceRes.nonce,
           issuedAt: nonceRes.issuedAt,
@@ -229,7 +230,7 @@ export default function PublishClient() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           id: slug.trim(),
-          publisherWallet: address,
+          publisherWallet: address || (manualAddress || undefined),
           nonce: nonceRes.nonce,
           issuedAt: nonceRes.issuedAt,
           signature,
@@ -379,6 +380,8 @@ export default function PublishClient() {
         pickerOpen={pickerOpen}
         connectors={connectors.map((c) => ({ id: c.id, name: c.name, ready: !!c }))}
         error={connectError}
+        manualAddress={manualAddress}
+        onManualAddressChange={setManualAddress}
         onOpenPicker={() => {
           setConnectError(null);
           setPickerOpen(true);
@@ -643,6 +646,8 @@ function WalletHeader({
   connectors,
   pickerOpen,
   error,
+  manualAddress,
+  onManualAddressChange,
   onOpenPicker,
   onPickConnector,
   onSwitchNetwork,
@@ -657,11 +662,14 @@ function WalletHeader({
   connectors: Array<{ id: string; name: string; ready: boolean }>;
   pickerOpen: boolean;
   error: string | null;
+  manualAddress: string;
+  onManualAddressChange: (value: string) => void;
   onOpenPicker: () => void;
   onPickConnector: (id: string) => void | Promise<void>;
   onSwitchNetwork: () => void | Promise<void>;
   onDisconnect: () => void;
 }) {
+  const manualIsValid = /^0x[a-fA-F0-9]{40}$/.test(manualAddress.trim());
   return (
     <div
       style={{
@@ -701,6 +709,21 @@ function WalletHeader({
                   via {connectorName}
                 </span>
               )}
+            </span>
+          ) : manualIsValid ? (
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 13,
+                color: "var(--text-primary)",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {manualAddress}
+              <span style={{ marginLeft: 8, fontSize: 11, color: "var(--text-muted)" }}>
+                preview only
+              </span>
             </span>
           ) : (
             <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>
@@ -752,6 +775,40 @@ function WalletHeader({
               {c.name}
             </button>
           ))}
+        </div>
+      )}
+
+      {!isConnected && (
+        <div style={{ marginTop: 4 }}>
+          <div style={{ fontSize: 11.5, color: "var(--text-muted)", marginBottom: 4 }}>
+            Or paste Arc address (preview only — full publish still needs a signature)
+          </div>
+          <input
+            type="text"
+            value={manualAddress}
+            onChange={(e) => onManualAddressChange(e.target.value.trim())}
+            placeholder="0xYourArcWallet..."
+            style={{
+              padding: "8px 10px",
+              borderRadius: 6,
+              border: `1px solid ${manualAddress && !manualIsValid ? "rgba(220,80,80,0.5)" : "var(--border)"}`,
+              background: "var(--surface-3)",
+              color: "var(--text-primary)",
+              fontFamily: "var(--font-mono)",
+              fontSize: 12.5,
+              outline: "none",
+              width: "100%",
+              maxWidth: 420,
+            }}
+          />
+          {manualAddress && !manualIsValid && (
+            <div style={{ fontSize: 11, color: "rgba(220,80,80,0.9)", marginTop: 3 }}>Not a valid 0x address.</div>
+          )}
+          {manualIsValid && (
+            <div style={{ fontSize: 11, color: "var(--text-secondary)", marginTop: 3 }}>
+              Preview set. Connect to sign and publish.
+            </div>
+          )}
         </div>
       )}
 

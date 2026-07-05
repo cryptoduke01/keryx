@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { BrandLogo } from "@/components/BrandLogo";
 import CopyButton from "@/components/CopyButton";
 
 export const metadata = {
@@ -119,25 +118,8 @@ export default function DocsPage() {
           Add the MCP server once and the agent gets the full catalog (20+ seeded tools + any community-published tools) as native tools.
         </p>
 
-        <div style={{ margin: "16px 0 20px", padding: "14px 18px", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: 12 }}>
-          <div style={{ fontSize: 11, color: "var(--text-muted)", marginBottom: 10, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-            Available in the agents you already use
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 18, alignItems: "center" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <BrandLogo name="cursor" size={22} />
-              <span style={{ fontSize: 14, fontWeight: 600 }}>Cursor</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <BrandLogo name="claude" size={22} />
-              <span style={{ fontSize: 14, fontWeight: 600 }}>Claude</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <BrandLogo name="copilot" size={22} />
-              <span style={{ fontSize: 14, fontWeight: 600 }}>GitHub Copilot</span>
-            </div>
-            <div style={{ fontSize: 13, color: "var(--text-muted)" }}>+ any MCP client</div>
-          </div>
+        <div style={{ margin: "12px 0 16px", fontSize: 13, color: "var(--text-secondary)" }}>
+          Works with Cursor, Claude (custom connector), GitHub Copilot, Codex, and any MCP client.
         </div>
 
         <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 16 }}>
@@ -158,11 +140,6 @@ export default function DocsPage() {
         />
 
         <h3 style={{ fontSize: 15, marginTop: 24, marginBottom: 8 }}>Cursor</h3>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-          {/* Drop your downloaded Cursor logo as public/logos/cursor.png to self-host */}
-          <BrandLogo name="cursor" size={20} />
-          <span style={{ fontWeight: 600 }}>Cursor</span>
-        </div>
         <p style={pStyle}>
           Add the JSON block above to your Cursor settings (Tools &amp; MCP) or project <code>.cursor/mcp.json</code>.
           <br />
@@ -170,11 +147,6 @@ export default function DocsPage() {
         </p>
 
         <h3 style={{ fontSize: 15, marginTop: 20, marginBottom: 8 }}>Claude (Claude.ai, Claude Code, Claude Desktop)</h3>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-          {/* Drop your downloaded Claude logo as public/logos/claude.png to self-host */}
-          <BrandLogo name="claude" size={20} />
-          <span style={{ fontWeight: 600 }}>Claude by Anthropic</span>
-        </div>
         <p style={pStyle}>
           Add as a custom connector:
         </p>
@@ -188,11 +160,6 @@ export default function DocsPage() {
         </p>
 
         <h3 style={{ fontSize: 15, marginTop: 20, marginBottom: 8 }}>GitHub Copilot (VS Code / Copilot CLI)</h3>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-          {/* Drop your downloaded Copilot logo as public/logos/copilot.png to self-host */}
-          <BrandLogo name="copilot" size={20} />
-          <span style={{ fontWeight: 600 }}>GitHub Copilot</span>
-        </div>
         <p style={pStyle}>
           Add to <code>.vscode/mcp.json</code> (project) or your user MCP config:
         </p>
