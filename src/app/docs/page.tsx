@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
+import CopyButton from "@/components/CopyButton";
 
 export const metadata = {
   title: "Docs · Kēryx",
@@ -294,26 +295,40 @@ function Section({ title, children, id }: { title: string; children: React.React
 
 function CodeBlock({ code, lang }: { code: string; lang?: string }) {
   return (
-    <pre
+    <div
       style={{
+        position: "relative",
         background: "var(--surface-2)",
         border: "1px solid var(--border)",
         borderRadius: 8,
-        padding: 16,
-        fontFamily: "var(--font-mono)",
-        fontSize: 12.5,
-        lineHeight: 1.55,
-        overflowX: "auto",
-        color: "var(--text-primary)",
         marginBottom: 14,
+        overflow: "hidden",
       }}
     >
-      {lang && (
-        <div className="text-eyebrow" style={{ marginBottom: 8, fontSize: 9 }}>
-          {lang}
-        </div>
-      )}
-      <code>{code}</code>
-    </pre>
+      <div
+        style={{
+          position: "absolute",
+          top: 8,
+          right: 8,
+          zIndex: 1,
+        }}
+      >
+        <CopyButton text={code} tag={lang} />
+      </div>
+      <pre
+        style={{
+          margin: 0,
+          padding: 16,
+          paddingTop: lang ? 40 : 44,
+          fontFamily: "var(--font-mono)",
+          fontSize: 12.5,
+          lineHeight: 1.55,
+          overflowX: "auto",
+          color: "var(--text-primary)",
+        }}
+      >
+        <code>{code}</code>
+      </pre>
+    </div>
   );
 }

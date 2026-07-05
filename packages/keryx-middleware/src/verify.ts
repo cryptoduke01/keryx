@@ -32,18 +32,6 @@ export const USDC_DOMAIN: Record<
     chainId: 5042001,
     verifyingContract: "0x3600000000000000000000000000000000000000",
   },
-  "base-sepolia": {
-    name: "USDC",
-    version: "2",
-    chainId: 84532,
-    verifyingContract: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
-  },
-  base: {
-    name: "USD Coin",
-    version: "2",
-    chainId: 8453,
-    verifyingContract: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-  },
 };
 
 /** EIP-3009 `TransferWithAuthorization` typed-data types. */

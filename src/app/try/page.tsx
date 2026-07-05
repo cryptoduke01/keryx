@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CopyButton from "@/components/CopyButton";
 
 export const metadata = {
   title: "Try Kēryx · Test the full flow in five minutes",
@@ -306,21 +307,33 @@ function P({ children }: { children: React.ReactNode }) {
 
 function CodeBlock({ code }: { code: string }) {
   return (
-    <pre
+    <div
       style={{
+        position: "relative",
         background: "var(--surface-2)",
         border: "1px solid var(--border)",
         borderRadius: 8,
-        padding: 16,
-        fontFamily: "var(--font-mono)",
-        fontSize: 12.5,
-        lineHeight: 1.55,
-        overflowX: "auto",
-        color: "var(--text-primary)",
         marginBottom: 14,
+        overflow: "hidden",
       }}
     >
-      <code>{code}</code>
-    </pre>
+      <div style={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}>
+        <CopyButton text={code} />
+      </div>
+      <pre
+        style={{
+          margin: 0,
+          padding: 16,
+          paddingTop: 44,
+          fontFamily: "var(--font-mono)",
+          fontSize: 12.5,
+          lineHeight: 1.55,
+          overflowX: "auto",
+          color: "var(--text-primary)",
+        }}
+      >
+        <code>{code}</code>
+      </pre>
+    </div>
   );
 }

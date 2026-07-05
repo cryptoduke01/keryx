@@ -274,10 +274,68 @@ export default async function Landing() {
             />
             <TractionStat
               eyebrow="SDK on npm"
-              value="v0.1.0"
+              value="v0.1.1"
               hint="@keryxhq/middleware"
               href="https://www.npmjs.com/package/@keryxhq/middleware"
             />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 16,
+              flexWrap: "wrap",
+              marginTop: 22,
+              paddingTop: 20,
+              borderTop: "1px solid var(--border)",
+            }}
+          >
+            <div style={{ fontSize: 13, color: "var(--text-muted)", maxWidth: 640, lineHeight: 1.55 }}>
+              Every fresh browser session that pays for a tool becomes one unique caller. Fire a call, ping your team, share the URL &mdash; the strip above updates live.
+            </div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <Link
+                href="/ask"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "8px 14px",
+                  borderRadius: 8,
+                  background: "var(--text-primary)",
+                  color: "var(--surface-0)",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  textDecoration: "none",
+                }}
+              >
+                Fire a live call &rarr;
+              </Link>
+              <a
+                href="https://twitter.com/intent/tweet?text=Kēryx%20—%20the%20paid%20tool%20registry%20for%20AI%20agents.%20x402%20%2B%20USDC%20on%20Arc.%20one%20wrapper%2C%20one%20npm%20install%2C%20agents%20pay%20per%20call.&url=https%3A%2F%2Fkeryxhq.xyz"
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "8px 14px",
+                  borderRadius: 8,
+                  border: "1px solid var(--border)",
+                  background: "var(--surface-2)",
+                  color: "var(--text-primary)",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  textDecoration: "none",
+                }}
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+                Share on X
+              </a>
+            </div>
           </div>
         </div>
         <style

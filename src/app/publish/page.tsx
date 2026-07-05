@@ -34,20 +34,22 @@ export default function PublishPage() {
       >
         <PublishClient />
         <div className="publish-art">
-          <ArtPanel
-            src="/inspo/publish-hero.jpg"
-            alt="A palace of publishers watched over by heralds"
-            aspectRatio="3 / 4"
-            position="50% 40%"
-            variant="raw"
-            overlayText="EVERY TOOL YOU PUBLISH BECOMES ANOTHER MESSENGER IN THE REGISTRY."
-          />
+          <div style={{ position: "sticky", top: 88 }}>
+            <ArtPanel
+              src="/inspo/publish-hero.jpg"
+              alt="A palace of publishers watched over by heralds"
+              aspectRatio="4 / 5"
+              position="50% 40%"
+              variant="raw"
+              overlayText="EVERY TOOL YOU PUBLISH BECOMES ANOTHER MESSENGER IN THE REGISTRY."
+            />
+          </div>
         </div>
       </div>
       <style
         dangerouslySetInnerHTML={{
           __html: `
-            @media (max-width: 900px) {
+            @media (max-width: 1080px) {
               .publish-grid { grid-template-columns: 1fr !important; }
               .publish-art { display: none; }
             }

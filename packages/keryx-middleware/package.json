@@ -1,6 +1,6 @@
 {
   "name": "@keryxhq/middleware",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Turn any HTTP handler into a paid tool for AI agents. Speaks x402, verifies EIP-3009 USDC authorizations, settles on Arc.",
   "keywords": [
     "x402",

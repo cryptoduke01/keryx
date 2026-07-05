@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CopyButton from "@/components/CopyButton";
 
 export const metadata = {
   title: "SDK · @keryxhq/middleware",
@@ -86,23 +87,69 @@ export default function SdkPage() {
         </p>
         <div
           style={{
-            padding: "10px 14px",
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "10px 12px 10px 16px",
             border: "1px solid var(--border)",
             borderRadius: 10,
             background: "var(--surface-2)",
-            fontFamily: "var(--font-mono)",
-            fontSize: 13.5,
-            color: "var(--text-primary)",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 10,
+            maxWidth: 560,
           }}
         >
-          <span style={{ color: "var(--text-muted)" }}>$</span>
-          pnpm add @keryxhq/middleware viem
+          <span style={{ color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: 13.5 }}>$</span>
+          <span
+            style={{
+              flex: 1,
+              fontFamily: "var(--font-mono)",
+              fontSize: 13.5,
+              color: "var(--text-primary)",
+              overflow: "auto",
+              whiteSpace: "nowrap",
+            }}
+          >
+            pnpm add @keryxhq/middleware viem
+          </span>
+          <CopyButton text="pnpm add @keryxhq/middleware viem" />
         </div>
-        <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 8 }}>
-          Also works with npm and yarn. <code style={inlineCode}>viem</code> is a peer dep &mdash; already in most Web3 projects.
+        <div style={{ display: "flex", gap: 12, marginTop: 10, flexWrap: "wrap", alignItems: "center" }}>
+          <a
+            href="https://www.npmjs.com/package/@keryxhq/middleware"
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "6px 12px",
+              borderRadius: 8,
+              border: "1px solid var(--border)",
+              background: "var(--surface-1)",
+              color: "var(--text-primary)",
+              fontSize: 12.5,
+              fontFamily: "var(--font-mono)",
+              fontWeight: 600,
+              textDecoration: "none",
+            }}
+          >
+            <span
+              style={{
+                fontSize: 9,
+                padding: "1px 5px",
+                borderRadius: 3,
+                background: "#cb3837",
+                color: "white",
+                letterSpacing: "0.06em",
+              }}
+            >
+              npm
+            </span>
+            <span>@keryxhq/middleware</span>
+            <span style={{ color: "var(--text-muted)" }}>&rarr;</span>
+          </a>
+          <span style={{ fontSize: 12, color: "var(--text-muted)" }}>
+            Also works with npm and yarn. <code style={inlineCode}>viem</code> is a peer dep.
+          </span>
         </div>
       </div>
 
@@ -188,8 +235,11 @@ export default function SdkPage() {
       <section style={{ marginBottom: 44 }}>
         <div style={sectionHeader}>
           <div className="text-eyebrow">Networks</div>
-          <h2 style={sectionH2}>Arc first. Base optional.</h2>
+          <h2 style={sectionH2}>Arc-native, USDC-priced.</h2>
         </div>
+        <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, marginBottom: 14, maxWidth: 640 }}>
+          The SDK ships with two Arc networks baked in. Arc is a stablecoin-native chain built by Circle where gas itself is denominated in USDC, so a sub-cent call doesn&rsquo;t get eaten alive by transaction fees. That&rsquo;s the only price band where per-call payments make sense.
+        </p>
         <div
           style={{
             border: "1px solid var(--border)",
@@ -217,8 +267,6 @@ export default function SdkPage() {
               {[
                 { n: "arc-testnet (default)", id: "5042002", a: "0x3600…0000" },
                 { n: "arc-mainnet", id: "5042001", a: "0x3600…0000" },
-                { n: "base-sepolia", id: "84532", a: "0x036C…CF7e" },
-                { n: "base", id: "8453", a: "0x8335…2913" },
               ].map((row) => (
                 <tr key={row.n} style={{ borderTop: "1px solid var(--border)" }}>
                   <td style={td}>{row.n}</td>
@@ -288,22 +336,33 @@ export default function SdkPage() {
 
 function CodeBlock({ code }: { code: string }) {
   return (
-    <pre
+    <div
       style={{
-        margin: 0,
-        padding: 20,
+        position: "relative",
         border: "1px solid var(--border)",
         borderRadius: 10,
         background: "var(--surface-1)",
-        overflowX: "auto",
-        fontFamily: "var(--font-mono)",
-        fontSize: 13,
-        lineHeight: 1.6,
-        color: "var(--text-primary)",
+        overflow: "hidden",
       }}
     >
-      <code>{code}</code>
-    </pre>
+      <div style={{ position: "absolute", top: 10, right: 10, zIndex: 1 }}>
+        <CopyButton text={code} tag="typescript" />
+      </div>
+      <pre
+        style={{
+          margin: 0,
+          padding: 20,
+          paddingTop: 44,
+          overflowX: "auto",
+          fontFamily: "var(--font-mono)",
+          fontSize: 13,
+          lineHeight: 1.6,
+          color: "var(--text-primary)",
+        }}
+      >
+        <code>{code}</code>
+      </pre>
+    </div>
   );
 }
 

@@ -8,22 +8,18 @@
  *   import { paidExpress } from "@keryxhq/middleware/express";
  */
 
-export type Network = "arc-testnet" | "arc-mainnet" | "base-sepolia" | "base";
+export type Network = "arc-testnet" | "arc-mainnet";
 
 /** CAIP-2 identifier for the supported networks. */
 export const NETWORK_CAIP2: Record<Network, string> = {
   "arc-testnet": "eip155:5042002",
   "arc-mainnet": "eip155:5042001",
-  "base-sepolia": "eip155:84532",
-  base: "eip155:8453",
 };
 
 /** Canonical USDC asset address per network. Arc uses USDC as native gas at 0x360…0000. */
 export const USDC_ADDRESS: Record<Network, `0x${string}`> = {
   "arc-testnet": "0x3600000000000000000000000000000000000000",
   "arc-mainnet": "0x3600000000000000000000000000000000000000",
-  "base-sepolia": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
-  base: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
 };
 
 /** Configuration for a single paid endpoint. */

@@ -3,6 +3,23 @@
 All notable changes to `@keryxhq/middleware` are documented here. The package
 follows [semver](https://semver.org).
 
+## 0.1.1 — 2026-07-05
+
+### Changed
+
+- **Focused on Arc.** Removed `base` and `base-sepolia` from the `Network`
+  type, `NETWORK_CAIP2`, `USDC_ADDRESS`, and `USDC_DOMAIN` tables. Kēryx is
+  Arc-native: settlement on any other L1 costs more in gas than a sub-cent
+  call, so the SDK now only ships with `arc-testnet` (default) and
+  `arc-mainnet`. Base-family support can return as a separate module later
+  if there's demand.
+
+### Docs
+
+- Full README rewrite for npm onboarding: expanded install/quickstart,
+  per-tier verification explanation, configuration reference, error table,
+  FAQ. Zero settling for less.
+
 ## 0.1.0 — 2026-07-04
 
 Initial public release.
