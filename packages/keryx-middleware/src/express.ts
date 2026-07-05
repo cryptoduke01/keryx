@@ -2,7 +2,7 @@
  * Express middleware wrapper.
  *
  *   import express from "express";
- *   import { paidExpress } from "@keryx/middleware/express";
+ *   import { paidExpress } from "@keryxhq/middleware/express";
  *
  *   const app = express();
  *   app.use(express.json());

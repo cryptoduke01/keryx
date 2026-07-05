@@ -1,11 +1,11 @@
 /**
- * @keryx/middleware — turn any HTTP handler into a paid tool for AI agents.
+ * @keryxhq/middleware — turn any HTTP handler into a paid tool for AI agents.
  *
  * Core primitives (framework-agnostic). Import from the framework-specific
  * subpath for the wrapper you want:
  *
- *   import { paidHandler } from "@keryx/middleware/next";
- *   import { paidExpress } from "@keryx/middleware/express";
+ *   import { paidHandler } from "@keryxhq/middleware/next";
+ *   import { paidExpress } from "@keryxhq/middleware/express";
  */
 
 export type Network = "arc-testnet" | "arc-mainnet" | "base-sepolia" | "base";
@@ -155,19 +155,24 @@ export function decodePaymentHeader(header: string): DecodedPayment {
 /**
  * Verify a decoded payment against requirements. Returns a receipt.
  *
- * - If `facilitatorUrl` is provided, delegates verify+settle to that facilitator
- *   (POST body: `{ payment, requirements }`, expected 200 with `{ txHash }`).
- * - Otherwise runs a local structural check: amount, payTo, network match; the
- *   authorization's `validBefore` is in the future; the signature format looks
- *   right. Full onchain signature verification requires viem and is left to
- *   the caller / to Kēryx's facilitator (`https://keryxhq.xyz/api/x402/facilitator`).
+ * Verification runs in three tiers, in order:
+ *
+ * 1. **Structural** — amount, payTo, network, expiry (fast, no I/O, no deps).
+ * 2. **Cryptographic** — if `viem` is available, recover the EIP-3009 signer
+ *    and compare to the authorization's `from`. Silently skipped when `viem`
+ *    isn't installed so the SDK works standalone; publishers who want strong
+ *    verification should install `viem` (`pnpm add viem`).
+ * 3. **Settlement** — if `facilitatorUrl` (or env `KERYX_FACILITATOR_URL`) is
+ *    set, POST `{ payment, requirements }` and read `{ txHash }` back.
+ *
+ * Any failed tier throws with a machine-readable error string.
  */
 export async function verifyPayment(
   payment: DecodedPayment,
   requirements: PaymentRequirements,
   facilitatorUrl?: string,
 ): Promise<PaymentReceipt> {
-  // Structural checks (fast, deterministic, no network).
+  // ---------- Tier 1: structural ----------
   const auth = payment?.payload?.authorization;
   if (!auth) throw new Error("payment_missing_authorization");
   if (payment.network !== requirements.network) {
@@ -184,8 +189,24 @@ export async function verifyPayment(
     throw new Error("payment_expired");
   }
 
-  // If a facilitator is configured, delegate verify + settle.
-  const url = facilitatorUrl ?? process.env.KERYX_FACILITATOR_URL;
+  // ---------- Tier 2: cryptographic (optional) ----------
+  const network = networkFromCaip2(requirements.network);
+  if (network) {
+    const { verifySignature } = await import("./verify.js");
+    const sigCheck = await verifySignature(payment, network);
+    if (!sigCheck.ok && sigCheck.reason !== "viem_not_installed") {
+      throw new Error(
+        `payment_signature_invalid: ${sigCheck.reason}${
+          sigCheck.recovered ? ` (recovered=${sigCheck.recovered})` : ""
+        }`,
+      );
+    }
+  }
+
+  // ---------- Tier 3: settlement (optional) ----------
+  const url =
+    facilitatorUrl ??
+    (typeof process !== "undefined" ? process.env?.KERYX_FACILITATOR_URL : undefined);
   if (url) {
     const res = await fetch(url, {
       method: "POST",
@@ -205,12 +226,23 @@ export async function verifyPayment(
     };
   }
 
-  // No facilitator — accept as structurally-verified. Publisher can broadcast later.
   return {
     settlementMode: "verified",
     from: auth.from,
     amount: auth.value,
   };
+}
+
+/** Reverse-lookup our `Network` label from a CAIP-2 id. Returns undefined for
+ *  unrecognised networks so signature verification is skipped rather than
+ *  failing the whole request. */
+function networkFromCaip2(caip2: string): Network | undefined {
+  for (const [key, value] of Object.entries(NETWORK_CAIP2) as Array<
+    [Network, string]
+  >) {
+    if (value === caip2) return key;
+  }
+  return undefined;
 }
 
 /** Build a well-formed 402 response body. */

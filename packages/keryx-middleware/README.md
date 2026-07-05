@@ -1,16 +1,16 @@
-# @keryx/middleware
+# @keryxhq/middleware
 
 **Turn any HTTP handler into a paid tool for AI agents.** Speaks the [x402](https://www.x402.org) protocol. Settles USDC on Arc. One `npm install`, one wrapper, done.
 
 ```bash
-pnpm add @keryx/middleware viem
+pnpm add @keryxhq/middleware viem
 ```
 
 ## Next.js
 
 ```ts
 // app/api/my-tool/route.ts
-import { paidHandler } from "@keryx/middleware/next";
+import { paidHandler } from "@keryxhq/middleware/next";
 
 export const POST = paidHandler({
   price: 0.004,                                       // USD per call
@@ -28,7 +28,7 @@ That's it. First hit without a payment header returns HTTP 402 with machine-read
 
 ```ts
 import express from "express";
-import { paidExpress } from "@keryx/middleware/express";
+import { paidExpress } from "@keryxhq/middleware/express";
 
 const app = express();
 app.use(express.json());
@@ -49,12 +49,15 @@ app.post(
 ## What it does
 
 1. **No payment header** → returns HTTP 402 with a `PaymentRequirements` body: the exact USDC amount, asset address, your wallet, network, and expiry. Agents (and Claude Code, Cursor, GitHub Copilot via MCP) know how to read this.
-2. **Payment header present** → base64-decodes, structurally verifies (amount, recipient, network, not expired), and — if you set `facilitatorUrl` — POSTs to a facilitator to broadcast the EIP-3009 authorization onchain. The verified receipt is passed to your handler.
+2. **Payment header present** → three-tier verification:
+   - **Structural**: amount, recipient, network, expiry.
+   - **Cryptographic** (when `viem` is installed): recovers the EIP-3009 signer from the typed-data signature and compares to the authorization's `from` address.
+   - **Settlement** (when `facilitatorUrl` is set): POSTs `{ payment, requirements }` to a facilitator that broadcasts the authorization onchain and returns a tx hash.
 3. **Handler returns** → response body is `{ result, paid: { … } }` with the settlement mode and tx hash if available.
 
 ## Settlement modes
 
-By default the SDK only **verifies** the signature structurally. The publisher can broadcast the authorization later or delegate it. To settle onchain automatically, point at a facilitator:
+By default the SDK **verifies** the signature (structurally, and cryptographically when viem is installed) but does not broadcast the EIP-3009 authorization onchain. The publisher holds the signed authorization and can broadcast it later. To settle onchain automatically, point at a facilitator:
 
 ```ts
 paidHandler({
@@ -100,12 +103,12 @@ import {
   decodePaymentHeader,
   verifyPayment,
   buildX402Body,
-} from "@keryx/middleware";
+} from "@keryxhq/middleware";
 ```
 
 ## Why
 
-Every API on the internet was built assuming a human logs in, gets a key, attaches a card. That flow doesn't work for an agent making one autonomous call. `@keryx/middleware` lets your existing HTTP handler accept payment inline, one call at a time, in a way agents already know how to speak.
+Every API on the internet was built assuming a human logs in, gets a key, attaches a card. That flow doesn't work for an agent making one autonomous call. `@keryxhq/middleware` lets your existing HTTP handler accept payment inline, one call at a time, in a way agents already know how to speak.
 
 ## License
 

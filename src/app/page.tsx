@@ -267,7 +267,7 @@ export default async function Landing() {
                 n: "01",
                 title: "Publish a tool",
                 desc:
-                  "Wrap any HTTP handler with @keryx/middleware. Set a price per call. Point it at an Arc wallet. Your tool is instantly discoverable.",
+                  "Wrap any HTTP handler with @keryxhq/middleware. Set a price per call. Point it at an Arc wallet. Your tool is instantly discoverable.",
                 icon: (
                   <path d="M14.7 6.3a1 1 0 010 1.4L8.4 14a1 1 0 01-1.4 0L4 11a1 1 0 011.4-1.4L7 11.2l5.3-5.3a1 1 0 011.4 0zM4 16h12" strokeLinecap="round" strokeLinejoin="round" />
                 ),

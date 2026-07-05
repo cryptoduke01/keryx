@@ -1,13 +1,13 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "SDK · @keryx/middleware",
+  title: "SDK · @keryxhq/middleware",
   description:
     "Turn any HTTP handler into a paid tool for AI agents. One npm install, one wrapper function, done. Speaks x402, settles USDC on Arc.",
 };
 
 const NEXT_EXAMPLE = `// app/api/my-tool/route.ts
-import { paidHandler } from "@keryx/middleware/next";
+import { paidHandler } from "@keryxhq/middleware/next";
 
 export const POST = paidHandler({
   price: 0.004,                           // USD per call
@@ -19,7 +19,7 @@ export const POST = paidHandler({
 });`;
 
 const EXPRESS_EXAMPLE = `import express from "express";
-import { paidExpress } from "@keryx/middleware/express";
+import { paidExpress } from "@keryxhq/middleware/express";
 
 const app = express();
 app.use(express.json());
@@ -42,7 +42,7 @@ const PRIMITIVES_EXAMPLE = `import {
   decodePaymentHeader,
   verifyPayment,
   buildX402Body,
-} from "@keryx/middleware";
+} from "@keryxhq/middleware";
 
 // Use these if you're not on Next.js or Express — Cloudflare Workers,
 // Deno, Fastify, Hono, bare Node http.Server, etc.`;
@@ -64,7 +64,7 @@ const FLOW_STEPS: Array<{ n: string; title: string; body: string }> = [
     n: "03",
     title: "SDK verifies, your handler runs",
     body:
-      "Structural + signature checks happen first. If a facilitator URL is set, it broadcasts the authorization onchain and returns a tx hash. Your handler runs with the verified receipt attached — you never touch the payment logic.",
+      "Three-tier verification: structural (amount, recipient, expiry), cryptographic (EIP-3009 signer recovery via viem), and optional settlement (facilitator broadcasts onchain and returns a tx hash). Your handler runs with the receipt attached — you never touch the payment logic.",
   },
 ];
 
@@ -79,7 +79,7 @@ export default function SdkPage() {
           Ship a paid tool in five minutes.
         </h1>
         <p style={{ fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.6, marginBottom: 20 }}>
-          <code style={inlineCode}>@keryx/middleware</code> wraps any HTTP
+          <code style={inlineCode}>@keryxhq/middleware</code> wraps any HTTP
           handler so agents can pay per call with x402 + USDC on Arc. Zero
           runtime deps.{" "}
           <b style={{ color: "var(--text-primary)" }}>You keep 95% of every call.</b>
@@ -99,7 +99,7 @@ export default function SdkPage() {
           }}
         >
           <span style={{ color: "var(--text-muted)" }}>$</span>
-          pnpm add @keryx/middleware viem
+          pnpm add @keryxhq/middleware viem
         </div>
         <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 8 }}>
           Also works with npm and yarn. <code style={inlineCode}>viem</code> is a peer dep &mdash; already in most Web3 projects.
