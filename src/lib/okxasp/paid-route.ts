@@ -1,23 +1,18 @@
 /**
- * Factory: wrap a Keryx tool handler with OKX x402 (withX402).
+ * Factory: wrap a Keryx tool handler with OKX Agent Payments Protocol.
+ * Declares both x402 `exact` and MPP `charge` on every unpaid call.
  * Settlement only runs after a successful handler response.
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import {
-  withX402FromHTTPServer,
-  x402HTTPResourceServer,
-} from "@okxweb3/x402-next";
 import { executeTool } from "@/lib/registry/handlers";
 import {
   getOkxAspTool,
   okxCredentialsReady,
   okxNetwork,
-  okxPayTo,
-  priceUsdToOkxPrice,
   type OkxAspToolId,
 } from "@/lib/okxasp/config";
-import { getOkxResourceServer } from "@/lib/okxasp/server";
+import { getOkxPaymentProtect } from "@/lib/okxasp/server";
 
 export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
   const tool = getOkxAspTool(toolId);
@@ -25,9 +20,11 @@ export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
     throw new Error(`unknown_okx_tool:${toolId}`);
   }
 
-  const handler = async (req: NextRequest): Promise<NextResponse> => {
+  const business = async (req: Request): Promise<Response> => {
     let args: Record<string, unknown> = {};
-    if (req.method === "POST") {
+    const method = req.method.toUpperCase();
+
+    if (method === "POST") {
       try {
         const body = (await req.json()) as unknown;
         if (body && typeof body === "object" && !Array.isArray(body)) {
@@ -38,10 +35,10 @@ export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
               : rec;
         }
       } catch {
-        return NextResponse.json({ error: "invalid_json" }, { status: 400 });
+        return Response.json({ error: "invalid_json" }, { status: 400 });
       }
     } else {
-      const sp = req.nextUrl.searchParams;
+      const sp = new URL(req.url).searchParams;
       for (const [k, v] of sp.entries()) {
         if (k === "limit" || k === "amount" || k === "days" || k === "timeFrame") {
           const n = Number(v);
@@ -54,7 +51,7 @@ export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
 
     try {
       const result = await executeTool(tool, args);
-      return NextResponse.json({
+      return Response.json({
         toolId: tool.id,
         name: tool.name,
         result,
@@ -63,7 +60,7 @@ export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : "handler_failed";
-      return NextResponse.json({ error: message, toolId: tool.id }, { status: 502 });
+      return Response.json({ error: message, toolId: tool.id }, { status: 502 });
     }
   };
 
@@ -80,56 +77,20 @@ export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
     return { GET: blocked, POST: blocked };
   }
 
-  const payTo = okxPayTo()!;
-  // Match OKX seller SDK docs: accepts as an array of exact options on eip155:196.
-  // Marketplace review crawls Payment-Required; keep the stock JSON 402 path
-  // (no custom HTML paywall) so the protocol header is never stripped.
-  const routeConfig = {
-    accepts: [
-      {
-        scheme: "exact" as const,
-        price: priceUsdToOkxPrice(tool.priceUsd),
-        network: okxNetwork() as `${string}:${string}`,
-        payTo,
-        // Reviewer / x402-check need decimals when USDT0 is not in their token list.
-        extra: { decimals: 6 },
-      },
-    ],
-    description: tool.summary,
-    mimeType: "application/json",
-  };
+  const protect = getOkxPaymentProtect();
+  const paid = protect(business);
 
-  const server = getOkxResourceServer();
-  const httpServer = new x402HTTPResourceServer(server, { "*": routeConfig })
-    .setPollDeadline(25_000)
-    .onSettlementTimeout(async (txHash) => {
-      return { confirmed: Boolean(txHash) };
-    });
-
-  const paid = withX402FromHTTPServer(
-    handler,
-    httpServer,
-    undefined,
-    undefined,
-    true,
-  );
-
-  // OKX listing QA / Agent Payments Protocol detectors look for either:
-  //   1) PAYMENT-REQUIRED header (v2), or
-  //   2) JSON body with x402Version (v1 / mock-merchant style).
-  // Stock @okxweb3/x402-next serves an HTML paywall (and drops the
-  // protocol header) when Accept includes text/html AND User-Agent
-  // includes Mozilla — which is how browser-like reviewers hit us.
-  // Force the JSON path and dual-write the challenge into the body.
   const protocolOnly = async (req: NextRequest): Promise<NextResponse> => {
+    // Force JSON Accept so x402 never takes the HTML paywall branch
+    // (Mozilla + text/html drops PAYMENT-REQUIRED).
     const res = await paid(forceJsonProtocolRequest(req));
-    return ensureProtocolChallengeBody(res);
+    return toNextResponse(await ensureProtocolChallengeBody(res));
   };
   return { GET: protocolOnly, POST: protocolOnly };
 }
 
 /** Rewrite Accept/UA so x402-core never takes the HTML paywall branch. */
-function forceJsonProtocolRequest(req: NextRequest): NextRequest {
+function forceJsonProtocolRequest(req: NextRequest): Request {
   const headers = new Headers(req.headers);
   headers.set("Accept", "application/json");
   const ua = headers.get("User-Agent") ?? "";
@@ -139,8 +100,6 @@ function forceJsonProtocolRequest(req: NextRequest): NextRequest {
 
   const method = req.method.toUpperCase();
   const hasBody = method !== "GET" && method !== "HEAD" && req.body != null;
-  // Build RequestInit explicitly — spreading NextRequest fields can pass
-  // `signal: null`, which fails Next.js / undici typings on Vercel.
   const init: {
     method: string;
     headers: Headers;
@@ -151,14 +110,15 @@ function forceJsonProtocolRequest(req: NextRequest): NextRequest {
     init.body = req.body as BodyInit;
     init.duplex = "half";
   }
-  return new NextRequest(req.url, init);
+  return new Request(req.url, init);
 }
 
 /**
- * Stock v2 402 returns `{}` + PAYMENT-REQUIRED. OKX's own mock merchant
- * and Priority-3 detectors also accept a body with `x402Version`. Emit both.
+ * Stock v2 x402 returns `{}` + PAYMENT-REQUIRED. Dual-write the decoded
+ * challenge into the body so Priority-3 detectors (body x402Version) also pass.
+ * Keep WWW-Authenticate (MPP charge) intact.
  */
-function ensureProtocolChallengeBody(res: NextResponse): NextResponse {
+async function ensureProtocolChallengeBody(res: Response): Promise<Response> {
   if (res.status !== 402 && res.status !== 412) return res;
 
   const pr =
@@ -176,11 +136,19 @@ function ensureProtocolChallengeBody(res: NextResponse): NextResponse {
 
     const headers = new Headers(res.headers);
     headers.set("Content-Type", "application/json");
-    return new NextResponse(JSON.stringify(challenge), {
+    return new Response(JSON.stringify(challenge), {
       status: res.status,
       headers,
     });
   } catch {
     return res;
   }
+}
+
+function toNextResponse(res: Response): NextResponse {
+  return new NextResponse(res.body, {
+    status: res.status,
+    statusText: res.statusText,
+    headers: res.headers,
+  });
 }

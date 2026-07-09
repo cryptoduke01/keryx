@@ -42,12 +42,13 @@ export async function GET(req: Request) {
     },
     settlement: ready ? "okx_x402_wired" : "pending_credentials",
     protocol: {
-      standard: "OKX Agent Payments Protocol / x402 exact",
+      // HTTP sellers must declare both exact + charge (OKX Agent Payments Protocol).
+      standard: "OKX Agent Payments Protocol",
+      schemes: ["exact", "charge"],
       network: okxNetwork(),
       expectsMainnet: "eip155:196",
       aligned: okxNetwork() === "eip155:196",
-      // Always JSON 402 + PAYMENT-REQUIRED (HTML paywall disabled for listing QA).
-      challengeTransport: "PAYMENT-REQUIRED",
+      challengeTransport: ["PAYMENT-REQUIRED", "WWW-Authenticate: Payment"],
       htmlPaywall: false,
     },
     catalog: `${origin}/api/okxasp/catalog`,
