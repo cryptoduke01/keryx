@@ -98,14 +98,20 @@ export default async function ForJudgesPage() {
       {/* -------------------- Video demo -------------------- */}
       <Section title="Video demo (≤3 min)">
         <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, marginBottom: 10 }}>
-          Uploaded separately. Link is in the Google Form submission.
+          Link is in the Google Form submission. Upload the final render to YouTube
+          (unlisted) and paste the URL there.
         </p>
-        <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.55 }}>
-          The video walks through: publishing a paid tool, an agent discovering
-          it via MCP in Claude Code, the agent making a decision to pay because
-          real-time onchain data can&rsquo;t be answered from training, the tx
-          settling on the ledger.
+        <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.55, marginBottom: 14 }}>
+          The video walks through: registry browse, cost-aware agent at{" "}
+          <Link href="/ask" style={inlineLink}>/ask</Link>, public ledger, publish
+          flow (paste Arc address + sign), MCP integration, and close. Subtitles
+          burned in (~2:12).
         </p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+          <a href="/pitch" style={chipLink}>Pitch deck →</a>
+          <a href="/sdk" style={chipLink}>SDK docs →</a>
+          <a href={NPM} target="_blank" rel="noreferrer" style={chipLink}>npm package →</a>
+        </div>
       </Section>
 
       {/* -------------------- Grading dimensions -------------------- */}
@@ -384,4 +390,16 @@ const code: React.CSSProperties = {
   background: "var(--surface-2)",
   border: "1px solid var(--border)",
   color: "var(--text-primary)",
+};
+
+const chipLink: React.CSSProperties = {
+  display: "inline-block",
+  fontSize: 13,
+  fontWeight: 600,
+  padding: "8px 14px",
+  borderRadius: 8,
+  border: "1px solid var(--border)",
+  background: "var(--surface-2)",
+  color: "var(--text-primary)",
+  textDecoration: "none",
 };

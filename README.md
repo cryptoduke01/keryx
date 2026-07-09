@@ -58,6 +58,9 @@ Every call (success or failure) is written to the public ledger at [/live](https
 | 🧪 Agent Playground | [keryxhq.xyz/ask](https://keryxhq.xyz/ask) |
 | 📝 Publish a tool | [keryxhq.xyz/publish](https://keryxhq.xyz/publish) |
 | 🗂️ Browse registry | [keryxhq.xyz/registry](https://keryxhq.xyz/registry) |
+| ⚖️ For judges (Lepton) | [keryxhq.xyz/for-judges](https://keryxhq.xyz/for-judges) |
+| 📊 Pitch deck | [keryxhq.xyz/pitch](https://keryxhq.xyz/pitch) |
+| 📦 SDK | [keryxhq.xyz/sdk](https://keryxhq.xyz/sdk) · [@keryxhq/middleware](https://www.npmjs.com/package/@keryxhq/middleware) |
 
 ---
 

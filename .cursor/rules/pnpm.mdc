@@ -1,0 +1,17 @@
+---
+description: Always use pnpm for package installs in this repo
+alwaysApply: true
+---
+
+# Package manager: pnpm only
+
+This repo uses **pnpm** (`pnpm-lock.yaml`). Never use `npm install` or `yarn` for dependencies.
+
+```bash
+pnpm add <pkg>
+pnpm add -D <pkg>
+pnpm install
+pnpm exec tsc --noEmit
+```
+
+`npm install` is slower here and can fight the existing pnpm store / lockfile.
