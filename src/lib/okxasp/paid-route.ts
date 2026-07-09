@@ -91,6 +91,8 @@ export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
         price: priceUsdToOkxPrice(tool.priceUsd),
         network: okxNetwork() as `${string}:${string}`,
         payTo,
+        // Reviewer / x402-check need decimals when USDT0 is not in their token list.
+        extra: { decimals: 6 },
       },
     ],
     description: tool.summary,
