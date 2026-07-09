@@ -40,11 +40,9 @@ export async function GET(req: Request) {
     network: okxNetwork(),
     payTo: okxPayTo(),
     credentialsReady: okxCredentialsReady(),
-    coexistence: {
-      note: "Arc Kēryx (/api/call) is unchanged. These endpoints settle on X Layer via OKX x402.",
-    },
+    asset: "USDT0",
+    docs: `${origin}/okxasp/docs`,
+    product: `${origin}/okxasp`,
     tools,
-    listingHint:
-      "Register as A2MCP on OKX.AI with endpoint pointing at a tool URL or this catalog + primary tool.",
   });
 }

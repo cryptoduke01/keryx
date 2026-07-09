@@ -733,7 +733,9 @@ export default async function Landing() {
             <div>
               <div className="text-eyebrow" style={footerColHead}>Company</div>
               <FooterLink href="/for-judges">For judges</FooterLink>
-              <FooterLink href="/okxasp">OKX.AI ASP</FooterLink>
+              <FooterLink href="/okxasp">OKX.AI Finance Copilot</FooterLink>
+              <FooterLink href="/okxasp/docs">OKX.AI docs</FooterLink>
+              <FooterLink href="/okxasp/whitepaper">OKX.AI product note</FooterLink>
               <FooterLink href="/pitch">Pitch deck</FooterLink>
               <FooterLink href="/whitepaper">Whitepaper</FooterLink>
               <FooterExternal href="https://x.com/keryxhq">@keryxhq</FooterExternal>

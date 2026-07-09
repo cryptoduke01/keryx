@@ -9,12 +9,23 @@ import {
 } from "@/lib/okxasp/config";
 
 export const metadata = {
-  title: "OKX.AI ASP · Kēryx Finance Copilot",
+  title: "Finance Copilot · Kēryx on OKX.AI",
   description:
-    "Kēryx Finance Copilot — an A2MCP Agent Service Provider for OKX.AI. Pay-per-call market intel on X Layer. Coexists with Arc settlement.",
+    "Pay-per-call market intel for AI agents on OKX.AI. Live prices, token risk, and FX on X Layer.",
 };
 
-const DEADLINE = "Jul 17, 00:00 UTC";
+/** Short consumer copy. Registry summaries stay agent-oriented. */
+const BLURBS: Record<string, string> = {
+  "crypto.price": "Live price, market cap, and 24h change for any coin.",
+  "crypto.trending": "What the market is searching right now.",
+  "crypto.btc-dominance": "BTC and ETH dominance plus total market cap.",
+  "solana.token-activity": "DEX volume, liquidity, and buy/sell flow for a Solana token.",
+  "solana.rug-check": "Risk score, LP lock, and flagged issues from rugcheck.xyz.",
+  "solana.launches": "Fresh Solana token profiles as they hit the board.",
+  "finance.convert": "Convert an amount between currencies at live rates.",
+  "finance.exchange-rates": "Full rate table for any base currency.",
+};
+
 const ASP_ID = "4759";
 
 export default function OkxAspPage() {
@@ -22,12 +33,11 @@ export default function OkxAspPage() {
 
   return (
     <>
-      {/* Full-bleed hero — same language as landing */}
       <section
         style={{
           position: "relative",
-          height: "min(78vh, 720px)",
-          minHeight: 480,
+          height: "min(72vh, 680px)",
+          minHeight: 440,
           overflow: "hidden",
         }}
       >
@@ -87,7 +97,7 @@ export default function OkxAspPage() {
                   background: "#fff",
                 }}
               />
-              OKX.AI Genesis · ASP #{ASP_ID}
+              OKX.AI · ASP #{ASP_ID}
             </div>
           </div>
         </div>
@@ -125,29 +135,24 @@ export default function OkxAspPage() {
                   fontSize: 16,
                   lineHeight: 1.6,
                   color: "rgba(245,244,240,0.78)",
-                  maxWidth: 520,
+                  maxWidth: 480,
                   marginBottom: 24,
                   textShadow: "0 1px 12px rgba(0,0,0,0.7)",
                 }}
               >
-                Live prices, token risk, and FX — paid per call on X Layer.
-                Discover the pack on OKX.AI. Arc Kēryx stays on its own rail.
+                Live prices, token risk, and FX. Agents pay per call on X Layer
+                and get the answer in one shot.
               </p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-                <a href="/api/okxasp/catalog" style={btnHeroPrimary}>
-                  Open catalog
+                <a href="https://okx.ai" target="_blank" rel="noreferrer" style={btnHeroPrimary}>
+                  Browse on OKX.AI
                 </a>
-                <a
-                  href="https://okx.ai"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={btnHeroGhost}
-                >
-                  OKX.AI marketplace
-                </a>
-                <Link href="/ask" style={btnHeroGhost}>
-                  Arc playground
+                <Link href="/okxasp/docs" style={btnHeroGhost}>
+                  Docs
                 </Link>
+                <a href="/api/okxasp/catalog" style={btnHeroGhost}>
+                  Catalog API
+                </a>
               </div>
             </Reveal>
           </div>
@@ -161,21 +166,19 @@ export default function OkxAspPage() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
             gap: 1,
             background: "var(--border)",
             border: "1px solid var(--border)",
             borderRadius: 12,
             overflow: "hidden",
             marginBottom: 56,
-            marginTop: -8,
           }}
         >
-          <Stat label="ASP type" value="A2MCP" />
+          <Stat label="Type" value="A2MCP" />
           <Stat label="Tools" value={String(tools.length)} />
           <Stat label="Settlement" value="X Layer" />
-          <Stat label="Listing" value={`#${ASP_ID}`} />
-          <Stat label="Deadline" value="Jul 17" />
+          <Stat label="Asset" value="USDT0" />
         </div>
 
         <div
@@ -184,13 +187,13 @@ export default function OkxAspPage() {
             display: "grid",
             gridTemplateColumns: "minmax(0, 1fr) minmax(0, 0.88fr)",
             gap: 40,
-            marginBottom: 56,
+            marginBottom: 64,
             alignItems: "start",
           }}
         >
           <section>
             <div className="text-eyebrow" style={{ marginBottom: 12 }}>
-              Paid tools
+              The pack
             </div>
             <h2
               style={{
@@ -202,19 +205,19 @@ export default function OkxAspPage() {
                 margin: "0 0 12px",
               }}
             >
-              Eight market calls. One ASP.
+              Eight tools. Pay only when you call.
             </h2>
-            <p style={{ ...body, marginBottom: 24 }}>
-              Unpaid hits return HTTP 402. After Agentic Wallet pays on X Layer,
-              the handler runs. Point your listing at a public{" "}
-              <code style={code}>https://</code> tool URL.
+            <p style={{ ...body, marginBottom: 28 }}>
+              Each endpoint returns HTTP 402 until the agent pays. After
+              settlement on X Layer, the data comes back as JSON.
             </p>
             <div style={{ display: "flex", flexDirection: "column" }}>
               {tools.map((tool) => {
                 const slug = slugForToolId(tool.id)!;
                 return (
-                  <div
+                  <a
                     key={tool.id}
+                    href={`/api/okxasp/tools/${slug}`}
                     style={{
                       display: "grid",
                       gridTemplateColumns: "1fr auto",
@@ -222,6 +225,8 @@ export default function OkxAspPage() {
                       padding: "18px 0",
                       borderBottom: "1px solid var(--border)",
                       alignItems: "start",
+                      textDecoration: "none",
+                      color: "inherit",
                     }}
                   >
                     <div>
@@ -242,12 +247,10 @@ export default function OkxAspPage() {
                           fontSize: 13.5,
                           color: "var(--text-secondary)",
                           lineHeight: 1.55,
-                          marginBottom: 8,
                         }}
                       >
-                        {tool.summary}
+                        {BLURBS[tool.id] ?? tool.summary}
                       </div>
-                      <code style={code}>/api/okxasp/tools/{slug}</code>
                     </div>
                     <div
                       style={{
@@ -260,43 +263,36 @@ export default function OkxAspPage() {
                     >
                       {priceUsdToOkxPrice(tool.priceUsd)}
                     </div>
-                  </div>
+                  </a>
                 );
               })}
             </div>
           </section>
 
-          <aside style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            <div className="okxasp-aside-art" style={{ position: "sticky", top: 88 }}>
+          <aside>
+            <div style={{ position: "sticky", top: 88 }} className="okxasp-aside">
               <ArtPanel
-                src="/inspo/publish-hero.jpg"
-                alt="Publishers and heralds of the registry"
+                src="/inspo/pitch-cover.jpg"
+                alt="Kēryx market atmosphere"
                 aspectRatio="4 / 5"
-                position="50% 35%"
+                position="50% 30%"
                 variant="raw"
-                overlayText="MARKET INTEL AT MACHINE SPEED — SETTLED ON X LAYER."
+                overlayText="MARKET INTEL AT MACHINE SPEED."
               />
               <div
                 style={{
                   marginTop: 20,
-                  padding: 20,
-                  borderRadius: 12,
-                  border: "1px solid var(--border)",
-                  background: "var(--surface-1)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 10,
                 }}
               >
-                <div className="text-eyebrow" style={{ marginBottom: 10 }}>
-                  Coexistence
-                </div>
-                <p style={body}>
-                  Arc paths (
-                  <Link href="/ask" style={link}>
-                    /ask
-                  </Link>
-                  , <code style={code}>/api/call</code>) still settle USDC on
-                  Arc. This page is the OKX.AI rail only — same handlers,
-                  different facilitator and chain.
-                </p>
+                <Link href="/okxasp/docs" style={btnSoft}>
+                  Integration docs
+                </Link>
+                <Link href="/okxasp/whitepaper" style={btnSoft}>
+                  Product note
+                </Link>
               </div>
             </div>
           </aside>
@@ -304,82 +300,41 @@ export default function OkxAspPage() {
 
         <section
           style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1.1fr) minmax(0, 0.9fr)",
-            gap: 32,
-            alignItems: "center",
-            marginBottom: 48,
-            padding: "32px 0",
+            paddingTop: 40,
             borderTop: "1px solid var(--border)",
+            maxWidth: 560,
           }}
-          className="okxasp-entry"
         >
-          <div>
-            <div className="text-eyebrow" style={{ marginBottom: 12 }}>
-              Hackathon entry
-            </div>
-            <h2
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(1.4rem, 2.2vw, 1.7rem)",
-                fontWeight: 500,
-                letterSpacing: "-0.02em",
-                color: "var(--text-primary)",
-                margin: "0 0 16px",
-              }}
-            >
-              Listed under review. Form still open.
-            </h2>
-            <ol style={{ ...body, paddingLeft: 20, margin: 0 }}>
-              <li style={{ marginBottom: 10 }}>
-                ASP{" "}
-                <b style={{ color: "var(--text-primary)" }}>#{ASP_ID}</b>{" "}
-                registered — {tools.length} A2MCP services on OKX.AI.
-              </li>
-              <li style={{ marginBottom: 10 }}>
-                When live, submit the Google form before{" "}
-                <b style={{ color: "var(--text-primary)" }}>{DEADLINE}</b>:{" "}
-                <a
-                  href="https://forms.gle/mddEUagmDbyV37ws8"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={link}
-                >
-                  forms.gle/…
-                </a>
-              </li>
-              <li>
-                X post with <code style={code}>#okxai</code>, demo ≤ 90
-                seconds.
-              </li>
-            </ol>
-            <p
-              style={{
-                ...body,
-                marginTop: 16,
-                fontSize: 13,
-                color: "var(--text-muted)",
-              }}
-            >
-              Marketplace:{" "}
-              <a
-                href="https://okx.ai"
-                target="_blank"
-                rel="noreferrer"
-                style={link}
-              >
-                okx.ai
-              </a>
-            </p>
+          <div className="text-eyebrow" style={{ marginBottom: 12 }}>
+            How it works
           </div>
-          <ArtPanel
-            src="/inspo/whitepaper-hero.png"
-            alt="Kēryx whitepaper atmosphere"
-            aspectRatio="16 / 10"
-            position="50% 40%"
-            variant="raw"
-            overlayText="PARALLEL RAIL — ARC UNTOUCHED."
-          />
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(1.35rem, 2vw, 1.6rem)",
+              fontWeight: 500,
+              letterSpacing: "-0.02em",
+              color: "var(--text-primary)",
+              margin: "0 0 16px",
+            }}
+          >
+            Call. Pay. Read.
+          </h2>
+          <ol style={{ ...body, paddingLeft: 20, margin: 0 }}>
+            <li style={{ marginBottom: 10 }}>
+              Point your agent at a tool URL or the{" "}
+              <a href="/api/okxasp/catalog" style={link}>
+                catalog
+              </a>
+              .
+            </li>
+            <li style={{ marginBottom: 10 }}>
+              First hit returns 402 with the price in USDT0 on X Layer.
+            </li>
+            <li>
+              Agentic Wallet pays. Retry. You get the JSON result.
+            </li>
+          </ol>
         </section>
       </div>
 
@@ -388,8 +343,7 @@ export default function OkxAspPage() {
           __html: `
             @media (max-width: 960px) {
               .okxasp-split { grid-template-columns: 1fr !important; }
-              .okxasp-entry { grid-template-columns: 1fr !important; }
-              .okxasp-aside-art { position: static !important; }
+              .okxasp-aside { position: static !important; }
             }
           `,
         }}
@@ -435,16 +389,6 @@ const link: React.CSSProperties = {
   textUnderlineOffset: 3,
 };
 
-const code: React.CSSProperties = {
-  fontFamily: "var(--font-mono)",
-  fontSize: 12.5,
-  padding: "1px 6px",
-  borderRadius: 4,
-  background: "var(--surface-2)",
-  border: "1px solid var(--border)",
-  color: "var(--text-primary)",
-};
-
 const btnHeroPrimary: React.CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
@@ -468,6 +412,21 @@ const btnHeroGhost: React.CSSProperties = {
   background: "rgba(11,11,12,0.35)",
   backdropFilter: "blur(6px)",
   color: "#f5f4f0",
+  fontSize: 13,
+  fontWeight: 600,
+  textDecoration: "none",
+};
+
+const btnSoft: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: 40,
+  padding: "0 16px",
+  borderRadius: 8,
+  border: "1px solid var(--border)",
+  background: "var(--surface-2)",
+  color: "var(--text-primary)",
   fontSize: 13,
   fontWeight: 600,
   textDecoration: "none",
