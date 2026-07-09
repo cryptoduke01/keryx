@@ -6,7 +6,36 @@
 import { OKXFacilitatorClient } from "@okxweb3/x402-core";
 import { x402ResourceServer } from "@okxweb3/x402-next";
 import { ExactEvmScheme } from "@okxweb3/x402-evm/exact/server";
+import type { PaymentRequirements } from "@okxweb3/x402-core/types";
 import { okxCredentialsReady, okxNetwork } from "@/lib/okxasp/config";
+
+/**
+ * Exact scheme that keeps USDT0 `decimals` on the 402 challenge.
+ * Marketplace / x402-check fail when the asset is outside their token list
+ * and `extra.decimals` is missing. Stock ExactEvmScheme only writes name/version.
+ */
+class OkxExactEvmScheme extends ExactEvmScheme {
+  override enhancePaymentRequirements(
+    paymentRequirements: PaymentRequirements,
+    supportedKind: {
+      x402Version: number;
+      scheme: string;
+      network: `${string}:${string}`;
+      extra?: Record<string, unknown>;
+    },
+    extensionKeys: string[],
+  ): Promise<PaymentRequirements> {
+    return super
+      .enhancePaymentRequirements(paymentRequirements, supportedKind, extensionKeys)
+      .then((req) => ({
+        ...req,
+        extra: {
+          ...(req.extra ?? {}),
+          decimals: 6,
+        },
+      }));
+  }
+}
 
 let cached: x402ResourceServer | null = null;
 
@@ -26,7 +55,7 @@ export function getOkxResourceServer(): x402ResourceServer {
   const network = okxNetwork() as `${string}:${string}`;
   cached = new x402ResourceServer(facilitatorClient).register(
     network,
-    new ExactEvmScheme(),
+    new OkxExactEvmScheme(),
   );
   return cached;
 }
