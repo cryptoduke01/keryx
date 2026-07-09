@@ -147,7 +147,7 @@ Seller SDK: https://web3.okx.com/onchainos/dev-docs/payments/service-seller-sdk
 ## Build order (Best Product, not a thin wrapper)
 
 1. **API keys** — done (`.env.local`).
-2. **Scaffold + x402 wire** — done: `/okxasp`, catalog, 10 paid tools via `@okxweb3/x402-next` (includes OKX Web3 market endpoints).
+2. **Scaffold + x402 wire** — done: `/okxasp`, catalog, 12 paid tools via `@okxweb3/x402-next` (4 OKX Web3 native: price, market, wallet PnL, recent PnL).
 3. **Install `onchainos` CLI** — done (`~/.local/bin/onchainos`). Skills install OK for Cursor; PromptScript failures are harmless.
 4. **Agentic Wallet login** (you — OTP to email):
    ```bash
@@ -181,8 +181,9 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 - [x] OKX API key + secret + passphrase in `.env.local` + Vercel production
 - [x] Agentic Wallet logged in (`0x6adab0c9c761c3459208bfa90ef2f924f986833c`)
 - [x] Deployed: https://keryxhq.xyz/okxasp + `/api/okxasp/*` (402 confirmed)
-- [x] ASP **#4759** registered — *Keryx Finance Copilot* · **10** A2MCP services (incl. OKX Web3 market) · category SOFTWARE_SERVICES
-- [x] Custom browser 402 paywall (shows real USDT0 amount)
+- [x] ASP **#4759** registered — *Keryx Finance Copilot* · **12** A2MCP services (4 OKX Web3 native incl. wallet PnL) · category SOFTWARE_SERVICES
+- [x] Custom browser 402 paywall (shows real USDT0 amount; Mozilla + Accept: text/html)
+- [x] Settlement proof tx on X Layer testnet: `0x20a15b12c65d4813f6af197257555a0ad0e284b2d81752b581b5cb34f3369273`
 - [x] Listing submitted — status: **Listing under review** (AI quality review suggested pass)
 - [x] Funded Agentic Wallet (~0.2 OKB + 10 USDT) for paid-call smoke tests
 - [ ] Wait for marketplace approval / go live on OKX.AI
@@ -222,24 +223,18 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 5. Submit Google form: https://forms.gle/mddEUagmDbyV37ws8 (ASP id, links, X post).
 6. Drive usage for Revenue Rocket / Social Buzz (friends, agents, thread replies).
 
-## Grand prize audit (honest)
+## Grand prize audit (updated)
 
-### Edge
-- Real product, not a one-endpoint joke: 8 coherent finance tools + polished `/okxasp`.
-- Correct OKX stack: `@okxweb3/x402-*`, 402 confirmed, ASP already in review.
-- Dual-rail story (Arc + X Layer) without breaking Lepton.
-- Brand + docs surface ready for judges.
+### Edge (shipped)
+- 12-tool Finance Copilot pack + live agent-loop UI on `/okxasp`.
+- 4 OKX Web3 native tools (token price, market snapshot, wallet PnL, recent PnL).
+- Custom browser 402 paywall with real USDT0 amount.
+- Settlement proof tx on X Layer testnet (Agentic Wallet).
+- ASP #4759 under review; description screams Finance Copilot.
 
-### Gaps / losses if we do nothing
-- **Zero paid usage yet** → weak Revenue Rocket.
-- **Not live on marketplace yet** → form invalid until approved.
-- **No demo video / #okxai post yet**.
-- Tools wrap public data (CoinGecko etc.) → judges may call it thin vs proprietary finance agents.
-- Category is SOFTWARE_SERVICES; Finance Copilot track needs the pitch to scream finance, not generic software.
-- Browser 402 HTML shows `$0.00 USDC` (SDK chrome). Agents see correct amount; still looks bad in screenshots.
+### Still blocked on approval
+- Marketplace “listed” + sold count / Revenue Rocket volume.
+- Demo + `#okxai` + Google form (after live).
 
-### What to ship next (priority)
-1. Live listing + one successful paid settle (screen-record it).
-2. 90s X demo + form.
-3. Optional: one "wow" proprietary or OKX-native signal (e.g. OKX market endpoint) so we are not only CoinGecko wrappers.
-4. Optional: mainnet settle before deadline if review allows.
+### Mainnet note
+Keep `OKX_X402_NETWORK=eip155:1952` until listing is live and mainnet USDT0/OKB are funded. Flip to `eip155:196` in Vercel when ready.

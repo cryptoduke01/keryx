@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import ArtPanel from "@/components/ArtPanel";
 import Reveal from "@/components/motion/Reveal";
+import OkxAgentLoop from "./OkxAgentLoop";
 import {
   listOkxAspTools,
   priceUsdToOkxPrice,
@@ -11,7 +12,7 @@ import {
 export const metadata = {
   title: "Finance Copilot · Keryx on OKX.AI",
   description:
-    "Pay-per-call market intel for AI agents on OKX.AI. Live prices, token risk, and FX on X Layer.",
+    "Pay-per-call finance for AI agents on OKX.AI. OKX Web3 prices, wallet PnL, token risk, and FX on X Layer.",
 };
 
 /** Short consumer copy. Registry summaries stay agent-oriented. */
@@ -19,19 +20,36 @@ const BLURBS: Record<string, string> = {
   "crypto.price": "Live price, market cap, and 24h change for any coin.",
   "crypto.trending": "What the market is searching right now.",
   "crypto.btc-dominance": "BTC and ETH dominance plus total market cap.",
-  "solana.token-activity": "DEX volume, liquidity, and buy/sell flow for a Solana token.",
-  "solana.rug-check": "Risk score, LP lock, and flagged issues from rugcheck.xyz.",
+  "solana.token-activity":
+    "DEX volume, liquidity, and buy/sell flow for a Solana token.",
+  "solana.rug-check":
+    "Risk score, LP lock, and flagged issues from rugcheck.xyz.",
   "solana.launches": "Fresh Solana token profiles as they hit the board.",
   "finance.convert": "Convert an amount between currencies at live rates.",
   "finance.exchange-rates": "Full rate table for any base currency.",
   "okx.token-price": "OKX Web3 USD price for any token contract.",
-  "okx.token-market": "OKX Web3 snapshot: price, market cap, liquidity, holders.",
+  "okx.token-market":
+    "OKX Web3 snapshot: price, market cap, liquidity, holders.",
+  "okx.wallet-pnl":
+    "OKX Web3 wallet PnL: realized PnL, win rate, buy/sell flow.",
+  "okx.wallet-recent-pnl": "OKX Web3 recent per-token PnL for a wallet.",
 };
 
 const ASP_ID = "4759";
+/** First successful X Layer testnet settle (facilitator returned success + tx). */
+const PROOF_TX =
+  "0x20a15b12c65d4813f6af197257555a0ad0e284b2d81752b581b5cb34f3369273";
 
 export default function OkxAspPage() {
   const tools = listOkxAspTools();
+  const loopTools = tools.map((t) => ({
+    id: t.id,
+    name: t.name,
+    slug: slugForToolId(t.id)!,
+    price: priceUsdToOkxPrice(t.priceUsd),
+    sampleArgs: t.sampleArgs,
+  }));
+  const okxNative = tools.filter((t) => t.id.startsWith("okx.")).length;
 
   return (
     <>
@@ -100,7 +118,7 @@ export default function OkxAspPage() {
                   background: "#fff",
                 }}
               />
-              OKX.AI · ASP #{ASP_ID}
+              Finance Copilot · ASP #{ASP_ID}
             </div>
           </div>
         </div>
@@ -126,7 +144,7 @@ export default function OkxAspPage() {
                   letterSpacing: "-0.025em",
                   color: "#f5f4f0",
                   marginBottom: 16,
-                  maxWidth: 640,
+                  maxWidth: 680,
                   textShadow:
                     "0 2px 24px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.6)",
                 }}
@@ -138,24 +156,29 @@ export default function OkxAspPage() {
                   fontSize: 16,
                   lineHeight: 1.6,
                   color: "rgba(245,244,240,0.78)",
-                  maxWidth: 480,
+                  maxWidth: 520,
                   marginBottom: 24,
                   textShadow: "0 1px 12px rgba(0,0,0,0.7)",
                 }}
               >
-                Live prices, token risk, and FX. Agents pay per call on X Layer
-                and get the answer in one shot.
+                OKX Web3 prices, wallet PnL, token risk, and FX. Agents pay per
+                call on X Layer and get the answer in one shot.
               </p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-                <a href="https://okx.ai" target="_blank" rel="noreferrer" style={btnHeroPrimary}>
-                  Browse on OKX.AI
+                <a href="#agent-loop" style={btnHeroPrimary}>
+                  Try the agent loop
+                </a>
+                <a
+                  href="https://okx.ai"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={btnHeroGhost}
+                >
+                  OKX.AI marketplace
                 </a>
                 <Link href="/okxasp/docs" style={btnHeroGhost}>
                   Docs
                 </Link>
-                <a href="/api/okxasp/catalog" style={btnHeroGhost}>
-                  Catalog API
-                </a>
               </div>
             </Reveal>
           </div>
@@ -169,7 +192,7 @@ export default function OkxAspPage() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
             gap: 1,
             background: "var(--border)",
             border: "1px solid var(--border)",
@@ -178,10 +201,16 @@ export default function OkxAspPage() {
             marginBottom: 56,
           }}
         >
+          <Stat label="Track" value="Finance" />
           <Stat label="Type" value="A2MCP" />
           <Stat label="Tools" value={String(tools.length)} />
+          <Stat label="OKX-native" value={String(okxNative)} />
           <Stat label="Settlement" value="X Layer" />
           <Stat label="Asset" value="USDT0" />
+        </div>
+
+        <div id="agent-loop" style={{ marginBottom: 64 }}>
+          <OkxAgentLoop tools={loopTools} />
         </div>
 
         <div
@@ -196,7 +225,7 @@ export default function OkxAspPage() {
         >
           <section>
             <div className="text-eyebrow" style={{ marginBottom: 12 }}>
-              The pack
+              The finance pack
             </div>
             <h2
               style={{
@@ -208,15 +237,17 @@ export default function OkxAspPage() {
                 margin: "0 0 12px",
               }}
             >
-              Ten tools. Pay only when you call.
+              {tools.length} tools. {okxNative} OKX-native. Pay per call.
             </h2>
             <p style={{ ...body, marginBottom: 28 }}>
-              Each endpoint returns HTTP 402 until the agent pays. After
-              settlement on X Layer, the data comes back as JSON.
+              Commodity feeds for coverage. OKX Web3 market and wallet PnL for
+              the edge. Every unpaid hit returns HTTP 402 with a real USDT0
+              price.
             </p>
             <div style={{ display: "flex", flexDirection: "column" }}>
               {tools.map((tool) => {
                 const slug = slugForToolId(tool.id)!;
+                const isOkx = tool.id.startsWith("okx.");
                 return (
                   <a
                     key={tool.id}
@@ -241,9 +272,30 @@ export default function OkxAspPage() {
                           marginBottom: 4,
                           fontFamily: "var(--font-display)",
                           letterSpacing: "-0.01em",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          flexWrap: "wrap",
                         }}
                       >
                         {tool.name}
+                        {isOkx && (
+                          <span
+                            style={{
+                              fontSize: 10,
+                              fontFamily: "var(--font-sans)",
+                              fontWeight: 600,
+                              letterSpacing: "0.06em",
+                              textTransform: "uppercase",
+                              padding: "2px 7px",
+                              borderRadius: 999,
+                              border: "1px solid rgba(184,255,60,0.35)",
+                              color: "#8fbf2e",
+                            }}
+                          >
+                            OKX Web3
+                          </span>
+                        )}
                       </div>
                       <div
                         style={{
@@ -273,18 +325,50 @@ export default function OkxAspPage() {
           </section>
 
           <aside>
-            <div style={{ position: "sticky", top: 88 }} className="okxasp-aside">
+            <div
+              style={{ position: "sticky", top: 88 }}
+              className="okxasp-aside"
+            >
               <ArtPanel
                 src="/inspo/okx-side.png"
                 alt="Agents gathering around market signal"
                 aspectRatio="4 / 5"
                 position="50% 45%"
-                variant="raw"
-                overlayText="MARKET INTEL AT MACHINE SPEED."
+                variant="neon"
+                overlayText="FINANCE COPILOT · X LAYER."
               />
               <div
                 style={{
                   marginTop: 20,
+                  padding: 16,
+                  borderRadius: 12,
+                  border: "1px solid var(--border)",
+                  background: "var(--surface-1)",
+                }}
+              >
+                <div className="text-eyebrow" style={{ marginBottom: 8 }}>
+                  Settlement proof
+                </div>
+                <p style={{ ...body, fontSize: 13, marginBottom: 10 }}>
+                  First paid authorize on X Layer testnet via Agentic Wallet.
+                  Facilitator returned success with tx hash.
+                </p>
+                <code
+                  style={{
+                    display: "block",
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 11,
+                    wordBreak: "break-all",
+                    color: "var(--text-primary)",
+                    lineHeight: 1.45,
+                  }}
+                >
+                  {PROOF_TX}
+                </code>
+              </div>
+              <div
+                style={{
+                  marginTop: 12,
                   display: "flex",
                   flexDirection: "column",
                   gap: 10,
@@ -335,7 +419,7 @@ export default function OkxAspPage() {
               First hit returns 402 with the price in USDT0 on X Layer.
             </li>
             <li>
-              Agentic Wallet pays. Retry. You get the JSON result.
+              Agentic Wallet pays. Retry with PAYMENT-SIGNATURE. You get JSON.
             </li>
           </ol>
         </section>

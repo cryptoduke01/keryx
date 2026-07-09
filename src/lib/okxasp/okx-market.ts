@@ -37,24 +37,28 @@ function credentials(): { apiKey: string; secret: string; passphrase: string } {
   return { apiKey, secret, passphrase };
 }
 
-async function okxPost<T>(path: string, body: unknown): Promise<T> {
+async function okxRequest<T>(
+  method: "GET" | "POST",
+  path: string,
+  body?: unknown,
+): Promise<T> {
   const { apiKey, secret, passphrase } = credentials();
-  const bodyStr = JSON.stringify(body);
+  const bodyStr = method === "POST" ? JSON.stringify(body ?? {}) : "";
   const timestamp = new Date().toISOString();
   const sign = createHmac("sha256", secret)
-    .update(timestamp + "POST" + path + bodyStr)
+    .update(timestamp + method + path + bodyStr)
     .digest("base64");
 
   const res = await fetch(`${OKX_WEB3_HOST}${path}`, {
-    method: "POST",
+    method,
     headers: {
       "OK-ACCESS-KEY": apiKey,
       "OK-ACCESS-SIGN": sign,
       "OK-ACCESS-TIMESTAMP": timestamp,
       "OK-ACCESS-PASSPHRASE": passphrase,
-      "Content-Type": "application/json",
+      ...(method === "POST" ? { "Content-Type": "application/json" } : {}),
     },
-    body: bodyStr,
+    body: method === "POST" ? bodyStr : undefined,
     signal: AbortSignal.timeout(12_000),
   });
 
@@ -69,6 +73,14 @@ async function okxPost<T>(path: string, body: unknown): Promise<T> {
     );
   }
   return json.data as T;
+}
+
+async function okxPost<T>(path: string, body: unknown): Promise<T> {
+  return okxRequest<T>("POST", path, body);
+}
+
+async function okxGet<T>(pathWithQuery: string): Promise<T> {
+  return okxRequest<T>("GET", pathWithQuery);
 }
 
 export function resolveChainIndex(chain: string): string {
@@ -164,6 +176,84 @@ export async function fetchOkxTokenMarket(args: {
     volume24hUsd: num(row.volume24h),
     liquidityUsd: num(row.liquidity),
     holders: num(row.holders),
+    source: "okx-web3",
+  };
+}
+
+function numOrNull(v: unknown): number | null {
+  if (v == null || v === "") return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+/** Wallet PnL overview from OKX Web3 (proprietary). */
+export async function fetchOkxWalletPnl(args: {
+  wallet: string;
+  chain?: string;
+  timeFrame?: string | number;
+}): Promise<{
+  chainIndex: string;
+  wallet: string;
+  realizedPnlUsd: number | null;
+  winRate: number | null;
+  buyTxCount: number | null;
+  sellTxCount: number | null;
+  buyTxVolumeUsd: number | null;
+  sellTxVolumeUsd: number | null;
+  top3PnlTokenSumUsd: number | null;
+  topPnlTokens: unknown;
+  source: "okx-web3";
+}> {
+  const wallet = args.wallet.trim();
+  if (!/^0x[a-fA-F0-9]{40}$/.test(wallet) && wallet.length < 32) {
+    throw new Error("wallet address is required");
+  }
+  const chainIndex = resolveChainIndex(args.chain ?? "ethereum");
+  const timeFrame = String(args.timeFrame ?? "4");
+  const path =
+    `/api/v6/dex/market/portfolio/overview?walletAddress=${encodeURIComponent(wallet)}` +
+    `&chainIndex=${encodeURIComponent(chainIndex)}&timeFrame=${encodeURIComponent(timeFrame)}`;
+  const data = await okxGet<Record<string, unknown>>(path);
+  return {
+    chainIndex,
+    wallet,
+    realizedPnlUsd: numOrNull(data.realizedPnlUsd),
+    winRate: numOrNull(data.winRate),
+    buyTxCount: numOrNull(data.buyTxCount),
+    sellTxCount: numOrNull(data.sellTxCount),
+    buyTxVolumeUsd: numOrNull(data.buyTxVolume),
+    sellTxVolumeUsd: numOrNull(data.sellTxVolume),
+    top3PnlTokenSumUsd: numOrNull(data.top3PnlTokenSumUsd),
+    topPnlTokens: data.topPnlTokenList ?? null,
+    source: "okx-web3",
+  };
+}
+
+/** Recent per-token PnL rows from OKX Web3. */
+export async function fetchOkxWalletRecentPnl(args: {
+  wallet: string;
+  chain?: string;
+  limit?: number;
+}): Promise<{
+  chainIndex: string;
+  wallet: string;
+  cursor: string | null;
+  tokens: unknown[];
+  source: "okx-web3";
+}> {
+  const wallet = args.wallet.trim();
+  if (!wallet) throw new Error("wallet address is required");
+  const chainIndex = resolveChainIndex(args.chain ?? "ethereum");
+  const limit = Math.min(Math.max(Number(args.limit) || 10, 1), 50);
+  const path =
+    `/api/v6/dex/market/portfolio/recent-pnl?walletAddress=${encodeURIComponent(wallet)}` +
+    `&chainIndex=${encodeURIComponent(chainIndex)}&limit=${limit}`;
+  const data = await okxGet<{ cursor?: string; pnlList?: unknown[] }>(path);
+  return {
+    chainIndex,
+    wallet,
+    cursor: data.cursor ?? null,
+    tokens: Array.isArray(data.pnlList) ? data.pnlList : [],
     source: "okx-web3",
   };
 }

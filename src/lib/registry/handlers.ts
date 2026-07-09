@@ -605,6 +605,8 @@ const HANDLERS: Record<string, (ctx: CallContext) => Promise<unknown>> = {
   "crypto.btc-dominance": handleBtcDominance,
   "okx.token-price": handleOkxTokenPrice,
   "okx.token-market": handleOkxTokenMarket,
+  "okx.wallet-pnl": handleOkxWalletPnl,
+  "okx.wallet-recent-pnl": handleOkxWalletRecentPnl,
 };
 
 async function handleDemoContentBlock(ctx: CallContext) {
@@ -705,4 +707,20 @@ async function handleOkxTokenMarket(ctx: CallContext) {
   const address = pickStr(ctx.args, "address", "").trim();
   const chain = pickStr(ctx.args, "chain", "ethereum").trim() || "ethereum";
   return fetchOkxTokenMarket({ address, chain });
+}
+
+async function handleOkxWalletPnl(ctx: CallContext) {
+  const { fetchOkxWalletPnl } = await import("@/lib/okxasp/okx-market");
+  const wallet = pickStr(ctx.args, "wallet", "").trim();
+  const chain = pickStr(ctx.args, "chain", "ethereum").trim() || "ethereum";
+  const timeFrame = pickStr(ctx.args, "timeFrame", "4").trim() || "4";
+  return fetchOkxWalletPnl({ wallet, chain, timeFrame });
+}
+
+async function handleOkxWalletRecentPnl(ctx: CallContext) {
+  const { fetchOkxWalletRecentPnl } = await import("@/lib/okxasp/okx-market");
+  const wallet = pickStr(ctx.args, "wallet", "").trim();
+  const chain = pickStr(ctx.args, "chain", "ethereum").trim() || "ethereum";
+  const limit = pickNum(ctx.args, "limit", 10);
+  return fetchOkxWalletRecentPnl({ wallet, chain, limit });
 }

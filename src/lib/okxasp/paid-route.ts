@@ -4,7 +4,10 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { withX402 } from "@okxweb3/x402-next";
+import {
+  withX402FromHTTPServer,
+  x402HTTPResourceServer,
+} from "@okxweb3/x402-next";
 import { executeTool } from "@/lib/registry/handlers";
 import {
   getOkxAspTool,
@@ -41,7 +44,7 @@ export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
     } else {
       const sp = req.nextUrl.searchParams;
       for (const [k, v] of sp.entries()) {
-        if (k === "limit" || k === "amount" || k === "days") {
+        if (k === "limit" || k === "amount" || k === "days" || k === "timeFrame") {
           const n = Number(v);
           args[k] = Number.isFinite(n) ? n : v;
         } else {
@@ -81,7 +84,7 @@ export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
   const payTo = okxPayTo()!;
   const routeConfig = {
     accepts: {
-      scheme: "exact",
+      scheme: "exact" as const,
       price: priceUsdToOkxPrice(tool.priceUsd),
       network: okxNetwork() as `${string}:${string}`,
       payTo,
@@ -91,15 +94,22 @@ export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
   };
 
   const server = getOkxResourceServer();
+  const httpServer = new x402HTTPResourceServer(server, { "*": routeConfig })
+    // X Layer testnet confirmations can exceed the default 5s poll window.
+    .setPollDeadline(25_000)
+    .onSettlementTimeout(async (txHash) => {
+      // Facilitator already returned a tx hash with success=true / status=timeout.
+      return { confirmed: Boolean(txHash) };
+    });
+
   const paywallConfig = {
     appName: "Keryx Finance Copilot",
     testnet: okxNetwork().includes("1952"),
   };
-  // Settlement only after successful response (status < 400)
-  const paid = withX402(
+
+  const paid = withX402FromHTTPServer(
     handler,
-    routeConfig,
-    server,
+    httpServer,
     paywallConfig,
     keryxOkxPaywall,
     true,

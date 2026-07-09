@@ -471,6 +471,70 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     verified: true,
     latencyMs: 900,
   },
+  {
+    id: "okx.wallet-pnl",
+    name: "OKX Wallet PnL Overview",
+    summary:
+      "OKX Web3 wallet PnL overview: realized PnL, win rate, buy/sell volume, top tokens. Agents use this to size risk before acting.",
+    category: "finance",
+    priceUsd: 0.005,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Keryx",
+    args: {
+      wallet: {
+        type: "string",
+        required: true,
+        description: "EVM wallet address to analyze.",
+      },
+      chain: {
+        type: "string",
+        description: "Chain name or index. Default ethereum.",
+      },
+      timeFrame: {
+        type: "string",
+        description: "1=1D, 2=3D, 3=7D, 4=1M, 5=3M. Default 4.",
+      },
+    },
+    sampleArgs: {
+      wallet: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+      chain: "ethereum",
+      timeFrame: "4",
+    },
+    verified: true,
+    latencyMs: 1100,
+  },
+  {
+    id: "okx.wallet-recent-pnl",
+    name: "OKX Wallet Recent Token PnL",
+    summary:
+      "Recent per-token PnL rows for a wallet from OKX Web3: unrealized PnL, buy/sell counts, balances.",
+    category: "finance",
+    priceUsd: 0.005,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Keryx",
+    args: {
+      wallet: {
+        type: "string",
+        required: true,
+        description: "EVM wallet address.",
+      },
+      chain: {
+        type: "string",
+        description: "Chain name or index. Default ethereum.",
+      },
+      limit: {
+        type: "number",
+        description: "Rows to return (1-50). Default 10.",
+      },
+    },
+    sampleArgs: {
+      wallet: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+      chain: "ethereum",
+      limit: 5,
+    },
+    verified: true,
+    latencyMs: 1100,
+  },
 ];
 
 /** Map for O(1) lookup by id. Rebuilt from SEEDED_TOOLS every call so

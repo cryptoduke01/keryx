@@ -18,6 +18,8 @@ export const OKX_ASP_TOOL_IDS = [
   "finance.exchange-rates",
   "okx.token-price",
   "okx.token-market",
+  "okx.wallet-pnl",
+  "okx.wallet-recent-pnl",
 ] as const;
 
 export type OkxAspToolId = (typeof OKX_ASP_TOOL_IDS)[number];
@@ -34,6 +36,8 @@ export const OKX_ASP_SLUGS: Record<string, OkxAspToolId> = {
   "finance-exchange-rates": "finance.exchange-rates",
   "okx-token-price": "okx.token-price",
   "okx-token-market": "okx.token-market",
+  "okx-wallet-pnl": "okx.wallet-pnl",
+  "okx-wallet-recent-pnl": "okx.wallet-recent-pnl",
 };
 
 export function okxNetwork(): string {
