@@ -510,6 +510,21 @@ h1, .display {
     linear-gradient(180deg, var(--art-cobalt-deep) 0%, #050b28 55%, var(--art-ink) 100%);
 }
 
+/* Neon lime re-tint for OKX.AI surfaces (docs / product note). */
+.art-photo-neon {
+  filter: grayscale(1) contrast(1.18) brightness(0.88);
+}
+.art-photo-tint-neon {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: color;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 28%, #b8ff3c 0%, transparent 58%),
+    radial-gradient(ellipse 100% 70% at 8% 92%, #1a3d12 0%, transparent 65%),
+    radial-gradient(ellipse 100% 70% at 92% 95%, #0d2810 0%, transparent 65%),
+    linear-gradient(180deg, #0a1a08 0%, #050c04 55%, #0b0b0c 100%);
+}
+
 /* Panel used as an inline text-over-art section (Kairos-style). */
 .art-section {
   position: relative;

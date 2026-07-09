@@ -16,6 +16,8 @@ export const OKX_ASP_TOOL_IDS = [
   "solana.launches",
   "finance.convert",
   "finance.exchange-rates",
+  "okx.token-price",
+  "okx.token-market",
 ] as const;
 
 export type OkxAspToolId = (typeof OKX_ASP_TOOL_IDS)[number];
@@ -30,6 +32,8 @@ export const OKX_ASP_SLUGS: Record<string, OkxAspToolId> = {
   "solana-launches": "solana.launches",
   "finance-convert": "finance.convert",
   "finance-exchange-rates": "finance.exchange-rates",
+  "okx-token-price": "okx.token-price",
+  "okx-token-market": "okx.token-market",
 };
 
 export function okxNetwork(): string {

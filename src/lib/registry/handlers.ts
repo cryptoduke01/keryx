@@ -603,6 +603,8 @@ const HANDLERS: Record<string, (ctx: CallContext) => Promise<unknown>> = {
   "time.current": handleTimeCurrent,
   "utility.uuid": handleUuid,
   "crypto.btc-dominance": handleBtcDominance,
+  "okx.token-price": handleOkxTokenPrice,
+  "okx.token-market": handleOkxTokenMarket,
 };
 
 async function handleDemoContentBlock(ctx: CallContext) {
@@ -689,4 +691,18 @@ async function handleBtcDominance(_ctx: CallContext) {
     updatedAt: new Date().toISOString(),
     source: "coingecko",
   };
+}
+
+async function handleOkxTokenPrice(ctx: CallContext) {
+  const { fetchOkxTokenPrice } = await import("@/lib/okxasp/okx-market");
+  const address = pickStr(ctx.args, "address", "").trim();
+  const chain = pickStr(ctx.args, "chain", "ethereum").trim() || "ethereum";
+  return fetchOkxTokenPrice({ address, chain });
+}
+
+async function handleOkxTokenMarket(ctx: CallContext) {
+  const { fetchOkxTokenMarket } = await import("@/lib/okxasp/okx-market");
+  const address = pickStr(ctx.args, "address", "").trim();
+  const chain = pickStr(ctx.args, "chain", "ethereum").trim() || "ethereum";
+  return fetchOkxTokenMarket({ address, chain });
 }

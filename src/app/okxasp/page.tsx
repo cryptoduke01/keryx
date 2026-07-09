@@ -24,6 +24,8 @@ const BLURBS: Record<string, string> = {
   "solana.launches": "Fresh Solana token profiles as they hit the board.",
   "finance.convert": "Convert an amount between currencies at live rates.",
   "finance.exchange-rates": "Full rate table for any base currency.",
+  "okx.token-price": "OKX Web3 USD price for any token contract.",
+  "okx.token-market": "OKX Web3 snapshot: price, market cap, liquidity, holders.",
 };
 
 const ASP_ID = "4759";
@@ -206,7 +208,7 @@ export default function OkxAspPage() {
                 margin: "0 0 12px",
               }}
             >
-              Eight tools. Pay only when you call.
+              Ten tools. Pay only when you call.
             </h2>
             <p style={{ ...body, marginBottom: 28 }}>
               Each endpoint returns HTTP 402 until the agent pays. After

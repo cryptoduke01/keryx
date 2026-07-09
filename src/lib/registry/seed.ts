@@ -415,6 +415,62 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     verified: true,
     latencyMs: 650,
   },
+  {
+    id: "okx.token-price",
+    name: "OKX Onchain Token Price",
+    summary:
+      "Live USD price for any token contract from OKX Web3 market data (not CoinGecko). Pass chain + contract address.",
+    category: "finance",
+    priceUsd: 0.003,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Keryx",
+    args: {
+      address: {
+        type: "string",
+        required: true,
+        description:
+          "Token contract address (EVM) or mint (Solana). Example WETH: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      },
+      chain: {
+        type: "string",
+        description:
+          "Chain name or index: ethereum, xlayer, solana, base, bsc, arbitrum, polygon. Default ethereum.",
+      },
+    },
+    sampleArgs: {
+      address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      chain: "ethereum",
+    },
+    verified: true,
+    latencyMs: 800,
+  },
+  {
+    id: "okx.token-market",
+    name: "OKX Token Market Snapshot",
+    summary:
+      "OKX Web3 market snapshot for a token: price, market cap, liquidity, holders. Proprietary to OKX DEX market APIs.",
+    category: "finance",
+    priceUsd: 0.004,
+    publisherWallet: KERYX_TREASURY_ADDRESS,
+    publisherName: "Keryx",
+    args: {
+      address: {
+        type: "string",
+        required: true,
+        description: "Token contract address or Solana mint.",
+      },
+      chain: {
+        type: "string",
+        description: "Chain name or index. Default ethereum.",
+      },
+    },
+    sampleArgs: {
+      address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      chain: "ethereum",
+    },
+    verified: true,
+    latencyMs: 900,
+  },
 ];
 
 /** Map for O(1) lookup by id. Rebuilt from SEEDED_TOOLS every call so

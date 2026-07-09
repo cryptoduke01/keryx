@@ -15,6 +15,7 @@ import {
   type OkxAspToolId,
 } from "@/lib/okxasp/config";
 import { getOkxResourceServer } from "@/lib/okxasp/server";
+import { keryxOkxPaywall } from "@/lib/okxasp/paywall";
 
 export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
   const tool = getOkxAspTool(toolId);
@@ -90,7 +91,18 @@ export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
   };
 
   const server = getOkxResourceServer();
+  const paywallConfig = {
+    appName: "Keryx Finance Copilot",
+    testnet: okxNetwork().includes("1952"),
+  };
   // Settlement only after successful response (status < 400)
-  const paid = withX402(handler, routeConfig, server, undefined, undefined, true);
+  const paid = withX402(
+    handler,
+    routeConfig,
+    server,
+    paywallConfig,
+    keryxOkxPaywall,
+    true,
+  );
   return { GET: paid, POST: paid };
 }
