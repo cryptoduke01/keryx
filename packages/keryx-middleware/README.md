@@ -4,7 +4,7 @@
 
 [![npm](https://img.shields.io/npm/v/@keryxhq/middleware.svg?color=cb3837)](https://www.npmjs.com/package/@keryxhq/middleware)
 [![license: MIT](https://img.shields.io/badge/license-MIT-black.svg)](./LICENSE)
-[![Kēryx](https://img.shields.io/badge/Kēryx-keryxhq.xyz-000)](https://keryxhq.xyz)
+[![Keryx](https://img.shields.io/badge/Keryx-keryxhq.xyz-000)](https://keryxhq.xyz)
 
 ---
 
@@ -114,7 +114,7 @@ The single `handlePaymentCheck({ config, resource, paymentHeader })` primitive i
 
 **3. Settlement (opt-in).** Set `facilitatorUrl` on the config (or the `KERYX_FACILITATOR_URL` env var) and the SDK POSTs `{ payment, requirements }` to that URL. The facilitator broadcasts the EIP-3009 authorization onchain and returns `{ txHash }`. The receipt then carries `settlementMode: "settled"` and the tx hash. Without a facilitator, the receipt is `settlementMode: "verified"` — the publisher holds the signed authorization and can broadcast it later.
 
-Run your own facilitator: any endpoint that accepts `POST { payment, requirements }` and returns `{ txHash }` will work. See the Kēryx repo for a reference implementation on Arc testnet.
+Run your own facilitator: any endpoint that accepts `POST { payment, requirements }` and returns `{ txHash }` will work. See the Keryx repo for a reference implementation on Arc testnet.
 
 ---
 
@@ -131,14 +131,14 @@ Override with `network: "arc-mainnet"` when you're ready.
 
 ---
 
-## Publishing your tool to the Kēryx registry
+## Publishing your tool to the Keryx registry
 
 Wrapping your endpoint is step 1. Step 2 is making it discoverable to every agent on Claude, Cursor, and GitHub Copilot:
 
 1. Deploy your wrapped handler at a public HTTPS URL.
 2. Visit **[keryxhq.xyz/publish](https://keryxhq.xyz/publish)**, connect your Arc wallet (must match the `wallet` field in the SDK config), and paste your handler URL.
 3. Sign the publish message with your wallet. Your tool is live in the registry immediately.
-4. Every MCP-enabled agent (Cursor, Claude Code, GitHub Copilot, custom) can now discover and call your tool by capability. You keep **95%** of every paid call. Kēryx takes 5%.
+4. Every MCP-enabled agent (Cursor, Claude Code, GitHub Copilot, custom) can now discover and call your tool by capability. You keep **95%** of every paid call. Keryx takes 5%.
 
 ---
 
@@ -213,16 +213,16 @@ No. Default mode verifies the signature but doesn't broadcast. You hold the sign
 Yes. Use the framework-agnostic primitives (`handlePaymentCheck` is the main one) and wire it into whatever framework you're on. See [Framework-agnostic primitives](#framework-agnostic-primitives) above.
 
 **What's the difference between MCP and direct API calls?**
-MCP is how Claude, Cursor, and Copilot **discover** your tool. Direct API is how any HTTP client calls it. Both surfaces read the same tool listing. The SDK you install here handles the direct API side with real x402. Kēryx runs the MCP endpoint separately at `keryxhq.xyz/api/mcp`.
+MCP is how Claude, Cursor, and Copilot **discover** your tool. Direct API is how any HTTP client calls it. Both surfaces read the same tool listing. The SDK you install here handles the direct API side with real x402. Keryx runs the MCP endpoint separately at `keryxhq.xyz/api/mcp`.
 
-**Is Kēryx custody?**
-No. The SDK verifies and (optionally) settles directly to your wallet. Kēryx never holds a balance for you. The 5% platform fee splits at settlement time via the same EIP-3009 authorization.
+**Is Keryx custody?**
+No. The SDK verifies and (optionally) settles directly to your wallet. Keryx never holds a balance for you. The 5% platform fee splits at settlement time via the same EIP-3009 authorization.
 
 ---
 
 ## Links
 
-- **Kēryx** — [keryxhq.xyz](https://keryxhq.xyz)
+- **Keryx** — [keryxhq.xyz](https://keryxhq.xyz)
 - **Live SDK page** — [keryxhq.xyz/sdk](https://keryxhq.xyz/sdk)
 - **Registry** (browse tools) — [keryxhq.xyz/registry](https://keryxhq.xyz/registry)
 - **Publish your tool** — [keryxhq.xyz/publish](https://keryxhq.xyz/publish)
@@ -237,4 +237,4 @@ No. The SDK verifies and (optionally) settles directly to your wallet. Kēryx ne
 
 ## License
 
-MIT © Kēryx
+MIT © Keryx

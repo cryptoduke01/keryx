@@ -2,9 +2,9 @@ import Link from "next/link";
 import CopyButton from "@/components/CopyButton";
 
 export const metadata = {
-  title: "Try Kēryx · Test the full flow in five minutes",
+  title: "Try Keryx · Test the full flow in five minutes",
   description:
-    "A minute-by-minute guide to try every part of Kēryx: play in /ask, hit /api/call from the terminal, add the MCP server to Claude Code, and publish a real tool.",
+    "A minute-by-minute guide to try every part of Keryx: play in /ask, hit /api/call from the terminal, add the MCP server to Claude Code, and publish a real tool.",
 };
 
 export default function TryPage() {
@@ -14,10 +14,10 @@ export default function TryPage() {
         Testing guide
       </div>
       <h1 className="text-headline" style={{ marginBottom: 16 }}>
-        Try Kēryx in five minutes.
+        Try Keryx in five minutes.
       </h1>
       <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.65, marginBottom: 40 }}>
-        Four ways to hit Kēryx yourself, ordered from easiest to most technical.
+        Four ways to hit Keryx yourself, ordered from easiest to most technical.
         Every one produces a real onchain USDC transaction on Arc testnet that
         you can look up on Arcscan afterwards.
       </p>
@@ -50,7 +50,7 @@ export default function TryPage() {
       >
         <P>
           Anyone with a terminal can hit the raw x402 endpoint. This is what
-          Kēryx looks like to an AI agent with no browser.
+          Keryx looks like to an AI agent with no browser.
         </P>
         <P>
           <b>First hit &mdash; you get a 402:</b>
@@ -72,19 +72,19 @@ export default function TryPage() {
         </P>
         <P>
           Don&apos;t want to write a signer? Use{" "}
-          <Link href="/ask" style={link}>/ask</Link> &mdash; Kēryx signs on
+          <Link href="/ask" style={link}>/ask</Link> &mdash; Keryx signs on
           behalf of its facilitator wallet for you.
         </P>
       </Step>
 
       <Step
         num={3}
-        title="Drop Kēryx into Claude Code"
+        title="Drop Keryx into Claude Code"
         seconds={120}
         difficulty="One JSON file"
       >
         <P>
-          Kēryx runs a Model Context Protocol server at{" "}
+          Keryx runs a Model Context Protocol server at{" "}
           <code style={codeInline}>https://keryxhq.xyz/api/mcp</code>. Add it
           to Claude Code&apos;s MCP config once and every tool in the registry
           becomes something Claude can call natively, no per-tool wiring.
@@ -105,7 +105,7 @@ export default function TryPage() {
           <i>&ldquo;use keryx to search for what Circle Arc is&rdquo;</i>{" "}
           or <i>&ldquo;use keryx to rug-check this Solana mint: EPjF…Dt1v&rdquo;</i>.
           Claude picks the right tool from the registry, calls it, and
-          Kēryx settles the payment onchain in the background. Every call
+          Keryx settles the payment onchain in the background. Every call
           shows up on <Link href="/live" style={link}>/live</Link>.
         </P>
       </Step>
@@ -117,10 +117,10 @@ export default function TryPage() {
         difficulty="Arc wallet + testnet USDC"
       >
         <P>
-          Any HTTP endpoint you can respond to can be listed on Kēryx. For
+          Any HTTP endpoint you can respond to can be listed on Keryx. For
           the demo below we&apos;ll list a fake tool called{" "}
           <code style={codeInline}>weather.today</code> at $0.002 per call.
-          The listing lives in two places: an offchain record on Kēryx that
+          The listing lives in two places: an offchain record on Keryx that
           shows up on <Link href="/registry" style={link}>/registry</Link>{" "}
           and an onchain record on{" "}
           <a
@@ -190,7 +190,7 @@ export default function TryPage() {
         </div>
         <p style={{ fontSize: 13.5, color: "var(--text-secondary)", lineHeight: 1.7 }}>
           Every step above triggered a real HTTP 402 payment protocol handshake
-          against a real USDC contract on Arc testnet, settled through a Kēryx
+          against a real USDC contract on Arc testnet, settled through a Keryx
           facilitator wallet that has{" "}
           <a
             href="https://testnet.arcscan.app/address/0x8F47aE9eC148903C8535b9289ad8efA400e026B6"

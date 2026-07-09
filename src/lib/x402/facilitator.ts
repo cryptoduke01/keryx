@@ -1,5 +1,5 @@
 /**
- * Kēryx's x402 facilitator layer.
+ * Keryx's x402 facilitator layer.
  *
  * Three settlement modes, picked from env at boot:
  *
@@ -7,7 +7,7 @@
  *                  Requires CIRCLE_GATEWAY_API_URL (+ credentials Circle issues you).
  *                  This is the production path we want to be on for the demo.
  *
- *  2. `local`    — Kēryx's own facilitator wallet broadcasts USDC transfers
+ *  2. `local`    — Keryx's own facilitator wallet broadcasts USDC transfers
  *                  directly on Arc. Requires KERYX_FACILITATOR_PRIVATE_KEY and
  *                  an RPC. Useful when Gateway creds aren't in hand yet but the
  *                  wallet has testnet USDC.

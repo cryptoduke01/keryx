@@ -1,5 +1,5 @@
 /**
- * Real handlers for Kēryx tools. Each one hits a live public API — no
+ * Real handlers for Keryx tools. Each one hits a live public API — no
  * hardcoded mocks. If an upstream is down, we surface the error to the
  * caller rather than making something up.
  *
@@ -562,7 +562,7 @@ async function handleCountry(ctx: CallContext) {
 
 // ---------------------------------------------------------------------------
 // Generic proxy for externally-hosted publisher handlers.
-// After Kēryx has taken payment, we forward the args to the publisher's URL.
+// After Keryx has taken payment, we forward the args to the publisher's URL.
 async function handleExternal(ctx: CallContext) {
   const url = ctx.tool.handlerUrl;
   if (!url) {
@@ -610,7 +610,7 @@ async function handleDemoContentBlock(ctx: CallContext) {
   const snippets: Record<string, string> = {
     "what is x402": "x402 is the HTTP 402 Payment Required standard for pay-per-request APIs. Client gets 402 with price, signs USDC auth, retries with X-Payment header.",
     "arc": "Arc is Circle's stablecoin-native L1. Gas in USDC, sub-second finality, designed for micropayments and agents.",
-    general: "This is a demo paid snippet. In production the publisher would return their real content after Kēryx settled the 95%.",
+    general: "This is a demo paid snippet. In production the publisher would return their real content after Keryx settled the 95%.",
   };
   return {
     topic,
@@ -624,7 +624,7 @@ export function isSeededExecutableTool(id: string): boolean {
   return id in HANDLERS;
 }
 
-/** A tool is executable in Kēryx if either:
+/** A tool is executable in Keryx if either:
  *  - it is one of the built-in seeded handlers, or
  *  - it is a published tool that supplied a handlerUrl at publish time.
  */

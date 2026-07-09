@@ -1,5 +1,5 @@
 /**
- * Kēryx quote helper. Day 1 handles pricing + fee split in a single
+ * Keryx quote helper. Day 1 handles pricing + fee split in a single
  * simulated settlement; day 2 wires this through actual x402 + Circle
  * Gateway batching for real onchain USDC movement.
  */

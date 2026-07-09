@@ -131,7 +131,7 @@ export default async function Landing() {
                   textShadow: "0 2px 16px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.6)",
                 }}
               >
-                Web scrapes break. Kēryx tools don&rsquo;t &mdash; because their
+                Web scrapes break. Keryx tools don&rsquo;t &mdash; because their
                 publishers get paid to keep them working. Fresh, structured,
                 attributable data at fractions of a cent per call, in USDC on Arc.
               </p>
@@ -139,7 +139,7 @@ export default async function Landing() {
             <Reveal immediate delay={0.22}>
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                 <Link href="/ask" style={{ textDecoration: "none" }}>
-                  <button className="btn btn-primary btn-lg">Ask Kēryx</button>
+                  <button className="btn btn-primary btn-lg">Ask Keryx</button>
                 </Link>
                 <Link href="/whitepaper" style={{ textDecoration: "none" }}>
                   <button
@@ -316,7 +316,7 @@ export default async function Landing() {
                 n: "03",
                 title: "USDC arrives",
                 desc:
-                  "Every call triggers a nanopayment through Circle Gateway. Your wallet updates in real time. Kēryx never holds a balance.",
+                  "Every call triggers a nanopayment through Circle Gateway. Your wallet updates in real time. Keryx never holds a balance.",
                 icon: (
                   <>
                     <circle cx="10" cy="10" r="7" strokeLinecap="round" />
@@ -621,7 +621,7 @@ export default async function Landing() {
                     textShadow: "0 2px 16px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.6)",
                   }}
                 >
-                  The next trillion users on the internet are AI agents. Kēryx
+                  The next trillion users on the internet are AI agents. Keryx
                   is where they pay for the tools they use.
                 </p>
                 <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
@@ -673,7 +673,7 @@ export default async function Landing() {
                   marginBottom: 12,
                 }}
               >
-                Kēryx
+                Keryx
               </div>
               <p style={{ fontSize: 13.5, color: "var(--text-secondary)", lineHeight: 1.55, maxWidth: 260, marginBottom: 20 }}>
                 The toll booth for the agent economy. Any developer publishes a paid tool. Any AI agent pays to use it. USDC nanopayments on Arc.
@@ -683,7 +683,7 @@ export default async function Landing() {
                   href="https://x.com/keryxhq"
                   target="_blank"
                   rel="noreferrer"
-                  aria-label="Kēryx on X"
+                  aria-label="Keryx on X"
                   style={footerIconStyle}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -755,7 +755,7 @@ export default async function Landing() {
             }}
           >
             <div style={{ fontSize: 11.5, color: "var(--text-faint)", letterSpacing: "0.02em" }}>
-              © 2026 Kēryx. Settles on Arc testnet. MIT-licensed. Not backed by Ycmobinator.
+              © 2026 Keryx. Settles on Arc testnet. MIT-licensed. Not backed by Ycmobinator.
             </div>
             <div style={{ fontSize: 11, color: "var(--text-faint)", fontFamily: "var(--font-mono)" }}>
               v0.1 · commit provably onchain

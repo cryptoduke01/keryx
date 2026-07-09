@@ -34,7 +34,7 @@ export async function GET(req: Request) {
   });
 
   return NextResponse.json({
-    asp: "Kēryx Finance Copilot",
+    asp: "Keryx Finance Copilot",
     aspType: "A2MCP",
     marketplace: "OKX.AI",
     network: okxNetwork(),

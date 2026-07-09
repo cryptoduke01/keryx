@@ -2,9 +2,9 @@ import Link from "next/link";
 import ArtPanel from "@/components/ArtPanel";
 
 export const metadata = {
-  title: "Whitepaper · Kēryx",
+  title: "Whitepaper · Keryx",
   description:
-    "How Kēryx prices, executes, and settles paid tool calls between developers and AI agents on Arc.",
+    "How Keryx prices, executes, and settles paid tool calls between developers and AI agents on Arc.",
 };
 
 const TOC_SECTIONS: Array<{ id: string; label: string }> = [
@@ -120,10 +120,10 @@ export default function WhitepaperPage() {
             Whitepaper · v0.1, July 2026
           </div>
           <h1 className="text-headline" style={{ marginBottom: 16 }}>
-            Kēryx: a paid tool registry for AI agents
+            Keryx: a paid tool registry for AI agents
           </h1>
           <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.65, marginBottom: 24 }}>
-            How Kēryx prices, executes, and settles a paid tool call between
+            How Keryx prices, executes, and settles a paid tool call between
             developers and AI agents. Where a mechanism is not yet live, this
             document says so plainly.
           </p>
@@ -186,7 +186,7 @@ export default function WhitepaperPage() {
           click through a signup form.
         </P>
         <P>
-          Kēryx is a registry where any developer publishes a tool at a
+          Keryx is a registry where any developer publishes a tool at a
           price, and any agent calls that tool by paying for exactly the
           call it makes. Discovery, pricing, execution, and payment happen
           in a single request. Settlement runs in USDC on Arc, a
@@ -231,7 +231,7 @@ export default function WhitepaperPage() {
 
       <Section id="design" title="Design principle: pay per call, not per account">
         <P>
-          Kēryx has one design principle and everything else follows from
+          Keryx has one design principle and everything else follows from
           it: <b>the unit of access is the call, not the account.</b> There
           is no signup for agents. There is no API key. A publisher lists
           a tool once; from then on, every agent on the internet can
@@ -272,7 +272,7 @@ export default function WhitepaperPage() {
           <code style={codeInline}>GET /api/tools</code> returns every
           published tool with its price, its argument schema, and a sample
           call. An agent needs no separate documentation lookup: the
-          schema an agent uses to plan a call is the same schema Kēryx
+          schema an agent uses to plan a call is the same schema Keryx
           uses to validate it.
         </P>
         <H3>3. Call, quote, execute, pay</H3>
@@ -289,7 +289,7 @@ export default function WhitepaperPage() {
         <H3>4. Settle</H3>
         <P>
           Every call splits 95% to the publisher's wallet and 5% to the
-          Kēryx treasury. See{" "}
+          Keryx treasury. See{" "}
           <a href="#settlement" style={linkStyle}>Settlement</a> for how
           that split currently moves versus how it will move once onchain
           settlement is fully live.
@@ -298,7 +298,7 @@ export default function WhitepaperPage() {
 
       <Section id="settlement" title="Settlement: x402 on Arc, batched through Circle Gateway">
         <P>
-          Kēryx settles on{" "}
+          Keryx settles on{" "}
           <a href="https://www.arc.network" style={linkStyle}>Arc</a>,
           Circle's stablecoin-native L1 (testnet chain id{" "}
           <code style={codeInline}>5042002</code>, native gas denominated
@@ -323,10 +323,10 @@ export default function WhitepaperPage() {
           Verification and settlement route through a swappable
           facilitator. When{" "}
           <code style={codeInline}>CIRCLE_GATEWAY_API_URL</code> is set,
-          Kēryx uses{" "}
+          Keryx uses{" "}
           <code style={codeInline}>@circle-fin/x402-batching</code>'s
           Gateway client &mdash; verify happens against Circle's endpoint
-          and settlement is batched onchain. Without that variable, Kēryx
+          and settlement is batched onchain. Without that variable, Keryx
           falls back to a demo facilitator that accepts well-formed
           payloads and records a synthetic tx hash; the{" "}
           <a href="/live" style={linkStyle}>/live</a> ledger tags those
@@ -338,7 +338,7 @@ export default function WhitepaperPage() {
           every call as its own onchain transaction is the same reason
           Arc exists in the first place: at sub-cent price points, the
           cost and latency of broadcasting one transaction per call would
-          dominate the transaction itself. Batching lets Kēryx settle many
+          dominate the transaction itself. Batching lets Keryx settle many
           calls' worth of USDC movement in a single, periodic onchain
           transfer per publisher, while every individual call is still
           quoted, priced, and ledgered in real time.
@@ -360,12 +360,12 @@ export default function WhitepaperPage() {
           or a different registration attempt.
         </P>
         <P>
-          Kēryx distinguishes tools by a{" "}
+          Keryx distinguishes tools by a{" "}
           <code style={codeInline}>verified</code> flag. Seeded tools
-          (Kēryx runs the handler against live public APIs) are verified
+          (Keryx runs the handler against live public APIs) are verified
           and immediately executable. Community tools are listed right away;
           they become executable when the publisher provides a simple
-          POST handler URL (Kēryx forwards after payment). The seeded catalog
+          POST handler URL (Keryx forwards after payment). The seeded catalog
           focuses on everyday micro-tasks (weather, finance, geo, dns, web data,
           crypto, utilities).
         </P>
@@ -376,7 +376,7 @@ export default function WhitepaperPage() {
           publisher wallet, price, and metadata URI in permanent storage
           keyed by <code style={codeInline}>keccak256(id)</code>. Only the
           wallet that first publishes an id can update its price, edit
-          metadata, or transfer the listing. Kēryx as owner can pause the
+          metadata, or transfer the listing. Keryx as owner can pause the
           registry or mark a listing verified; it cannot rewrite a
           publisher's state. The contract is deployed on Arc testnet at{" "}
           <a
@@ -387,14 +387,14 @@ export default function WhitepaperPage() {
           >
             <code style={codeInline}>0x7eA3…8bA7</code>
           </a>
-          , owned by the Kēryx treasury, and seeded tools are mirrored onchain
+          , owned by the Keryx treasury, and seeded tools are mirrored onchain
           (visible as <b>On Arc</b> badges on the <code style={codeInline}>/registry</code> page).
         </P>
       </Section>
 
       <Section id="economics" title="Economics">
         <P>
-          Kēryx takes a flat 5% platform fee on every call, computed at
+          Keryx takes a flat 5% platform fee on every call, computed at
           quote time and split at settlement. There is no listing fee, no
           minimum volume, and no subscription on either side of the
           market. A publisher earns from the first call. An agent pays
@@ -415,7 +415,7 @@ export default function WhitepaperPage() {
           Status as of July 2026:
         </p>
         <Ul items={[
-          <>✓ Clear handler contract for community publishers (publish a <code>handlerUrl</code>; Kēryx forwards after payment). Seeded catalog at 20 practical tools (Solana onchain research, weather, finance/rates, geo, search, crypto market signals, utilities, time/uuid, etc.).</>,
+          <>✓ Clear handler contract for community publishers (publish a <code>handlerUrl</code>; Keryx forwards after payment). Seeded catalog at 20 practical tools (Solana onchain research, weather, finance/rates, geo, search, crypto market signals, utilities, time/uuid, etc.).</>,
           <>○ Circle Gateway: fully implemented in code (prefers <code>CIRCLE_GATEWAY_API_URL</code> → real batched Gateway; falls back to local facilitator if private key present; otherwise demo). The production deployment at keryxhq.xyz is currently on demo (synthetic hashes). Nothing in the code prevents flipping — it is waiting on provisioning a real Circle Gateway account/URL.</>,
           <>✓ Basic OpenAPI spec published at /keryx-openapi.json. First-party SDKs (Node/Python middleware) — not started (planned next).</>,
         ]} />
@@ -439,7 +439,7 @@ export default function WhitepaperPage() {
           real batched Circle Gateway; when a local facilitator key is
           configured it broadcasts directly on Arc. Persistence is Redis
           when configured, otherwise in-memory (resets on cold start).
-          20 seeded tools are implemented and executable (Kēryx calls real
+          20 seeded tools are implemented and executable (Keryx calls real
           public APIs). Community tools are executable when the publisher
           supplies a <code>handlerUrl</code>. Not every interesting data
           source has a cheap, machine-friendly public endpoint yet.

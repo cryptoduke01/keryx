@@ -1,10 +1,13 @@
-# OKX.AI Genesis Hackathon — Kēryx coexistence plan
+# OKX.AI Genesis Hackathon — Keryx coexistence plan
 
-**Deadline:** Google form before **Jul 17, 00:00 UTC**  
+**Deadline:** Google form before **Jul 17, 00:00 UTC** (also listed as Jul 17, 23:59 UTC / Jul 18 08:00 UTC+8)  
 **Form:** https://forms.gle/mddEUagmDbyV37ws8  
+**HackQuest listing:** https://hackquest.io/en/hackathons  
 **Listing guide:** https://okx.ai/tutorial/asp  
 **Register / Build X:** https://web3.okx.com/xlayer/build-x-series  
 **X demo:** ≤ 90 seconds · hashtag **`#okxai`** / **`#OKXAI`**
+
+Review: OKX says ASP listing review is typically **within 24 hours** (email + agent chat).
 
 ---
 
@@ -12,7 +15,7 @@
 
 | Surface | Chain | Payment | Status |
 |---------|-------|---------|--------|
-| **Kēryx core** (`/ask`, `/api/call`, MCP, registry) | Arc (`5042002`) | Circle / local / demo facilitator | **Untouched** — Lepton product |
+| **Keryx core** (`/ask`, `/api/call`, MCP, registry) | Arc (`5042002`) | Circle / local / demo facilitator | **Untouched** — Lepton product |
 | **OKX ASP feature** (`/okxasp`, `/api/okxasp/*`) | X Layer (`eip155:196` / testnet `1952`) | OKX Payment SDK + `OKXFacilitatorClient` | **New parallel feature** |
 
 Same repo, same handlers where useful, **separate settlement path**. Judges on OKX.AI never need Arc. Arc users never need OKX keys.
@@ -22,7 +25,7 @@ Agent on OKX.AI
     → A2MCP call to keryxhq.xyz/api/okxasp/...
     → HTTP 402 (OKX x402)
     → Agentic Wallet pays USDT0 on X Layer
-    → Handler reuses Kēryx tool logic (finance/crypto)
+    → Handler reuses Keryx tool logic (finance/crypto)
     → 200 + result
 
 Agent on Arc / Claude / Cursor
@@ -38,7 +41,7 @@ Agent on Arc / Claude / Cursor
 - **A2MCP** — pay-per-call MCP/API (our path). Fixed price. Instant settle via OKX Payment SDK. Endpoint must speak x402.
 - **A2A** — negotiated tasks + escrow. Skip for v1.
 
-We ship: **Kēryx Finance Copilot** as an **A2MCP ASP** (Best Product + Finance Copilot + Software Utility + Social Buzz).
+We ship: **Keryx Finance Copilot** as an **A2MCP ASP** (Best Product + Finance Copilot + Software Utility + Social Buzz).
 
 ---
 
@@ -184,7 +187,7 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 - [ ] Wait for marketplace approval / go live on OKX.AI
 - [ ] Google form before Jul 17, 00:00 UTC: https://forms.gle/mddEUagmDbyV37ws8
 - [ ] X post with `#okxai` + ≤90s demo
-- [ ] Arc/Kēryx Lepton paths still green (no regressions)
+- [ ] Arc/Keryx Lepton paths still green (no regressions)
 
 ### ASP #4759 quick refs
 
@@ -204,4 +207,38 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 - ASP tutorial: https://okx.ai/tutorial/asp  
 - Seller SDK: https://web3.okx.com/onchainos/dev-docs/payments/service-seller-sdk  
 - Dev portal: https://web3.okx.com/onchainos/dev-docs/home/developer-portal  
-- Form: https://forms.gle/mddEUagmDbyV37ws8  
+- Form: https://forms.gle/mddEUagmDbyV37ws8
+
+
+---
+
+## After listing approval (~24h)
+
+1. Confirm ASP #4759 shows **listed / live** on https://okx.ai (search "Keryx").
+2. Smoke a **real paid call** with Agentic Wallet (0.2 OKB + 10 USDT is enough).
+3. Switch network to mainnet only if judges expect mainnet settle (`OKX_X402_NETWORK=eip155:196`) and you have mainnet USDT0/OKB.
+4. Film ≤90s demo: problem → 402 → pay → JSON → marketplace card. Post on X with `#okxai`.
+5. Submit Google form: https://forms.gle/mddEUagmDbyV37ws8 (ASP id, links, X post).
+6. Drive usage for Revenue Rocket / Social Buzz (friends, agents, thread replies).
+
+## Grand prize audit (honest)
+
+### Edge
+- Real product, not a one-endpoint joke: 8 coherent finance tools + polished `/okxasp`.
+- Correct OKX stack: `@okxweb3/x402-*`, 402 confirmed, ASP already in review.
+- Dual-rail story (Arc + X Layer) without breaking Lepton.
+- Brand + docs surface ready for judges.
+
+### Gaps / losses if we do nothing
+- **Zero paid usage yet** → weak Revenue Rocket.
+- **Not live on marketplace yet** → form invalid until approved.
+- **No demo video / #okxai post yet**.
+- Tools wrap public data (CoinGecko etc.) → judges may call it thin vs proprietary finance agents.
+- Category is SOFTWARE_SERVICES; Finance Copilot track needs the pitch to scream finance, not generic software.
+- Browser 402 HTML shows `$0.00 USDC` (SDK chrome). Agents see correct amount; still looks bad in screenshots.
+
+### What to ship next (priority)
+1. Live listing + one successful paid settle (screen-record it).
+2. 90s X demo + form.
+3. Optional: one "wow" proprietary or OKX-native signal (e.g. OKX market endpoint) so we are not only CoinGecko wrappers.
+4. Optional: mainnet settle before deadline if review allows.

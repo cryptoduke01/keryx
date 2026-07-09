@@ -1,9 +1,9 @@
 import AskClient from "./AskClient";
 
 export const metadata = {
-  title: "Ask Kēryx · The paid tool registry for AI agents",
+  title: "Ask Keryx · The paid tool registry for AI agents",
   description:
-    "Ask a question. Watch Kēryx pay real developers for real data to answer it.",
+    "Ask a question. Watch Keryx pay real developers for real data to answer it.",
 };
 
 export default function AskPage() {
@@ -33,7 +33,7 @@ export default function AskPage() {
               color: "var(--text-primary)",
             }}
           >
-            Ask Kēryx
+            Ask Keryx
           </h1>
           <span className="text-eyebrow" style={{ color: "var(--text-muted)" }}>
             The playground

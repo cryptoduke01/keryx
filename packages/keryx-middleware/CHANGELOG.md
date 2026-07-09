@@ -8,7 +8,7 @@ follows [semver](https://semver.org).
 ### Changed
 
 - **Focused on Arc.** Removed `base` and `base-sepolia` from the `Network`
-  type, `NETWORK_CAIP2`, `USDC_ADDRESS`, and `USDC_DOMAIN` tables. Kēryx is
+  type, `NETWORK_CAIP2`, `USDC_ADDRESS`, and `USDC_DOMAIN` tables. Keryx is
   Arc-native: settlement on any other L1 costs more in gas than a sub-cent
   call, so the SDK now only ships with `arc-testnet` (default) and
   `arc-mainnet`. Base-family support can return as a separate module later

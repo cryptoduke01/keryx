@@ -5,7 +5,7 @@ import { ledgerStats } from "@/lib/ledger";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "For judges · Kēryx",
+  title: "For judges · Keryx",
   description:
     "Everything a reviewer needs, on one page: video, repo, live URL, onchain contract, npm package, whitepaper.",
   robots: { index: false, follow: true },
@@ -38,7 +38,7 @@ export default async function ForJudgesPage() {
           maxWidth: 640,
         }}
       >
-        Kēryx is <b style={{ color: "var(--text-primary)" }}>Stripe for the
+        Keryx is <b style={{ color: "var(--text-primary)" }}>Stripe for the
         moment an AI agent needs to use an API</b>. Publishers list tools at a
         price-per-call; agents pay in USDC on Arc, one call at a time, no
         signup. This page collects every artifact a Lepton reviewer might
@@ -84,7 +84,7 @@ export default async function ForJudgesPage() {
           value="@keryxhq/middleware"
           href={NPM}
           external
-          note="The SDK a publisher installs to wire their endpoint into Kēryx."
+          note="The SDK a publisher installs to wire their endpoint into Keryx."
         />
         <LinkRow
           label="Onchain contract"
@@ -181,7 +181,7 @@ export default async function ForJudgesPage() {
       {/* -------------------- Try it live -------------------- */}
       <Section title="Try it live (no setup)">
         <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, marginBottom: 14 }}>
-          Three ways to hit Kēryx yourself in under a minute each. Every one
+          Three ways to hit Keryx yourself in under a minute each. Every one
           produces a real ledger entry visible on <Link href="/live" style={inlineLink}>/live</Link>.
         </p>
         <ol style={{ paddingLeft: 20, fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.75 }}>
@@ -195,7 +195,7 @@ export default async function ForJudgesPage() {
           </li>
           <li style={{ marginBottom: 8 }}>
             <b style={{ color: "var(--text-primary)" }}>Claude Code / Cursor / Copilot</b>: add the MCP server URL{" "}
-            <code style={code}>{MCP_URL}</code> to your MCP config. Every Kēryx tool becomes discoverable inside your agent.
+            <code style={code}>{MCP_URL}</code> to your MCP config. Every Keryx tool becomes discoverable inside your agent.
           </li>
         </ol>
       </Section>
@@ -216,12 +216,12 @@ export default async function ForJudgesPage() {
       {/* -------------------- Post-hackathon -------------------- */}
       <Section title="Post-hackathon">
         <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65 }}>
-          Kēryx is intended to be maintained. Immediate next steps: flip
+          Keryx is intended to be maintained. Immediate next steps: flip
           production to a real Circle Gateway facilitator, publish the first
           three external publisher integrations (Helius / Birdeye /
           DexScreener via the SDK), ship a Python SDK. The registry contract
           on Arc is designed so publishers own their listings independently of
-          Kēryx.
+          Keryx.
         </p>
       </Section>
 

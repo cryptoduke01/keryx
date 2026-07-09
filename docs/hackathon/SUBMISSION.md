@@ -14,18 +14,18 @@ Every API on the internet was built for humans: sign up, add a card, store an AP
 
 Micropayments were supposed to fix this, but there's no **discovery + payment + execution layer** built for agents. Developers who want to sell per-call access have to wire x402, wallets, and agent integrations themselves. Agents that want paid capabilities have no catalog to browse, no way to compare cost vs. value, and no standard to pay across tools.
 
-Kēryx solves the missing toll booth: a registry where publishers list tools at a price, agents discover them via MCP or HTTP, pay in USDC on Arc per call, and get results in one round trip — no accounts, no keys, no human gatekeepers.
+Keryx solves the missing toll booth: a registry where publishers list tools at a price, agents discover them via MCP or HTTP, pay in USDC on Arc per call, and get results in one round trip — no accounts, no keys, no human gatekeepers.
 
 ---
 
 ## Project Description
 
-**Kēryx is the paid tool registry for AI agents** — Stripe for the moment an agent needs to use an API.
+**Keryx is the paid tool registry for AI agents** — Stripe for the moment an agent needs to use an API.
 
 **What it does:**
 - **Publishers** register HTTP tools with a price (USD) and Arc wallet at `/publish`. Paste an address to preview; sign with wallet to go live.
 - **Agents** discover tools via `GET /api/tools`, MCP (`/api/mcp`), or the `/ask` playground — a cost-aware agent that only spends when fresh data is worth the price.
-- **Pay per call:** `POST /api/call` returns HTTP 402 with machine-readable x402 requirements → agent signs EIP-3009 `transferWithAuthorization` → Kēryx verifies, executes the handler, splits 95% publisher / 5% platform, and writes every call to a public ledger at `/live`.
+- **Pay per call:** `POST /api/call` returns HTTP 402 with machine-readable x402 requirements → agent signs EIP-3009 `transferWithAuthorization` → Keryx verifies, executes the handler, splits 95% publisher / 5% platform, and writes every call to a public ledger at `/live`.
 
 **Built during Lepton:**
 - Shipped **@keryxhq/middleware** on npm — wrap any Next.js or Express handler into a paid x402 endpoint in one line.
@@ -78,7 +78,7 @@ Judge shortcuts: https://keryxhq.xyz/for-judges · https://keryxhq.xyz/pitch · 
 
 **→ Upload `remotion/out/KeryxDemo-final.mp4` to YouTube (unlisted) and paste URL here.**
 
-Suggested title: *Kēryx — Paid tool registry for AI agents (Lepton demo)*
+Suggested title: *Keryx — Paid tool registry for AI agents (Lepton demo)*
 
 Video covers (~2:12): registry browse → cost-aware agent at /ask → public ledger → publish flow → MCP integration → close.
 
@@ -90,9 +90,9 @@ Subtitles are burned in.
 
 **Yes — I would love to apply for Arc OSS! I can commit to keeping my code open source!**
 
-### Why choose Kēryx for Arc OSS?
+### Why choose Keryx for Arc OSS?
 
-Circle's `circlefin/arc-*` repos cover wallets, samples, and primitives. Kēryx adds an **end-to-end agent-commerce stack** other builders can fork:
+Circle's `circlefin/arc-*` repos cover wallets, samples, and primitives. Keryx adds an **end-to-end agent-commerce stack** other builders can fork:
 
 | Primitive | What builders get |
 |-----------|-------------------|
@@ -102,7 +102,7 @@ Circle's `circlefin/arc-*` repos cover wallets, samples, and primitives. Kēryx 
 | **Publisher flow** | EIP-191 signed listings + optional onchain mirror (`KeryxRegistry.sol`) |
 | **Agent playground** | Reference cost-aware agent that evaluates price before spending |
 
-A builder can: `npm i @keryxhq/middleware` → wrap their API → list on Kēryx (or self-host the registry) → agents pay in USDC on Arc per call. That's a flow the Arc ecosystem doesn't have in one place today.
+A builder can: `npm i @keryxhq/middleware` → wrap their API → list on Keryx (or self-host the registry) → agents pay in USDC on Arc per call. That's a flow the Arc ecosystem doesn't have in one place today.
 
 ---
 

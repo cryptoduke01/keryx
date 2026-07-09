@@ -2,7 +2,7 @@ import PublishClient from "./PublishClient";
 import ArtPanel from "@/components/ArtPanel";
 
 export const metadata = {
-  title: "Publish a tool · Kēryx",
+  title: "Publish a tool · Keryx",
   description:
     "Turn any HTTP endpoint into a paid tool for AI agents. Set a price. Connect an Arc wallet. Ship.",
 };
@@ -19,7 +19,7 @@ export default function PublishPage() {
         </h1>
         <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.6 }}>
           Every AI agent needs tools. Publish yours &mdash; set a price per
-          call, connect the Arc wallet where you want to be paid, and Kēryx
+          call, connect the Arc wallet where you want to be paid, and Keryx
           routes agent calls straight to it. Your revenue lands on-chain.
         </p>
       </div>

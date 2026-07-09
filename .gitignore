@@ -49,3 +49,8 @@ demo.mp4
 packages/*/dist
 packages/*/node_modules
 
+
+# Local agent tooling (not product)
+.claude/
+.cursor/
+.cursor-plugin/

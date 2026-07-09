@@ -1,6 +1,6 @@
 # KeryxRegistry
 
-The onchain source of truth for who owns which tool id on Kēryx.
+The onchain source of truth for who owns which tool id on Keryx.
 
 - **File:** [`src/KeryxRegistry.sol`](./src/KeryxRegistry.sol)
 - **Tests:** [`test/KeryxRegistry.t.sol`](./test/KeryxRegistry.t.sol) (13 passing)
@@ -10,7 +10,7 @@ The onchain source of truth for who owns which tool id on Kēryx.
 ## Live deployment
 
 - **Address:** [`0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7`](https://testnet.arcscan.app/address/0x7eA36cC743EDF162fd7BF3704BD55c56A1998bA7)
-- **Owner:** `0x8F47aE9eC148903C8535b9289ad8efA400e026B6` (Kēryx treasury)
+- **Owner:** `0x8F47aE9eC148903C8535b9289ad8efA400e026B6` (Keryx treasury)
 - **Deploy tx:** `0x3b4b18c4a38d8ad77da82b4669e4d03bb6e1ca84f7e15ccb7c31a319792ce34c`
 - **All 5 seeded tools published onchain:** `solana.token-activity`, `solana.launches`, `solana.rug-check`, `search.web`, `crypto.trending`.
 
@@ -23,7 +23,7 @@ For each tool id (hashed as `keccak256(bytes(id))`):
 - `publisher` — the wallet that first published it. Only wallet allowed to update.
 - `priceAtomicUsdc` — per-call price in USDC atomic units (6 decimals).
 - `active` — publisher-controlled kill switch.
-- `verified` — Kēryx-controlled trust flag.
+- `verified` — Keryx-controlled trust flag.
 - `metadataUri` — free-form IPFS / HTTPS URL pointing at the offchain schema, summary, etc.
 - `createdAt` / `updatedAt` — block timestamps.
 
@@ -35,10 +35,10 @@ The contract **never holds funds**. Payment happens in the x402 flow against the
 |---|---|
 | `publish(id, price, uri)` | Anyone (writes msg.sender as publisher) |
 | `updatePrice`, `updateMetadata`, `setActive`, `transferListing` | The publisher recorded onchain, and only them |
-| `setVerified` | Contract owner (Kēryx) |
+| `setVerified` | Contract owner (Keryx) |
 | `setPaused`, `transferOwner` | Contract owner |
 
-Kēryx as owner **cannot** rewrite a publisher's state — verified in `test_owner_cannot_hijack_publisher_state`.
+Keryx as owner **cannot** rewrite a publisher's state — verified in `test_owner_cannot_hijack_publisher_state`.
 
 ## Local development
 
@@ -78,7 +78,7 @@ Redeploy the site. `/registry` now shows the contract address at the top and an 
 
 ## Publishing an onchain listing
 
-For our five seeded tools, run one publish per tool from the Kēryx treasury:
+For our five seeded tools, run one publish per tool from the Keryx treasury:
 
 ```bash
 cast send $REGISTRY_ADDRESS \

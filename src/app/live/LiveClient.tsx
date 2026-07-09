@@ -88,7 +88,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
           <span>When</span>
           <span>Tool</span>
             <span>Publisher (gets 95%)</span>
-            <span style={{ textAlign: "right" }}>Total paid (Kēryx 5%)</span>
+            <span style={{ textAlign: "right" }}>Total paid (Keryx 5%)</span>
           <span>Settlement</span>
           <span style={{ textAlign: "right" }}>Status</span>
         </div>
@@ -106,7 +106,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
             <a href="/ask" style={{ textDecoration: "underline", textUnderlineOffset: 3 }}>
               /ask
             </a>{" "}
-            and ask Kēryx a question.
+            and ask Keryx a question.
           </div>
         )}
 
@@ -158,7 +158,7 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
               }}
             >
               ${e.priceUsd.toFixed(4)}
-              <div style={{ fontSize: 9, color: "var(--text-muted)", lineHeight: 1.1 }}>Kēryx 5%</div>
+              <div style={{ fontSize: 9, color: "var(--text-muted)", lineHeight: 1.1 }}>Keryx 5%</div>
             </span>
             <span className="cell-settlement">
               <SettlementCell mode={e.settlementMode} txHash={e.txHash} />

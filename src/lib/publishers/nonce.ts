@@ -78,13 +78,13 @@ export function buildMessage(params: {
   const action = params.action ?? "register";
   const actionLine =
     action === "register"
-      ? "Signing this message proves you control the wallet and authorizes Kēryx to list this tool under it."
+      ? "Signing this message proves you control the wallet and authorizes Keryx to list this tool under it."
       : action === "update"
-        ? "Signing this message proves you control the wallet and authorizes Kēryx to update the listing for this tool."
-        : "Signing this message proves you control the wallet and authorizes Kēryx to delete this tool listing.";
+        ? "Signing this message proves you control the wallet and authorizes Keryx to update the listing for this tool."
+        : "Signing this message proves you control the wallet and authorizes Keryx to delete this tool listing.";
 
   return [
-    "Kēryx publisher action",
+    "Keryx publisher action",
     "",
     `Action: ${action.toUpperCase()}`,
     `Wallet: ${params.wallet}`,

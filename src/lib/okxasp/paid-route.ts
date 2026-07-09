@@ -1,5 +1,5 @@
 /**
- * Factory: wrap a Kēryx tool handler with OKX x402 (withX402).
+ * Factory: wrap a Keryx tool handler with OKX x402 (withX402).
  * Settlement only runs after a successful handler response.
  */
 

@@ -62,7 +62,7 @@ export default function OgImage() {
             <path d="M74 29 Q 61 20 50 29" fill="none" stroke="#f3f3f1" strokeWidth="5" strokeLinecap="round" />
           </svg>
           <div style={{ fontSize: 76, color: "#f3f3f1", fontWeight: 700, display: "flex" }}>
-            Kēryx
+            Keryx
           </div>
         </div>
 

@@ -744,7 +744,7 @@ function ChatColumn({
 
         {busy && (
           <div className="text-eyebrow" style={{ color: "var(--text-muted)" }}>
-            Kēryx is thinking…
+            Keryx is thinking…
           </div>
         )}
       </div>
@@ -784,7 +784,7 @@ function ChatComposer({
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="Ask Kēryx anything…"
+        placeholder="Ask Keryx anything…"
         disabled={busy}
         style={{
           flex: 1,
@@ -878,7 +878,7 @@ function ActivityRail({ agentId }: { agentId: string }) {
 
       {entries.length === 0 && (
         <div style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.5 }}>
-          Every paid call across every Kēryx agent lands here as it settles onchain. Ask something to start the ticker.
+          Every paid call across every Keryx agent lands here as it settles onchain. Ask something to start the ticker.
         </div>
       )}
 

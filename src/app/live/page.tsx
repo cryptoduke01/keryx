@@ -2,8 +2,8 @@ import LiveClient from "./LiveClient";
 import { ledgerStats, readEntries } from "@/lib/ledger";
 
 export const metadata = {
-  title: "Live · Kēryx",
-  description: "Every paid tool call on Kēryx, in real time.",
+  title: "Live · Keryx",
+  description: "Every paid tool call on Keryx, in real time.",
 };
 
 export const dynamic = "force-dynamic";

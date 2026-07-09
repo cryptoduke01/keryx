@@ -9,7 +9,7 @@
  *      onchain. Facilitator wallet pays gas (USDC-as-gas on Arc). Returns the
  *      broadcast tx hash.
  *
- * When Kēryx itself is the caller (as in /ask or MCP), we sign the
+ * When Keryx itself is the caller (as in /ask or MCP), we sign the
  * authorization on behalf of a self-controlled agent wallet first via
  * signSelfAuthorization(), then hand it to verify + settle. USDC still moves
  * onchain — from the facilitator/agent wallet to the publisher wallet.
@@ -151,7 +151,7 @@ export function tryBuildLocalFacilitator(): KeryxFacilitator | null {
   return facilitator;
 }
 
-/** Kēryx facilitator wallet address, when configured. Handy for /ask and
+/** Keryx facilitator wallet address, when configured. Handy for /ask and
  *  MCP to sign self-authorizations from a known agent wallet. */
 export function facilitatorAddress(): Address | null {
   if (!cached) tryBuildLocalFacilitator();
@@ -159,7 +159,7 @@ export function facilitatorAddress(): Address | null {
 }
 
 /**
- * Sign an EIP-3009 authorization "transfer `amount` USDC from the Kēryx
+ * Sign an EIP-3009 authorization "transfer `amount` USDC from the Keryx
  * facilitator wallet to `payTo`". Used by /ask and MCP so a paid call
  * becomes a real onchain USDC transfer without asking the visitor for a
  * wallet. Returns a payload shaped for the facilitator's verify/settle.

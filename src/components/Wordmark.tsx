@@ -8,10 +8,8 @@ interface WordmarkProps {
 }
 
 /**
- * Kēryx wordmark. Instrument Serif italic — the swashy editorial lockup
- * font, reserved for exactly this use (see brand notes: Obscura uses the
- * same family of face for its "Obscura®" logotype). Never used for body
- * headlines, which stay on Fraunces.
+ * Keryx wordmark. Instrument Serif italic lockup, reserved for the logo.
+ * Body headlines stay on Fraunces.
  */
 export default function Wordmark({
   size = 22,
@@ -35,7 +33,7 @@ export default function Wordmark({
         ...style,
       }}
     >
-      Kēryx
+      Keryx
       {showR && (
         <sup
           style={{

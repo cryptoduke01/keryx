@@ -3,7 +3,7 @@ import PitchLayoutBoot from "./PitchLayoutBoot";
 import PrintButton from "./PrintButton";
 
 export const metadata = {
-  title: "Kēryx · Pitch deck",
+  title: "Keryx · Pitch deck",
   description: "The toll booth for the agent economy.",
 };
 
@@ -24,7 +24,7 @@ export default function PitchPage() {
         />
         <div className="pitch-cover-scrim" />
         <div className="pitch-cover-content">
-          <div className="pitch-cover-wordmark">Kēryx</div>
+          <div className="pitch-cover-wordmark">Keryx</div>
           <div className="pitch-cover-primary">
             Commerce at machine speed.
           </div>
@@ -83,19 +83,19 @@ export default function PitchPage() {
         </div>
       </section>
 
-      {/* -------------------- SLIDE 4 · Enter Kēryx --------------- */}
+      {/* -------------------- SLIDE 4 · Enter Keryx --------------- */}
       <section className="pitch-slide">
         <SlideHead num="03" eyebrow="Enter">
-          Kēryx is a paid tool registry for AI agents.
+          Keryx is a paid tool registry for AI agents.
         </SlideHead>
         <div className="pitch-two-col">
           <ul className="pitch-bullets">
             <li>Any developer publishes an HTTP endpoint at a price, points it at an Arc wallet, and it's live in a minute. No accounts.</li>
             <li>Any AI agent — <strong>Cursor, Claude, GitHub Copilot, custom</strong> — discovers it via MCP and pays per call in USDC on Circle Arc.</li>
             <li style={{ fontSize: "0.95em", opacity: 0.9 }}>Works in Cursor, Claude (connectors), GitHub Copilot, and any MCP client. One-line config.</li>
-            <li>The unit of access is the call, not the account. 95% to the publisher, 5% to Kēryx, no listing fee, no minimum. Paste address supported for preview (sign to publish).</li>
+            <li>The unit of access is the call, not the account. 95% to the publisher, 5% to Keryx, no listing fee, no minimum. Paste address supported for preview (sign to publish).</li>
             <li>Every payment settles onchain in under half a second. Every settlement has a real Arcscan tx hash.</li>
-            <li><i>Not</i> "pay for things that are free on the web". Kēryx is the payment + discovery layer for capabilities agents are willing to pay for — today public data with reliability, tomorrow paid creator tools and proprietary sources.</li>
+            <li><i>Not</i> "pay for things that are free on the web". Keryx is the payment + discovery layer for capabilities agents are willing to pay for — today public data with reliability, tomorrow paid creator tools and proprietary sources.</li>
           </ul>
           <ReceiptCard
             heading="Provably live"
@@ -122,13 +122,13 @@ export default function PitchPage() {
             Wrap any HTTP handler with a middleware. Set a price. Point it at your Arc wallet. Sign an EIP-191 message to prove ownership.
           </FlowStep>
           <FlowStep num="2" name="Discover">
-            Agents hit <code>GET /api/tools</code> or drop the Kēryx MCP server into Claude Code's config. Every listing carries its price and arg schema.
+            Agents hit <code>GET /api/tools</code> or drop the Keryx MCP server into Claude Code's config. Every listing carries its price and arg schema.
           </FlowStep>
           <FlowStep num="3" name="Pay-per-call">
             The agent's first request returns HTTP 402 with a machine-readable price. It signs an EIP-3009 USDC authorization and retries.
           </FlowStep>
           <FlowStep num="4" name="Settle">
-            Kēryx verifies the signature, executes the tool, broadcasts the USDC transfer onchain. Real tx hash lands on the public ledger.
+            Keryx verifies the signature, executes the tool, broadcasts the USDC transfer onchain. Real tx hash lands on the public ledger.
           </FlowStep>
         </div>
         <SlideFoot>One call. One payment. One Arc transaction. Ninety-five percent to the publisher.</SlideFoot>
@@ -143,7 +143,7 @@ export default function PitchPage() {
           <StackLayer label="AI agent" example="Claude Code · Cursor · custom" />
           <StackLayer label="MCP" example="Native tool discovery in three lines of config" />
           <StackLayer label="x402 protocol" example="HTTP 402 + signed X-PAYMENT retry" />
-          <StackLayer label="Kēryx registry" example="Offchain listings + onchain KeryxRegistry.sol" />
+          <StackLayer label="Keryx registry" example="Offchain listings + onchain KeryxRegistry.sol" />
           <StackLayer label="USDC on Arc" example="Sub-cent settlements, USDC-native gas, <2s finality" />
         </div>
         <SlideFoot>
@@ -177,7 +177,7 @@ export default function PitchPage() {
             <thead>
               <tr>
                 <th></th>
-                <th className="us">Kēryx</th>
+                <th className="us">Keryx</th>
                 <th>RapidAPI</th>
                 <th>Exa · Tavily</th>
                 <th>Skyfire</th>
@@ -195,7 +195,7 @@ export default function PitchPage() {
           </table>
         </div>
         <SlideFoot>
-          Exa, Tavily, Firecrawl, Helius, DexScreener &mdash; every single-product API on this table could <b>list on Kēryx</b>. We&apos;re a different layer of the stack.
+          Exa, Tavily, Firecrawl, Helius, DexScreener &mdash; every single-product API on this table could <b>list on Keryx</b>. We&apos;re a different layer of the stack.
         </SlideFoot>
       </section>
 
@@ -208,7 +208,7 @@ export default function PitchPage() {
           <PriceRow label="Stripe minimum" value="$0.30 + 2.9%" verdict="A $0.005 call becomes a $0.31 call." />
           <PriceRow label="Ethereum L1 gas" value="~$0.50 – $2.00" verdict="More gas than call. Impossible math." />
           <PriceRow label="Base / Optimism" value="~$0.001 – $0.005" verdict="Better, but a $0.005 tool still costs more in gas than in revenue." />
-          <PriceRow label="Circle Arc" value="Native USDC gas · ~$0.0001 per tx" verdict="This is the only chain in Kēryx&apos;s price band." highlight />
+          <PriceRow label="Circle Arc" value="Native USDC gas · ~$0.0001 per tx" verdict="This is the only chain in Keryx&apos;s price band." highlight />
         </div>
         <SlideFoot>
           Arc is <b>USDC as native gas</b> with sub-half-second finality. It's the reason the whole business model is possible.
@@ -231,7 +231,7 @@ export default function PitchPage() {
           />
           <MoatPillar
             title="Registry network effects"
-            body="Every publisher adds a reason for agents to be on Kēryx. Every agent adds a reason for publishers to list. Standard marketplace lock-in, but tuned for machines."
+            body="Every publisher adds a reason for agents to be on Keryx. Every agent adds a reason for publishers to list. Standard marketplace lock-in, but tuned for machines."
           />
         </div>
       </section>
@@ -303,7 +303,7 @@ export default function PitchPage() {
         <img src="/inspo/pitch-cover.png" alt="" className="pitch-cover-bg" />
         <div className="pitch-cover-scrim" />
         <div className="pitch-cover-content">
-          <div className="pitch-cover-wordmark" style={{ fontSize: 96 }}>Kēryx</div>
+          <div className="pitch-cover-wordmark" style={{ fontSize: 96 }}>Keryx</div>
           <div className="pitch-cover-primary" style={{ marginBottom: 40 }}>
             Commerce at machine speed.
           </div>

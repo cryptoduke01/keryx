@@ -16,14 +16,14 @@ function makeConnectors() {
     injected({ target: "rabby" }),
     injected({ target: "okxWallet" }),
     injected({ shimDisconnect: true }),
-    coinbaseWallet({ appName: "Kēryx" }),
+    coinbaseWallet({ appName: "Keryx" }),
   ];
   if (walletConnectProjectId) {
     list.push(
       walletConnect({
         projectId: walletConnectProjectId,
         metadata: {
-          name: "Kēryx",
+          name: "Keryx",
           description: "The paid tool registry for AI agents",
           url: "https://keryxhq.xyz",
           icons: ["https://keryxhq.xyz/logo.png"],

@@ -1,15 +1,25 @@
 import Link from "next/link";
+import ArtPanel from "@/components/ArtPanel";
 import CopyButton from "@/components/CopyButton";
 
 export const metadata = {
-  title: "OKX.AI docs · Kēryx Finance Copilot",
+  title: "OKX.AI docs · Keryx Finance Copilot",
   description:
-    "How to call Kēryx Finance Copilot tools on OKX.AI. Pay per call on X Layer with Agentic Wallet.",
+    "How to call Keryx Finance Copilot tools on OKX.AI. Pay per call on X Layer with Agentic Wallet.",
 };
 
 export default function OkxAspDocsPage() {
   return (
     <div className="container-narrow" style={{ paddingTop: 40, paddingBottom: 96 }}>
+      <div style={{ marginBottom: 28, maxWidth: 520 }}>
+        <ArtPanel
+          src="/inspo/okx-docs.png"
+          alt=""
+          aspectRatio="21 / 9"
+          position="50% 40%"
+          variant="raw"
+        />
+      </div>
       <div className="text-eyebrow" style={{ marginBottom: 12 }}>
         OKX.AI · Docs
       </div>

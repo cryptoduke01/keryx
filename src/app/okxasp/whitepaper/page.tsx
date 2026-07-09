@@ -2,9 +2,9 @@ import Link from "next/link";
 import ArtPanel from "@/components/ArtPanel";
 
 export const metadata = {
-  title: "Product note · Kēryx Finance Copilot",
+  title: "Product note · Keryx Finance Copilot",
   description:
-    "Why Kēryx ships a Finance Copilot ASP on OKX.AI: pay-per-call market intel for agents on X Layer.",
+    "Why Keryx ships a Finance Copilot ASP on OKX.AI: pay-per-call market intel for agents on X Layer.",
 };
 
 export default function OkxAspWhitepaperPage() {
@@ -42,7 +42,7 @@ export default function OkxAspWhitepaperPage() {
 
           <h2 style={h2}>The product</h2>
           <p style={p}>
-            Kēryx Finance Copilot is an A2MCP pack on OKX.AI. Eight tools cover
+            Keryx Finance Copilot is an A2MCP pack on OKX.AI. Eight tools cover
             the questions agents actually ask: price, trend, dominance, Solana
             activity, rug risk, new launches, FX convert, and rate tables. Each
             call is gated by x402. Unpaid requests get 402. Paid requests get
@@ -87,7 +87,7 @@ export default function OkxAspWhitepaperPage() {
 
         <aside style={{ position: "sticky", top: 88 }} className="okx-wp-art">
           <ArtPanel
-            src="/inspo/whitepaper-hero.png"
+            src="/inspo/okx-note.png"
             alt=""
             aspectRatio="3 / 4"
             position="50% 40%"

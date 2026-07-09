@@ -1,6 +1,6 @@
 <div align="center">
 
-# Kēryx
+# Keryx
 
 **The toll booth for the agent economy.**
 
@@ -16,19 +16,19 @@
 
 ---
 
-Kēryx is the **paid tool registry for AI agents**.
+Keryx is the **paid tool registry for AI agents**.
 
 Developers publish tools. Agents discover them, pay per call in sub-cent USDC on [Arc](https://www.arc.network/), and get results instantly. No accounts, no API keys, no subscriptions, no human gatekeepers.
 
 ---
 
-## Why Kēryx
+## Why Keryx
 
 Every API on the internet was designed for humans.
 
 Agents are becoming the primary consumers of software — yet they still have to pretend to be people: sign up, generate keys, add cards, wait for webhooks.
 
-**Kēryx removes the human-shaped friction.**
+**Keryx removes the human-shaped friction.**
 
 - A tool is just an HTTP endpoint + price + wallet.
 - An agent pays exactly once per call using x402 micropayments.
@@ -42,7 +42,7 @@ Payment + execution happen in the same round-trip.
 
 1. **Publish** — Register a tool with an id, price (in USD), and Arc wallet. It appears instantly in the public registry.
 2. **Discover** — Any agent calls `GET /api/tools` and receives every tool with price, schema, and example call (machine-readable).
-3. **Call & Pay** — `POST /api/call` with toolId + args. Kēryx returns a 402 with payment details → agent signs (EIP-3009) → Kēryx executes, splits (95% publisher / 5% platform), and returns the result + ledger entry.
+3. **Call & Pay** — `POST /api/call` with toolId + args. Keryx returns a 402 with payment details → agent signs (EIP-3009) → Keryx executes, splits (95% publisher / 5% platform), and returns the result + ledger entry.
 
 Every call (success or failure) is written to the public ledger at [/live](https://keryxhq.xyz/live).
 
@@ -104,7 +104,7 @@ Full schemas and agent SDK snippets live in the [docs](https://keryxhq.xyz/docs)
 
 ---
 
-## Seeded Tools (all real data, executable by Kēryx)
+## Seeded Tools (all real data, executable by Keryx)
 
 | id | Source | Price |
 |----|--------|-------|
@@ -123,10 +123,10 @@ Full schemas and agent SDK snippets live in the [docs](https://keryxhq.xyz/docs)
 | `utility.qr` | QR code generator | $0.001 |
 | `geo.country` | RestCountries | $0.001 |
 
-20 seeded executable tools (Solana research, weather, finance, geo, crypto market signals, search, utilities, time, uuid, etc.). More added regularly. Community tools can be published by anyone; only those with a handlerUrl are auto-executable by Kēryx surfaces.
+20 seeded executable tools (Solana research, weather, finance, geo, crypto market signals, search, utilities, time, uuid, etc.). More added regularly. Community tools can be published by anyone; only those with a handlerUrl are auto-executable by Keryx surfaces.
 
 Additional community tools (with `verified: false`) can be published by anyone.
-Kēryx's goal is a large, always-on catalog (50–100+) of micro-tasks an average web2 or web3 user/agent reaches for daily: weather, rates, geo, domain info, HN, repo facts, prices, QR, country data, and many more. Seeded tools are implemented and maintained by the Kēryx team against real public endpoints.
+Keryx's goal is a large, always-on catalog (50–100+) of micro-tasks an average web2 or web3 user/agent reaches for daily: weather, rates, geo, domain info, HN, repo facts, prices, QR, country data, and many more. Seeded tools are implemented and maintained by the Keryx team against real public endpoints.
 
 ---
 

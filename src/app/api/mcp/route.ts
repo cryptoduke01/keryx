@@ -1,8 +1,8 @@
 /**
- * POST /api/mcp — Model Context Protocol server for Kēryx.
+ * POST /api/mcp — Model Context Protocol server for Keryx.
  *
  * Speaks MCP's JSON-RPC 2.0 dialect so a Claude Code, Cursor, or Anthropic
- * MCP-compatible client can list Kēryx's registry tools and call them by
+ * MCP-compatible client can list Keryx's registry tools and call them by
  * name, no separate HTTP integration required.
  *
  * Transport is the streamable-HTTP flavor from the 2025-03-26 revision of the
@@ -11,7 +11,7 @@
  * for tools/list + tools/call, which are the two verbs that matter.
  *
  * Payment: MCP callers don't carry wallets today, so this route bypasses
- * x402 and executes tools directly. The demo is subsidized by Kēryx and the
+ * x402 and executes tools directly. The demo is subsidized by Keryx and the
  * ledger tags calls as mode="demo" (see settlementMode on LedgerEntry). When
  * MCP grows a wallet primitive, this route will start routing through
  * /api/call with a signed X-PAYMENT header instead.
@@ -122,7 +122,7 @@ export function GET() {
     transport: "streamable-http",
     docs: "https://keryxhq.xyz/docs#mcp",
     message:
-      "Kēryx MCP endpoint. POST JSON-RPC 2.0 messages here. See /docs for the config snippet Claude Code and Cursor expect.",
+      "Keryx MCP endpoint. POST JSON-RPC 2.0 messages here. See /docs for the config snippet Claude Code and Cursor expect.",
   });
 }
 
@@ -144,7 +144,7 @@ async function dispatch(msg: JsonRpcRequest, req: NextRequest): Promise<unknown>
         capabilities: { tools: {} },
         serverInfo: { name: SERVER_NAME, version: SERVER_VERSION },
         instructions:
-          "Kēryx exposes a registry of paid tools for AI agents. Every tool in tools/list can be called via tools/call. Payment is sponsored in demo mode; the /live ledger records each call.",
+          "Keryx exposes a registry of paid tools for AI agents. Every tool in tools/list can be called via tools/call. Payment is sponsored in demo mode; the /live ledger records each call.",
       };
 
     case "tools/list": {
@@ -217,7 +217,7 @@ async function callTool(
 
   const quote = quoteCall(tool.priceUsd);
 
-  // Settlement mirrors /api/call and /api/ask: in `local` mode Kēryx signs
+  // Settlement mirrors /api/call and /api/ask: in `local` mode Keryx signs
   // a self-authorization from its facilitator wallet so USDC actually moves
   // onchain per MCP call; in `demo` mode we still record a ledger entry but
   // with a synthetic tx hash.

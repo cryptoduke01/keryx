@@ -9,7 +9,7 @@ import {
 } from "@/lib/okxasp/config";
 
 export const metadata = {
-  title: "Finance Copilot · Kēryx on OKX.AI",
+  title: "Finance Copilot · Keryx on OKX.AI",
   description:
     "Pay-per-call market intel for AI agents on OKX.AI. Live prices, token risk, and FX on X Layer.",
 };
@@ -36,18 +36,19 @@ export default function OkxAspPage() {
       <section
         style={{
           position: "relative",
-          height: "min(72vh, 680px)",
-          minHeight: 440,
+          height: "100dvh",
+          minHeight: 560,
           overflow: "hidden",
         }}
       >
         <Image
-          src="/inspo/ask-hero.png"
+          src="/inspo/okx-hero.png"
           alt=""
           fill
           priority
           className="art-photo"
           sizes="100vw"
+          style={{ objectPosition: "50% 42%" }}
         />
         <div className="art-photo-tint" />
         <div className="art-grain" />
@@ -57,7 +58,7 @@ export default function OkxAspPage() {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(180deg, rgba(11,11,12,0.2) 0%, rgba(11,11,12,0.55) 50%, rgba(11,11,12,0.96) 96%), linear-gradient(100deg, rgba(11,11,12,0.75) 0%, rgba(11,11,12,0.4) 42%, transparent 70%)",
+              "linear-gradient(180deg, rgba(11,11,12,0.25) 0%, rgba(11,11,12,0.5) 45%, rgba(11,11,12,0.94) 92%), linear-gradient(105deg, rgba(11,11,12,0.72) 0%, rgba(11,11,12,0.35) 40%, transparent 68%)",
           }}
         />
 
@@ -272,10 +273,10 @@ export default function OkxAspPage() {
           <aside>
             <div style={{ position: "sticky", top: 88 }} className="okxasp-aside">
               <ArtPanel
-                src="/inspo/pitch-cover.jpg"
-                alt="Kēryx market atmosphere"
+                src="/inspo/okx-side.png"
+                alt="Agents gathering around market signal"
                 aspectRatio="4 / 5"
-                position="50% 30%"
+                position="50% 45%"
                 variant="raw"
                 overlayText="MARKET INTEL AT MACHINE SPEED."
               />

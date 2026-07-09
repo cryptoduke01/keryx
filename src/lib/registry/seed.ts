@@ -1,9 +1,9 @@
 /**
- * Kēryx seed registry. Every entry here maps to a real handler in
+ * Keryx seed registry. Every entry here maps to a real handler in
  * src/lib/registry/handlers.ts that hits a live public API — no mocked
  * data. Community publishers can add their own via POST /api/publishers/tools.
  *
- * The publishers for the seed lineup are the Kēryx treasury so demo revenue
+ * The publishers for the seed lineup are the Keryx treasury so demo revenue
  * flows to a wallet we control while the platform is bootstrapping.
  */
 
@@ -45,13 +45,13 @@ export interface ToolDefinition {
   >;
   /** Sample invocation for documentation. */
   sampleArgs: Record<string, unknown>;
-  /** Whether this tool is verified by Kēryx (seeded = true). */
+  /** Whether this tool is verified by Keryx (seeded = true). */
   verified: boolean;
   /** Approximate latency in ms (for agent budgeting). */
   latencyMs: number;
   /**
-   * For community-published tools: the publisher's HTTPS endpoint that Kēryx
-   * will POST the args to (after payment settles). Kēryx forwards the call
+   * For community-published tools: the publisher's HTTPS endpoint that Keryx
+   * will POST the args to (after payment settles). Keryx forwards the call
    * server-to-server and returns whatever the handler returns.
    * Seeded tools do not use this.
    */
@@ -67,7 +67,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "solana",
     priceUsd: 0.005,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       mintOrSymbol: {
         type: "string",
@@ -88,7 +88,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "solana",
     priceUsd: 0.003,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       limit: {
         type: "number",
@@ -107,7 +107,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "solana",
     priceUsd: 0.002,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       mint: {
         type: "string",
@@ -127,7 +127,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "search",
     priceUsd: 0.004,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       query: {
         type: "string",
@@ -151,7 +151,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "social",
     priceUsd: 0.001,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       limit: {
         type: "number",
@@ -171,7 +171,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "weather",
     priceUsd: 0.002,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       latitude: { type: "number", required: true, description: "Latitude, e.g. 40.71" },
       longitude: { type: "number", required: true, description: "Longitude, e.g. -74.00" },
@@ -188,7 +188,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "weather",
     priceUsd: 0.003,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       latitude: { type: "number", required: true, description: "Latitude" },
       longitude: { type: "number", required: true, description: "Longitude" },
@@ -207,7 +207,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "finance",
     priceUsd: 0.002,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       base: { type: "string", required: true, description: "Base currency code, e.g. usd, eur, btc" },
     },
@@ -222,7 +222,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "finance",
     priceUsd: 0.002,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       amount: { type: "number", required: true, description: "Amount to convert" },
       from: { type: "string", required: true, description: "From currency code (usd, eur...)" },
@@ -241,7 +241,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "geo",
     priceUsd: 0.002,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       ip: { type: "string", description: "IPv4 or IPv6. Omit to lookup the caller's IP (best effort)." },
     },
@@ -258,7 +258,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "dns",
     priceUsd: 0.003,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       domain: { type: "string", required: true, description: "Domain name, e.g. example.com" },
     },
@@ -275,7 +275,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "web",
     priceUsd: 0.001,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       limit: { type: "number", description: "How many stories (default 10, max 30)" },
     },
@@ -290,7 +290,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "web",
     priceUsd: 0.002,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       owner: { type: "string", required: true, description: "GitHub org or user" },
       repo: { type: "string", required: true, description: "Repository name" },
@@ -308,7 +308,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "finance",
     priceUsd: 0.002,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       ids: { type: "string", required: true, description: "Comma-separated coin ids or symbols, e.g. bitcoin,ethereum,solana" },
       vs: { type: "string", description: "vs currency, default usd" },
@@ -326,7 +326,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "utility",
     priceUsd: 0.001,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       text: { type: "string", required: true, description: "The content to encode (url, address, text)" },
       size: { type: "number", description: "Pixel size (default 200, 100-1000)" },
@@ -337,15 +337,15 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
   },
 
   // Real external-creator example. The publisher wallet is a genuine second
-  // wallet Kēryx controls (funded from treasury with a small USDC float),
+  // wallet Keryx controls (funded from treasury with a small USDC float),
   // NOT the treasury itself and NOT a burner. When an agent pays for this
   // tool, real USDC lands in that external wallet onchain — provably not
-  // going to Kēryx, verifiable on Arcscan. This demonstrates the
+  // going to Keryx, verifiable on Arcscan. This demonstrates the
   // publisher-payout flow end-to-end for external creators.
   {
     id: "demo.content-block",
     name: "Paid Creator Snippet",
-    summary: "Example of a paid creator tool. Returns a monetized knowledge snippet. 95% of the fee lands directly in the external creator's Arc wallet (0x3AfD…B34E), not the Kēryx treasury. Click the tx hash on /live to verify onchain.",
+    summary: "Example of a paid creator tool. Returns a monetized knowledge snippet. 95% of the fee lands directly in the external creator's Arc wallet (0x3AfD…B34E), not the Keryx treasury. Click the tx hash on /live to verify onchain.",
     category: "web",
     priceUsd: 0.004,
     publisherWallet: "0x3AfD3EF93cd406eBBd76fc1b32C58492FAd4B34E" as const,
@@ -366,7 +366,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "geo",
     priceUsd: 0.001,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {
       query: { type: "string", required: true, description: "Country name or ISO code (e.g. Brazil, BR, usa)" },
     },
@@ -383,7 +383,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "utility",
     priceUsd: 0.0005,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {},
     sampleArgs: {},
     verified: true,
@@ -396,7 +396,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "utility",
     priceUsd: 0.0005,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {},
     sampleArgs: {},
     verified: true,
@@ -409,7 +409,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
     category: "social",
     priceUsd: 0.0015,
     publisherWallet: KERYX_TREASURY_ADDRESS,
-    publisherName: "Kēryx",
+    publisherName: "Keryx",
     args: {},
     sampleArgs: {},
     verified: true,

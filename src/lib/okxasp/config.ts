@@ -6,7 +6,7 @@
 import type { ToolDefinition } from "@/lib/registry/seed";
 import { seedIndex } from "@/lib/registry/seed";
 
-/** Tools exposed on the OKX Finance Copilot ASP (reuse Kēryx handlers). */
+/** Tools exposed on the OKX Finance Copilot ASP (reuse Keryx handlers). */
 export const OKX_ASP_TOOL_IDS = [
   "crypto.price",
   "crypto.trending",

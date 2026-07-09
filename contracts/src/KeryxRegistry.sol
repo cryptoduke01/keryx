@@ -18,7 +18,7 @@ pragma solidity ^0.8.24;
  *   - Prices are stored in USDC atomic units (6 decimals). $0.005 is `5000`.
  *   - No custody. The registry never holds funds. Payment happens in the
  *     x402 layer against the USDC contract directly.
- *   - Owner is Kēryx, and can only pause / unpause and mark a tool as
+ *   - Owner is Keryx, and can only pause / unpause and mark a tool as
  *     verified. Owner cannot rewrite a publisher's listing.
  */
 contract KeryxRegistry {

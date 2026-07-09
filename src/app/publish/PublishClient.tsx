@@ -507,7 +507,7 @@ export default function PublishClient() {
 
       <Field
         label="Handler URL"
-        hint="Public HTTPS endpoint Kēryx will call with the args after the agent pays. Must return JSON."
+        hint="Public HTTPS endpoint Keryx will call with the args after the agent pays. Must return JSON."
       >
         <input
           type="url"
@@ -593,8 +593,8 @@ export default function PublishClient() {
             Published as <code style={{ fontFamily: "var(--font-mono)" }}>{status.toolId}</code>
           </div>
           <div style={{ fontSize: 12.5, color: "var(--text-secondary)", lineHeight: 1.55 }}>
-            Tool is live in the registry. Seeded tools (Kēryx-run) are executable immediately.
-            If you provided a Handler URL, Kēryx will forward paid calls to it.
+            Tool is live in the registry. Seeded tools (Keryx-run) are executable immediately.
+            If you provided a Handler URL, Keryx will forward paid calls to it.
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <a

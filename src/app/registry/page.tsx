@@ -76,7 +76,7 @@ export default async function RegistryPage() {
           Registry
         </div>
         <h1 className="text-headline" style={{ marginBottom: 12 }}>
-          {tools.length} tools live on Kēryx.
+          {tools.length} tools live on Keryx.
         </h1>
         <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.6 }}>
           <b style={{ color: "var(--text-primary)" }}>{tradingToolCount} of them are for trading agents</b>
@@ -85,7 +85,7 @@ export default async function RegistryPage() {
         </p>
         <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.55, marginTop: 8 }}>
           The rest wrap high-quality public sources for general agent tasks
-          (weather, geo, search, web). Kēryx is the payment, discovery, and
+          (weather, geo, search, web). Keryx is the payment, discovery, and
           settlement layer &mdash; not a replacement for free web browsing.
         </p>
         <div style={{ display: "flex", gap: 8, marginTop: 20, flexWrap: "wrap" }}>
@@ -230,7 +230,7 @@ export default async function RegistryPage() {
                 </div>
                 <div style={{ marginTop: 8 }}>
                   {isExecutable ? (
-                    <span style={{ fontSize: 10, padding: "1px 6px", borderRadius: 3, background: "var(--surface-3)", color: "var(--text-secondary)" }}>Kēryx executes • real settlement</span>
+                    <span style={{ fontSize: 10, padding: "1px 6px", borderRadius: 3, background: "var(--surface-3)", color: "var(--text-secondary)" }}>Keryx executes • real settlement</span>
                   ) : (
                     <span style={{ fontSize: 10, padding: "1px 6px", borderRadius: 3, background: "var(--surface-3)", color: "var(--text-muted)" }}>Discovery only • add handlerUrl to execute</span>
                   )}

@@ -2,7 +2,7 @@ import Link from "next/link";
 import CopyButton from "@/components/CopyButton";
 
 export const metadata = {
-  title: "Docs · Kēryx",
+  title: "Docs · Keryx",
   description: "How to publish paid tools and call them from any AI agent.",
 };
 
@@ -16,12 +16,12 @@ export default function DocsPage() {
         Two integrations. One page.
       </h1>
       <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.6, marginBottom: 40 }}>
-        Kēryx sits between developers who publish tools and AI agents that
+        Keryx sits between developers who publish tools and AI agents that
         pay to use them. Both sides fit on this page.
       </p>
       <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.55, marginBottom: 32 }}>
         Note: many seeded tools provide reliable structured access to public data sources.
-        Agents can still fetch some of this data for free elsewhere. Kēryx's value is the unified payment,
+        Agents can still fetch some of this data for free elsewhere. Keryx's value is the unified payment,
         discovery, settlement, and MCP interface — especially as the catalog grows with paid creator and proprietary tools.
       </p>
 
@@ -93,8 +93,8 @@ export default function DocsPage() {
           minus a 5% platform fee.
         </p>
         <p style={pStyle}>
-          <b>Seeded tools</b> (Kēryx runs the handler) are executable out of the box by /ask, MCP, and /api/call.
-          Community tools are listed immediately. To make a published tool executable by Kēryx today, provide a simple HTTPS POST endpoint that returns JSON (see publish form for exact contract).
+          <b>Seeded tools</b> (Keryx runs the handler) are executable out of the box by /ask, MCP, and /api/call.
+          Community tools are listed immediately. To make a published tool executable by Keryx today, provide a simple HTTPS POST endpoint that returns JSON (see publish form for exact contract).
         </p>
         <CodeBlock
           lang="bash"
@@ -114,7 +114,7 @@ export default function DocsPage() {
 
       <Section title="For Claude Code, Cursor, GitHub Copilot, and any MCP client" id="mcp">
         <p style={pStyle}>
-          <b>Real agents do not use our /ask chat.</b> They talk directly to Kēryx via the Model Context Protocol.
+          <b>Real agents do not use our /ask chat.</b> They talk directly to Keryx via the Model Context Protocol.
           Add the MCP server once and the agent gets the full catalog (20+ seeded tools + any community-published tools) as native tools.
         </p>
 
@@ -123,7 +123,7 @@ export default function DocsPage() {
         </div>
 
         <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 16 }}>
-          <strong>Note on payments:</strong> Through MCP, tool calls are currently executed in <strong>demo/subsidized mode</strong> (Kēryx covers the cost while MCP clients do not yet support wallets). 
+          <strong>Note on payments:</strong> Through MCP, tool calls are currently executed in <strong>demo/subsidized mode</strong> (Keryx covers the cost while MCP clients do not yet support wallets). 
           For real paid calls with USDC settlement on Arc, use the direct <code>/api/call</code> endpoint. The current deployment runs the facilitator in demo mode; setting <code>CIRCLE_GATEWAY_API_URL</code> or a local facilitator private key flips it to real onchain settlement without any code change.
         </p>
 
@@ -186,7 +186,7 @@ export default function DocsPage() {
         <div style={{ marginTop: 24, paddingTop: 16, borderTop: "1px solid var(--border)" }}>
           <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>OpenAI Codex</div>
           <p style={{ fontSize: 13, color: "var(--text-secondary)" }}>
-            Kēryx tools can be exposed to OpenAI Codex agents. See the official build guide:
+            Keryx tools can be exposed to OpenAI Codex agents. See the official build guide:
             {" "}
             <a href="https://developers.openai.com/codex/plugins/build" target="_blank" rel="noreferrer" style={{ textDecoration: "underline" }}>
               developers.openai.com/codex/plugins/build
@@ -198,7 +198,7 @@ export default function DocsPage() {
       <Section title="For publishers · integrate x402 yourself (SDKs planned)">
         <p style={pStyle}>
           First-party SDKs and an <code style={codeInline}>@keryx/*</code> middleware are planned.
-          Today you can implement the x402 flow directly (return 402 with price requirements, accept <code>X-PAYMENT</code>, settle via the same facilitator logic) or point a simple <code>handlerUrl</code> at your existing endpoint and let Kēryx handle payment + forwarding.
+          Today you can implement the x402 flow directly (return 402 with price requirements, accept <code>X-PAYMENT</code>, settle via the same facilitator logic) or point a simple <code>handlerUrl</code> at your existing endpoint and let Keryx handle payment + forwarding.
         </p>
         <p style={pStyle}>
           See the whitepaper for the settlement modes and the publish form for the exact contract when providing a <code>handlerUrl</code>.
@@ -211,7 +211,7 @@ export default function DocsPage() {
         </div>
         <ul style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.8, paddingLeft: 20 }}>
           <li>20 seeded executable tools (Solana onchain research, weather, finance/rates, geo, search, crypto signals, utilities, time, uuid) — real public data or fresh computation</li>
-          <li>Anyone can publish tools. Provide a <code>handlerUrl</code> to make them executable by Kēryx surfaces.</li>
+          <li>Anyone can publish tools. Provide a <code>handlerUrl</code> to make them executable by Keryx surfaces.</li>
           <li>Full x402 flow + public ledger. MCP server works with Claude, Cursor, GitHub Copilot, and any MCP client.</li>
           <li>OpenAPI spec at <a href="/keryx-openapi.json" style={{ textDecoration: "underline" }}>/keryx-openapi.json</a></li>
           <li>Onchain registry contract (KeryxRegistry.sol) + EIP-191 publisher ownership</li>

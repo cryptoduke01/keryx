@@ -62,14 +62,14 @@ export async function getTool(id: string): Promise<ToolDefinition | null> {
 
 export async function upsertTool(tool: ToolDefinition): Promise<void> {
   if (seedIndex().has(tool.id)) {
-    throw new Error(`Tool id "${tool.id}" is reserved by Kēryx seed.`);
+    throw new Error(`Tool id "${tool.id}" is reserved by Keryx seed.`);
   }
   await saveUserTool(tool);
 }
 
 export async function deleteUserTool(id: string): Promise<void> {
   if (seedIndex().has(id)) {
-    throw new Error(`Tool id "${id}" is a Kēryx seed and cannot be deleted.`);
+    throw new Error(`Tool id "${id}" is a Keryx seed and cannot be deleted.`);
   }
   if (redis) {
     await redis.hdel(KEY_TOOLS, id);

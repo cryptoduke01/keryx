@@ -4,7 +4,7 @@ export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
 /**
- * Kēryx favicon — a simplified herald's-staff monogram: a coin-disc
+ * Keryx favicon — a simplified herald's-staff monogram: a coin-disc
  * bisected by the rod, with two small wing ticks. Legible at 16px.
  * Generated at request time via Satori/ImageResponse, no external
  * asset needed.

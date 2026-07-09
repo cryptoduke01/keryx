@@ -1,5 +1,5 @@
 /**
- * POST /api/ask — the Kēryx playground agent.
+ * POST /api/ask — the Keryx playground agent.
  *
  * Streams a chat completion. The LLM sees every listed tool as a callable
  * function; when it calls one, we route through /api/call so a real
@@ -39,7 +39,7 @@ interface IncomingMessage {
   content: string;
 }
 
-const SYSTEM_PROMPT = `You are Kēryx — a helpful AI assistant with a VERY SMALL budget for paid tools (fractions of a cent per call). Every tool call costs real money in USDC on Arc. The user explicitly said: only use paid tools when the data is worth the cost.
+const SYSTEM_PROMPT = `You are Keryx — a helpful AI assistant with a VERY SMALL budget for paid tools (fractions of a cent per call). Every tool call costs real money in USDC on Arc. The user explicitly said: only use paid tools when the data is worth the cost.
 
 CRITICAL ECONOMIC RULES:
 - Most general knowledge, famous landmarks, well-known advice, public facts, and common recommendations are already in your training data. Answer from knowledge for free.
@@ -55,10 +55,10 @@ CRITICAL ECONOMIC RULES:
 - Before ANY tool call, you must internally answer: "Is this specific piece of data worth ~$X right now for this user?"
 - If in doubt, answer from knowledge and do not spend.
 - When you do call: say ONE short line using the canonical dotted id "Calling <tool> ($price) — <precise reason this data is worth paying for>". Example: "Calling solana.rug-check ($0.002) — to assess rug risk on this mint before any decision."
-- Cite ONLY with the exact canonical dotted id: "Sources: solana.rug-check (Kēryx, $0.002)".
+- Cite ONLY with the exact canonical dotted id: "Sources: solana.rug-check (Keryx, $0.002)".
 - Be concise. Never fabricate.
 
-HIGH-STAKES ONCHAIN / CRYPTO DECISIONS (the exact reason people pay for Kēryx):
+HIGH-STAKES ONCHAIN / CRYPTO DECISIONS (the exact reason people pay for Keryx):
 When the query involves real money moving onchain right now ("$50K just aped into mint X", "fresh launch", "is it a rug?", "should I ape or follow this wallet?"), this is THE use case.
 - Immediately call the right solana.* / crypto.* tool(s). The tiny fee is economically trivial compared to the decision.
 - After the tool result arrives, give a DIRECT, blunt, numbers-first read. Use the actual scores, %, holders, liquidity, etc.
@@ -101,7 +101,7 @@ export async function POST(req: Request) {
 
   /** Only expose tools that the playground (and the unified executor) can run.
    *  This now includes:
-   *   - Kēryx-seeded tools (hardcoded real handlers)
+   *   - Keryx-seeded tools (hardcoded real handlers)
    *   - Published community tools that provided a handlerUrl at publish time
    */
   const playableTools = registryTools.filter((t) => isExecutableTool(t));
@@ -118,7 +118,7 @@ export async function POST(req: Request) {
   for (const t of playableTools) {
     const fnName = t.id.replace(/\./g, "-");
     tools[fnName] = tool({
-      description: `[$${t.priceUsd.toFixed(3)} paid via Kēryx to ${t.publisherName}] Canonical id: ${t.id}. ${t.summary} — only call if the fresh/structured result is worth the cost vs answering from knowledge. When writing "Calling ..." or "Sources:", always use the dotted canonical id "${t.id}".`,
+      description: `[$${t.priceUsd.toFixed(3)} paid via Keryx to ${t.publisherName}] Canonical id: ${t.id}. ${t.summary} — only call if the fresh/structured result is worth the cost vs answering from knowledge. When writing "Calling ..." or "Sources:", always use the dotted canonical id "${t.id}".`,
       parameters: argsToZod(t.args),
       execute: async (rawArgs) => {
         const tool = await getTool(t.id);
@@ -235,7 +235,7 @@ function pickModel(): StreamModel | null {
   return null;
 }
 
-/** Convert a Kēryx arg spec to a zod schema so the AI SDK can validate
+/** Convert a Keryx arg spec to a zod schema so the AI SDK can validate
  *  what the LLM sends before we execute it. */
 function argsToZod(spec: Record<string, { type: "string" | "number" | "boolean"; required?: boolean; description: string }>) {
   const shape: Record<string, z.ZodTypeAny> = {};

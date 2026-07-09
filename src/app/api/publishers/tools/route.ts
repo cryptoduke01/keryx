@@ -8,7 +8,7 @@
  * consumes the nonce so it can't be replayed.
  *
  * This enforces that only the wallet that owns publisherWallet can list
- * tools under it. Tools are stored with verified=false until Kēryx
+ * tools under it. Tools are stored with verified=false until Keryx
  * manually promotes them; the signature only proves wallet control.
  */
 
@@ -53,8 +53,8 @@ const PublishSchema = z.object({
     .string()
     .regex(/^0x[a-fA-F0-9]{40}$/, { message: "publisherWallet must be a 0x address" }),
   publisherName: z.string().min(1).max(60),
-  /** Optional but required for the tool to be executable by Kēryx agents.
-   *  The public HTTPS URL of the publisher's handler. Kēryx will POST the
+  /** Optional but required for the tool to be executable by Keryx agents.
+   *  The public HTTPS URL of the publisher's handler. Keryx will POST the
    *  args object to this URL after payment verification/settlement. */
   handlerUrl: z.string().url().optional(),
   /** Server-issued nonce from POST /api/publishers/nonce. */
