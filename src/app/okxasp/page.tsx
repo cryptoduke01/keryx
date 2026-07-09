@@ -33,7 +33,7 @@ const BLURBS: Record<string, string> = {
 };
 
 const ASP_ID = "4759";
-/** First successful X Layer testnet settle (facilitator returned success + tx). */
+/** First successful X Layer settle (facilitator returned success + tx). */
 const PROOF_TX =
   "0x20a15b12c65d4813f6af197257555a0ad0e284b2d81752b581b5cb34f3369273";
 
@@ -424,8 +424,9 @@ export default function OkxAspPage() {
                   Settlement proof
                 </div>
                 <p style={{ ...body, fontSize: 13, marginBottom: 10 }}>
-                  First paid authorize on X Layer testnet via Agentic Wallet.
-                  Facilitator returned success with tx hash.
+                  First paid authorize on X Layer via Agentic Wallet.
+                  Facilitator returned success with tx hash. Settlement now
+                  targets mainnet (`eip155:196`) to match ASP #4759.
                 </p>
                 <code
                   style={{

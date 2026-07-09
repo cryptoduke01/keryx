@@ -95,7 +95,7 @@ OKX_API_KEY=...
 OKX_SECRET_KEY=...
 OKX_PASSPHRASE=...
 OKX_PAY_TO_ADDRESS=0x...   # Agentic Wallet or any EVM wallet that receives fees
-OKX_X402_NETWORK=eip155:1952   # testnet first; switch to eip155:196 for mainnet
+OKX_X402_NETWORK=eip155:196   # X Layer mainnet (ASP listing + seller docs). Use eip155:1952 only for local testnet smoke.
 ```
 
 Limits: up to **3 projects**, **3 API keys per project**.
@@ -199,7 +199,7 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 | Primary endpoint | https://keryxhq.xyz/api/okxasp/tools/okx-token-price |
 | Catalog | https://keryxhq.xyz/api/okxasp/catalog |
 | Owner / payTo | `0x6adab0c9c761c3459208bfa90ef2f924f986833c` |
-| Network (test) | `eip155:1952` |
+| Network | `eip155:196` (X Layer mainnet) |
 
 ---
 
@@ -239,4 +239,4 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 - Demo + `#okxai` + Google form (after live).
 
 ### Mainnet note
-Keep `OKX_X402_NETWORK=eip155:1952` until listing is live and mainnet USDT0/OKB are funded. Flip to `eip155:196` in Vercel when ready.
+`OKX_X402_NETWORK=eip155:196` is required for marketplace listing review. ASP #4759 is registered on chainIndex 196. Testnet (`1952`) 402s fail protocol review even when x402-check returns valid. Fund the Agentic Wallet with mainnet USDT0 + OKB before paid smoke tests.

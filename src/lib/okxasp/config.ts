@@ -38,8 +38,17 @@ export const OKX_ASP_SLUGS: Record<string, OkxAspToolId> = {
 /** Canonical listing / docs primary endpoint (OKX-native, not commodity). */
 export const OKX_ASP_PRIMARY_SLUG = "okx-token-price" as const;
 
+/**
+ * X Layer network for x402 accepts.
+ * ASP #4759 is registered on mainnet (chainIndex 196). Official seller docs
+ * use eip155:196. Testnet (1952) fails marketplace protocol review.
+ */
 export function okxNetwork(): string {
-  return process.env.OKX_X402_NETWORK?.trim() || "eip155:1952";
+  return process.env.OKX_X402_NETWORK?.trim() || "eip155:196";
+}
+
+export function okxIsTestnet(): boolean {
+  return okxNetwork().includes("1952");
 }
 
 export function okxPayTo(): `0x${string}` | null {

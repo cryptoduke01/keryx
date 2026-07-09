@@ -18,7 +18,6 @@ import {
   type OkxAspToolId,
 } from "@/lib/okxasp/config";
 import { getOkxResourceServer } from "@/lib/okxasp/server";
-import { keryxOkxPaywall } from "@/lib/okxasp/paywall";
 
 export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
   const tool = getOkxAspTool(toolId);
@@ -82,36 +81,34 @@ export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
   }
 
   const payTo = okxPayTo()!;
+  // Match OKX seller SDK docs: accepts as an array of exact options on eip155:196.
+  // Marketplace review crawls Payment-Required; keep the stock JSON 402 path
+  // (no custom HTML paywall) so the protocol header is never stripped.
   const routeConfig = {
-    accepts: {
-      scheme: "exact" as const,
-      price: priceUsdToOkxPrice(tool.priceUsd),
-      network: okxNetwork() as `${string}:${string}`,
-      payTo,
-    },
+    accepts: [
+      {
+        scheme: "exact" as const,
+        price: priceUsdToOkxPrice(tool.priceUsd),
+        network: okxNetwork() as `${string}:${string}`,
+        payTo,
+      },
+    ],
     description: tool.summary,
     mimeType: "application/json",
   };
 
   const server = getOkxResourceServer();
   const httpServer = new x402HTTPResourceServer(server, { "*": routeConfig })
-    // X Layer testnet confirmations can exceed the default 5s poll window.
     .setPollDeadline(25_000)
     .onSettlementTimeout(async (txHash) => {
-      // Facilitator already returned a tx hash with success=true / status=timeout.
       return { confirmed: Boolean(txHash) };
     });
-
-  const paywallConfig = {
-    appName: "Keryx Finance Copilot",
-    testnet: okxNetwork().includes("1952"),
-  };
 
   const paid = withX402FromHTTPServer(
     handler,
     httpServer,
-    paywallConfig,
-    keryxOkxPaywall,
+    undefined,
+    undefined,
     true,
   );
   return { GET: paid, POST: paid };

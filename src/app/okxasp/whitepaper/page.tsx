@@ -148,7 +148,7 @@ export default function OkxAspWhitepaperPage() {
               ["OKX-native", "4 tools"],
               ["Coverage", "5 tools"],
               ["Settlement", "X Layer · USDT0"],
-              ["Network", "Testnet until live"],
+              ["Network", "X Layer mainnet"],
             ].map(([k, v]) => (
               <div
                 key={k}

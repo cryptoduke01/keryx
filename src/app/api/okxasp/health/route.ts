@@ -41,6 +41,12 @@ export async function GET(req: Request) {
       ready,
     },
     settlement: ready ? "okx_x402_wired" : "pending_credentials",
+    protocol: {
+      standard: "OKX Agent Payments Protocol / x402 exact",
+      network: okxNetwork(),
+      expectsMainnet: "eip155:196",
+      aligned: okxNetwork() === "eip155:196",
+    },
     catalog: `${origin}/api/okxasp/catalog`,
     tools,
     docs: "/okxasp",

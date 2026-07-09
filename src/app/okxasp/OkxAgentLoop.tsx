@@ -92,7 +92,7 @@ export default function OkxAgentLoop({ tools }: { tools: ToolOption[] }) {
         setState({
           step: "402",
           amount: decoded?.amount ?? tool.price,
-          network: decoded?.network ?? "eip155:1952",
+          network: decoded?.network ?? "eip155:196",
           asset: decoded?.asset ?? "USDT0",
           payTo: decoded?.payTo ?? "",
           rawHeader: payHeader ?? "",
