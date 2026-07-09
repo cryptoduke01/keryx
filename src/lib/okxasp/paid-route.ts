@@ -138,14 +138,20 @@ function forceJsonProtocolRequest(req: NextRequest): NextRequest {
   }
 
   const method = req.method.toUpperCase();
-  const hasBody = method !== "GET" && method !== "HEAD";
-  return new NextRequest(req.url, {
-    method: req.method,
-    headers,
-    body: hasBody ? req.body : undefined,
-    // Required by undici when forwarding a streaming body.
-    ...(hasBody ? ({ duplex: "half" } as RequestInit) : {}),
-  });
+  const hasBody = method !== "GET" && method !== "HEAD" && req.body != null;
+  // Build RequestInit explicitly — spreading NextRequest fields can pass
+  // `signal: null`, which fails Next.js / undici typings on Vercel.
+  const init: {
+    method: string;
+    headers: Headers;
+    body?: BodyInit;
+    duplex?: "half";
+  } = { method: req.method, headers };
+  if (hasBody) {
+    init.body = req.body as BodyInit;
+    init.duplex = "half";
+  }
+  return new NextRequest(req.url, init);
 }
 
 /**
