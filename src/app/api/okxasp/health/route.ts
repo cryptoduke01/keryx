@@ -46,6 +46,9 @@ export async function GET(req: Request) {
       network: okxNetwork(),
       expectsMainnet: "eip155:196",
       aligned: okxNetwork() === "eip155:196",
+      // Always JSON 402 + PAYMENT-REQUIRED (HTML paywall disabled for listing QA).
+      challengeTransport: "PAYMENT-REQUIRED",
+      htmlPaywall: false,
     },
     catalog: `${origin}/api/okxasp/catalog`,
     tools,

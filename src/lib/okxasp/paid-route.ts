@@ -113,5 +113,68 @@ export function createOkxPaidToolHandlers(toolId: OkxAspToolId) {
     undefined,
     true,
   );
-  return { GET: paid, POST: paid };
+
+  // OKX listing QA / Agent Payments Protocol detectors look for either:
+  //   1) PAYMENT-REQUIRED header (v2), or
+  //   2) JSON body with x402Version (v1 / mock-merchant style).
+  // Stock @okxweb3/x402-next serves an HTML paywall (and drops the
+  // protocol header) when Accept includes text/html AND User-Agent
+  // includes Mozilla — which is how browser-like reviewers hit us.
+  // Force the JSON path and dual-write the challenge into the body.
+  const protocolOnly = async (req: NextRequest): Promise<NextResponse> => {
+    const res = await paid(forceJsonProtocolRequest(req));
+    return ensureProtocolChallengeBody(res);
+  };
+  return { GET: protocolOnly, POST: protocolOnly };
+}
+
+/** Rewrite Accept/UA so x402-core never takes the HTML paywall branch. */
+function forceJsonProtocolRequest(req: NextRequest): NextRequest {
+  const headers = new Headers(req.headers);
+  headers.set("Accept", "application/json");
+  const ua = headers.get("User-Agent") ?? "";
+  if (ua.includes("Mozilla")) {
+    headers.set("User-Agent", "OKX-A2MCP-Client/1.0");
+  }
+
+  const method = req.method.toUpperCase();
+  const hasBody = method !== "GET" && method !== "HEAD";
+  return new NextRequest(req.url, {
+    method: req.method,
+    headers,
+    body: hasBody ? req.body : undefined,
+    // Required by undici when forwarding a streaming body.
+    ...(hasBody ? ({ duplex: "half" } as RequestInit) : {}),
+  });
+}
+
+/**
+ * Stock v2 402 returns `{}` + PAYMENT-REQUIRED. OKX's own mock merchant
+ * and Priority-3 detectors also accept a body with `x402Version`. Emit both.
+ */
+function ensureProtocolChallengeBody(res: NextResponse): NextResponse {
+  if (res.status !== 402 && res.status !== 412) return res;
+
+  const pr =
+    res.headers.get("payment-required") ??
+    res.headers.get("PAYMENT-REQUIRED");
+  if (!pr) return res;
+
+  try {
+    const pad = "=".repeat((4 - (pr.length % 4)) % 4);
+    const b64 = pr.replace(/-/g, "+").replace(/_/g, "/") + pad;
+    const challenge = JSON.parse(
+      Buffer.from(b64, "base64").toString("utf8"),
+    ) as Record<string, unknown>;
+    if (typeof challenge.x402Version !== "number") return res;
+
+    const headers = new Headers(res.headers);
+    headers.set("Content-Type", "application/json");
+    return new NextResponse(JSON.stringify(challenge), {
+      status: res.status,
+      headers,
+    });
+  } catch {
+    return res;
+  }
 }
