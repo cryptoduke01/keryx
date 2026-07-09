@@ -175,15 +175,26 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 
 ## Checklist before Jul 17
 
-- [x] OKX API key + secret + passphrase in `.env.local`
-- [x] Agentic Wallet logged in via Onchain OS (`0x6adab0…833c`)
-- [ ] Deploy `/okxasp` + `/api/okxasp/*` to production (listing rejects localhost)
-- [ ] Fund X Layer testnet (OKB + USD₮0) via https://web3.okx.com/xlayer/faucet
-- [ ] Smoke: unpaid call → HTTP 402 on `https://keryxhq.xyz/api/okxasp/tools/crypto-price`
-- [ ] A2MCP ASP registered + **listed/approved** on OKX.AI
-- [ ] Google form submitted with ASP + X post URL
-- [ ] X post live with `#okxai` and ≤90s demo
+- [x] OKX API key + secret + passphrase in `.env.local` + Vercel production
+- [x] Agentic Wallet logged in (`0x6adab0c9c761c3459208bfa90ef2f924f986833c`)
+- [x] Deployed: https://keryxhq.xyz/okxasp + `/api/okxasp/*` (402 confirmed)
+- [x] ASP **#4759** registered — *Keryx Finance Copilot* · 5 A2MCP services · category SOFTWARE_SERVICES
+- [x] Listing submitted — status: **Listing under review** (AI quality review suggested pass)
+- [ ] Wait for marketplace approval / go live on OKX.AI
+- [ ] Fund X Layer testnet (OKB + USD₮0): https://web3.okx.com/xlayer/faucet
+- [ ] Google form before Jul 17, 00:00 UTC: https://forms.gle/mddEUagmDbyV37ws8
+- [ ] X post with `#okxai` + ≤90s demo
 - [ ] Arc/Kēryx Lepton paths still green (no regressions)
+
+### ASP #4759 quick refs
+
+| Field | Value |
+|-------|-------|
+| Name | Keryx Finance Copilot |
+| Primary endpoint | https://keryxhq.xyz/api/okxasp/tools/crypto-price |
+| Catalog | https://keryxhq.xyz/api/okxasp/catalog |
+| Owner / payTo | `0x6adab0c9c761c3459208bfa90ef2f924f986833c` |
+| Network (test) | `eip155:1952` |
 
 ---
 
