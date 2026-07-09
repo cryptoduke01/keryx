@@ -147,7 +147,7 @@ Seller SDK: https://web3.okx.com/onchainos/dev-docs/payments/service-seller-sdk
 ## Build order (Best Product, not a thin wrapper)
 
 1. **API keys** — done (`.env.local`).
-2. **Scaffold + x402 wire** — done: `/okxasp`, catalog, 8 paid tools via `@okxweb3/x402-next`.
+2. **Scaffold + x402 wire** — done: `/okxasp`, catalog, 10 paid tools via `@okxweb3/x402-next` (includes OKX Web3 market endpoints).
 3. **Install `onchainos` CLI** — done (`~/.local/bin/onchainos`). Skills install OK for Cursor; PromptScript failures are harmless.
 4. **Agentic Wallet login** (you — OTP to email):
    ```bash
@@ -181,7 +181,8 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 - [x] OKX API key + secret + passphrase in `.env.local` + Vercel production
 - [x] Agentic Wallet logged in (`0x6adab0c9c761c3459208bfa90ef2f924f986833c`)
 - [x] Deployed: https://keryxhq.xyz/okxasp + `/api/okxasp/*` (402 confirmed)
-- [x] ASP **#4759** registered — *Keryx Finance Copilot* · **8** A2MCP services · category SOFTWARE_SERVICES
+- [x] ASP **#4759** registered — *Keryx Finance Copilot* · **10** A2MCP services (incl. OKX Web3 market) · category SOFTWARE_SERVICES
+- [x] Custom browser 402 paywall (shows real USDT0 amount)
 - [x] Listing submitted — status: **Listing under review** (AI quality review suggested pass)
 - [x] Funded Agentic Wallet (~0.2 OKB + 10 USDT) for paid-call smoke tests
 - [ ] Wait for marketplace approval / go live on OKX.AI
