@@ -10,9 +10,12 @@ import { seedIndex } from "@/lib/registry/seed";
 export const OKX_ASP_TOOL_IDS = [
   "crypto.price",
   "crypto.trending",
+  "crypto.btc-dominance",
   "solana.token-activity",
   "solana.rug-check",
+  "solana.launches",
   "finance.convert",
+  "finance.exchange-rates",
 ] as const;
 
 export type OkxAspToolId = (typeof OKX_ASP_TOOL_IDS)[number];
@@ -21,9 +24,12 @@ export type OkxAspToolId = (typeof OKX_ASP_TOOL_IDS)[number];
 export const OKX_ASP_SLUGS: Record<string, OkxAspToolId> = {
   "crypto-price": "crypto.price",
   "crypto-trending": "crypto.trending",
+  "crypto-btc-dominance": "crypto.btc-dominance",
   "solana-token-activity": "solana.token-activity",
   "solana-rug-check": "solana.rug-check",
+  "solana-launches": "solana.launches",
   "finance-convert": "finance.convert",
+  "finance-exchange-rates": "finance.exchange-rates",
 };
 
 export function okxNetwork(): string {
@@ -46,7 +52,6 @@ export function okxCredentialsReady(): boolean {
 }
 
 export function priceUsdToOkxPrice(priceUsd: number): string {
-  // OKX accepts "$0.01" style; keep 6 dp max for sub-cent tools
   const fixed = priceUsd.toFixed(6).replace(/\.?0+$/, "");
   return `$${fixed || "0"}`;
 }
