@@ -123,7 +123,7 @@ export default function OkxAspHeader() {
           style={{ alignItems: "center", gap: 8 }}
         >
           <a
-            href="#agent-loop"
+            href="/okxasp#agent-loop"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -150,18 +150,6 @@ export default function OkxAspHeader() {
             />
             Agent loop
           </a>
-          <Link
-            href="/"
-            className="okx-nav-link"
-            style={{
-              fontSize: 12.5,
-              fontWeight: 500,
-              color: "var(--text-muted)",
-              textDecoration: "none",
-            }}
-          >
-            Main site
-          </Link>
           <ThemeToggle />
         </div>
 
@@ -250,19 +238,6 @@ export default function OkxAspHeader() {
               </Link>
             );
           })}
-          <Link
-            href="/"
-            onClick={() => setOpen(false)}
-            style={{
-              padding: "12px 4px",
-              fontSize: 15,
-              fontWeight: 500,
-              color: "var(--text-muted)",
-              textDecoration: "none",
-            }}
-          >
-            Main site
-          </Link>
         </div>
       )}
 

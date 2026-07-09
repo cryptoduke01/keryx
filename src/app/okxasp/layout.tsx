@@ -10,7 +10,8 @@ export default function OkxAspLayout({
   return (
     <div className="okxasp-shell">
       <OkxAspHeader />
-      <div style={{ paddingTop: 56, minHeight: "70vh" }}>{children}</div>
+      {/* Root layout already clears the fixed header (paddingTop: 56). */}
+      <div style={{ minHeight: "70vh" }}>{children}</div>
       <OkxAspFooter />
       <style
         dangerouslySetInnerHTML={{

@@ -169,14 +169,6 @@ export default function OkxAspPage() {
                 <a href="#agent-loop" style={btnHeroPrimary}>
                   Try the agent loop
                 </a>
-                <a
-                  href="https://okx.ai"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={btnHeroGhost}
-                >
-                  OKX.AI marketplace
-                </a>
                 <Link href="/okxasp/docs" style={btnHeroGhost}>
                   Docs
                 </Link>

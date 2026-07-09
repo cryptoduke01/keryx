@@ -40,11 +40,11 @@ export default function OkxAspDocsPage() {
         </div>
         <h1
           className="text-headline"
-          style={{ marginBottom: 16, maxWidth: 820 }}
+          style={{ marginBottom: 16 }}
         >
           Wire your agent to the Finance Copilot.
         </h1>
-        <p style={{ ...lead, maxWidth: 820 }}>
+        <p style={lead}>
           Twelve paid market tools on X Layer. Hit an HTTPS endpoint, pay USDT0
           when asked, get JSON back. Four tools hit OKX Web3 market and wallet
           APIs with our seller credentials. The rest fill coverage so an agent
