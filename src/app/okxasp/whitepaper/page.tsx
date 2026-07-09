@@ -64,12 +64,11 @@ export default function OkxAspWhitepaperPage() {
 
           <h2 style={h2}>The product</h2>
           <p style={p}>
-            Keryx Finance Copilot is twelve tools in one pack. Four are
+            Keryx Finance Copilot is nine tools in one pack. Four are
             OKX-native: token price, market snapshot, wallet PnL, and recent
             per-token PnL — pulled through OKX Web3 with our seller credentials.
-            The rest cover the questions agents actually ask next: global price
-            and trend, BTC dominance, Solana activity, rug risk, launches, and
-            FX.
+            Five coverage tools answer the next questions: global price, Solana
+            activity, rug risk, launches, and FX.
           </p>
           <p style={p}>
             Each call is gated by x402. Unpaid requests get 402 with a real
@@ -147,7 +146,7 @@ export default function OkxAspWhitepaperPage() {
               ["ASP", "#4759"],
               ["Type", "A2MCP"],
               ["OKX-native", "4 tools"],
-              ["Coverage", "8 tools"],
+              ["Coverage", "5 tools"],
               ["Settlement", "X Layer · USDT0"],
               ["Network", "Testnet until live"],
             ].map(([k, v]) => (

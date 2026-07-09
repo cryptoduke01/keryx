@@ -7,19 +7,16 @@ import type { ToolDefinition } from "@/lib/registry/seed";
 import { seedIndex } from "@/lib/registry/seed";
 
 /** Tools exposed on the OKX Finance Copilot ASP (reuse Keryx handlers). */
-/** OKX-native tools first — that is the edge for judges. */
+/** OKX-native first. Coverage kept tight so the pack does not read as a wrapper. */
 export const OKX_ASP_TOOL_IDS = [
   "okx.token-price",
   "okx.token-market",
   "okx.wallet-pnl",
   "okx.wallet-recent-pnl",
   "crypto.price",
-  "crypto.trending",
-  "crypto.btc-dominance",
   "solana.token-activity",
   "solana.rug-check",
   "solana.launches",
-  "finance.convert",
   "finance.exchange-rates",
 ] as const;
 
@@ -28,18 +25,18 @@ export type OkxAspToolId = (typeof OKX_ASP_TOOL_IDS)[number];
 /** URL slug → registry tool id */
 export const OKX_ASP_SLUGS: Record<string, OkxAspToolId> = {
   "crypto-price": "crypto.price",
-  "crypto-trending": "crypto.trending",
-  "crypto-btc-dominance": "crypto.btc-dominance",
   "solana-token-activity": "solana.token-activity",
   "solana-rug-check": "solana.rug-check",
   "solana-launches": "solana.launches",
-  "finance-convert": "finance.convert",
   "finance-exchange-rates": "finance.exchange-rates",
   "okx-token-price": "okx.token-price",
   "okx-token-market": "okx.token-market",
   "okx-wallet-pnl": "okx.wallet-pnl",
   "okx-wallet-recent-pnl": "okx.wallet-recent-pnl",
 };
+
+/** Canonical listing / docs primary endpoint (OKX-native, not commodity). */
+export const OKX_ASP_PRIMARY_SLUG = "okx-token-price" as const;
 
 export function okxNetwork(): string {
   return process.env.OKX_X402_NETWORK?.trim() || "eip155:1952";

@@ -45,10 +45,10 @@ export default function OkxAspDocsPage() {
           Wire your agent to the Finance Copilot.
         </h1>
         <p style={lead}>
-          Twelve paid market tools on X Layer. Hit an HTTPS endpoint, pay USDT0
+          Nine paid market tools on X Layer. Hit an HTTPS endpoint, pay USDT0
           when asked, get JSON back. Four tools hit OKX Web3 market and wallet
-          APIs with our seller credentials. The rest fill coverage so an agent
-          can stay inside one ASP.
+          APIs with our seller credentials. Five coverage tools fill price,
+          Solana risk, and FX so an agent can stay inside one ASP.
         </p>
         <p style={{ ...muted, marginBottom: 48 }}>
           Product:{" "}

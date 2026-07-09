@@ -18,14 +18,11 @@ export const metadata = {
 /** Short consumer copy. Registry summaries stay agent-oriented. */
 const BLURBS: Record<string, string> = {
   "crypto.price": "Live price, market cap, and 24h change for any coin.",
-  "crypto.trending": "What the market is searching right now.",
-  "crypto.btc-dominance": "BTC and ETH dominance plus total market cap.",
   "solana.token-activity":
     "DEX volume, liquidity, and buy/sell flow for a Solana token.",
   "solana.rug-check":
     "Risk score, LP lock, and flagged issues from rugcheck.xyz.",
   "solana.launches": "Fresh Solana token profiles as they hit the board.",
-  "finance.convert": "Convert an amount between currencies at live rates.",
   "finance.exchange-rates": "Full rate table for any base currency.",
   "okx.token-price": "OKX Web3 USD price for any token contract.",
   "okx.token-market":
@@ -39,6 +36,16 @@ const ASP_ID = "4759";
 /** First successful X Layer testnet settle (facilitator returned success + tx). */
 const PROOF_TX =
   "0x20a15b12c65d4813f6af197257555a0ad0e284b2d81752b581b5cb34f3369273";
+
+const SAMPLE_JSON = `{
+  "toolId": "okx.token-price",
+  "result": {
+    "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "chain": "ethereum",
+    "priceUsd": 3241.18,
+    "source": "okx-web3"
+  }
+}`;
 
 export default function OkxAspPage() {
   const tools = listOkxAspTools();
@@ -202,9 +209,64 @@ export default function OkxAspPage() {
           <Stat label="Asset" value="USDT0" />
         </div>
 
-        <div id="agent-loop" style={{ marginBottom: 64 }}>
+        <div id="agent-loop" style={{ marginBottom: 40 }}>
           <OkxAgentLoop tools={loopTools} />
         </div>
+
+        <section
+          style={{
+            marginBottom: 64,
+            padding: 20,
+            borderRadius: 12,
+            border: "1px solid var(--border)",
+            background: "var(--surface-1)",
+          }}
+        >
+          <div className="text-eyebrow" style={{ marginBottom: 10 }}>
+            What you get back
+          </div>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(1.25rem, 2vw, 1.5rem)",
+              fontWeight: 500,
+              letterSpacing: "-0.02em",
+              color: "var(--text-primary)",
+              margin: "0 0 8px",
+            }}
+          >
+            Paid call → JSON. No dashboard scrape.
+          </h2>
+          <p style={{ ...body, marginBottom: 14, maxWidth: 640 }}>
+            Example response from{" "}
+            <code
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 12.5,
+                color: "var(--text-primary)",
+              }}
+            >
+              /api/okxasp/tools/okx-token-price
+            </code>{" "}
+            after settle. Primary listing endpoint is OKX-native.
+          </p>
+          <pre
+            style={{
+              margin: 0,
+              padding: "14px 16px",
+              borderRadius: 10,
+              border: "1px solid var(--border)",
+              background: "var(--surface-2)",
+              overflow: "auto",
+              fontSize: 12.5,
+              lineHeight: 1.55,
+              fontFamily: "var(--font-mono)",
+              color: "var(--text-primary)",
+            }}
+          >
+            {SAMPLE_JSON}
+          </pre>
+        </section>
 
         <div
           className="okxasp-split"
@@ -233,9 +295,10 @@ export default function OkxAspPage() {
               {tools.length} tools. {okxNative} OKX-native. Pay per call.
             </h2>
             <p style={{ ...body, marginBottom: 28 }}>
-              Commodity feeds for coverage. OKX Web3 market and wallet PnL for
-              the edge. Every unpaid hit returns HTTP 402 with a real USDT0
-              price.
+              {okxNative} OKX Web3 tools lead the pack. {tools.length - okxNative}{" "}
+              coverage tools fill price, Solana risk, and FX so an agent stays
+              inside one ASP. Every unpaid hit returns HTTP 402 with a real
+              USDT0 price.
             </p>
             <div style={{ display: "flex", flexDirection: "column" }}>
               {tools.map((tool) => {

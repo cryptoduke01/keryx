@@ -6,6 +6,7 @@ import {
   okxPayTo,
   priceUsdToOkxPrice,
   slugForToolId,
+  OKX_ASP_PRIMARY_SLUG,
 } from "@/lib/okxasp/config";
 
 export const runtime = "nodejs";
@@ -41,6 +42,7 @@ export async function GET(req: Request) {
     payTo: okxPayTo(),
     credentialsReady: okxCredentialsReady(),
     asset: "USDT0",
+    primaryEndpoint: `${origin}/api/okxasp/tools/${OKX_ASP_PRIMARY_SLUG}`,
     docs: `${origin}/okxasp/docs`,
     product: `${origin}/okxasp`,
     tools,

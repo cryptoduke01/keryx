@@ -123,7 +123,7 @@ Then register A2MCP:
 Help me register an A2MCP ASP on OKX.AI using OKX Agent Identity from Onchain OS
 ```
 
-Provide: name, description, **price per call**, **public https endpoint** (e.g. `https://keryxhq.xyz/api/okxasp/tools/crypto-price`).
+Provide: name, description, **price per call**, **public https endpoint** (e.g. `https://keryxhq.xyz/api/okxasp/tools/okx-token-price`).
 
 List on marketplace:
 
@@ -161,7 +161,7 @@ Seller SDK: https://web3.okx.com/onchainos/dev-docs/payments/service-seller-sdk
 
 ### Primary listing endpoint (suggested)
 
-`https://keryxhq.xyz/api/okxasp/tools/crypto-price`  
+`https://keryxhq.xyz/api/okxasp/tools/okx-token-price`  
 Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 
 ### What “Best Product” looks like vs average entries
@@ -181,7 +181,7 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 - [x] OKX API key + secret + passphrase in `.env.local` + Vercel production
 - [x] Agentic Wallet logged in (`0x6adab0c9c761c3459208bfa90ef2f924f986833c`)
 - [x] Deployed: https://keryxhq.xyz/okxasp + `/api/okxasp/*` (402 confirmed)
-- [x] ASP **#4759** registered — *Keryx Finance Copilot* · **12** A2MCP services (4 OKX Web3 native incl. wallet PnL) · category SOFTWARE_SERVICES
+- [x] ASP **#4759** registered — *Keryx Finance Copilot* · **9** A2MCP services (4 OKX Web3 native + 5 coverage) · category SOFTWARE_SERVICES (description is Finance Copilot; CLI has no category retag)
 - [x] Custom browser 402 paywall (shows real USDT0 amount; Mozilla + Accept: text/html)
 - [x] Settlement proof tx on X Layer testnet: `0x20a15b12c65d4813f6af197257555a0ad0e284b2d81752b581b5cb34f3369273`
 - [x] Listing submitted — status: **Listing under review** (AI quality review suggested pass)
@@ -196,7 +196,7 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 | Field | Value |
 |-------|-------|
 | Name | Keryx Finance Copilot |
-| Primary endpoint | https://keryxhq.xyz/api/okxasp/tools/crypto-price |
+| Primary endpoint | https://keryxhq.xyz/api/okxasp/tools/okx-token-price |
 | Catalog | https://keryxhq.xyz/api/okxasp/catalog |
 | Owner / payTo | `0x6adab0c9c761c3459208bfa90ef2f924f986833c` |
 | Network (test) | `eip155:1952` |
@@ -226,7 +226,9 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 ## Grand prize audit (updated)
 
 ### Edge (shipped)
-- 12-tool Finance Copilot pack + live agent-loop UI on `/okxasp`.
+- 9-tool Finance Copilot pack (4 OKX-native + 5 coverage) + live agent-loop UI on `/okxasp`.
+- Primary listing endpoint: `/api/okxasp/tools/okx-token-price` (OKX Web3).
+- JSON sample on product page (“what you get back”).
 - 4 OKX Web3 native tools (token price, market snapshot, wallet PnL, recent PnL).
 - Custom browser 402 paywall with real USDT0 amount.
 - Settlement proof tx on X Layer testnet (Agentic Wallet).
