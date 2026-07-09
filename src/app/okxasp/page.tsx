@@ -66,11 +66,11 @@ export default function OkxAspPage() {
           alt=""
           fill
           priority
-          className="art-photo"
+          className="art-photo art-photo-neon"
           sizes="100vw"
           style={{ objectPosition: "50% 42%" }}
         />
-        <div className="art-photo-tint" />
+        <div className="art-photo-tint-neon" />
         <div className="art-grain" />
         <div
           aria-hidden
@@ -128,9 +128,10 @@ export default function OkxAspPage() {
             position: "absolute",
             left: 0,
             right: 0,
-            bottom: 0,
+            top: "38%",
+            transform: "translateY(-18%)",
             zIndex: 2,
-            paddingBottom: 48,
+            paddingBottom: 32,
           }}
         >
           <div className="container-page">
@@ -347,6 +348,24 @@ export default function OkxAspPage() {
                 }}
               >
                 <div className="text-eyebrow" style={{ marginBottom: 8 }}>
+                  Why the list is long
+                </div>
+                <p style={{ ...body, fontSize: 13, marginBottom: 0 }}>
+                  OKX-native tools sit first. Commodity feeds fill coverage so
+                  an agent can stay inside one ASP instead of hopping APIs.
+                  The sticky panel stays with you while you scroll the pack.
+                </p>
+              </div>
+              <div
+                style={{
+                  marginTop: 12,
+                  padding: 16,
+                  borderRadius: 12,
+                  border: "1px solid var(--border)",
+                  background: "var(--surface-1)",
+                }}
+              >
+                <div className="text-eyebrow" style={{ marginBottom: 8 }}>
                   Settlement proof
                 </div>
                 <p style={{ ...body, fontSize: 13, marginBottom: 10 }}>
@@ -387,9 +406,8 @@ export default function OkxAspPage() {
 
         <section
           style={{
-            paddingTop: 40,
+            paddingTop: 48,
             borderTop: "1px solid var(--border)",
-            maxWidth: 560,
           }}
         >
           <div className="text-eyebrow" style={{ marginBottom: 12 }}>
@@ -398,30 +416,85 @@ export default function OkxAspPage() {
           <h2
             style={{
               fontFamily: "var(--font-display)",
-              fontSize: "clamp(1.35rem, 2vw, 1.6rem)",
+              fontSize: "clamp(1.5rem, 2.4vw, 1.85rem)",
               fontWeight: 500,
               letterSpacing: "-0.02em",
               color: "var(--text-primary)",
-              margin: "0 0 16px",
+              margin: "0 0 12px",
+              maxWidth: 640,
             }}
           >
-            Call. Pay. Read.
+            Call. Pay. Read. Built for agents, not dashboards.
           </h2>
-          <ol style={{ ...body, paddingLeft: 20, margin: 0 }}>
-            <li style={{ marginBottom: 10 }}>
-              Point your agent at a tool URL or the{" "}
-              <a href="/api/okxasp/catalog" style={link}>
-                catalog
-              </a>
-              .
-            </li>
-            <li style={{ marginBottom: 10 }}>
-              First hit returns 402 with the price in USDT0 on X Layer.
-            </li>
-            <li>
-              Agentic Wallet pays. Retry with PAYMENT-SIGNATURE. You get JSON.
-            </li>
-          </ol>
+          <p style={{ ...body, marginBottom: 28, maxWidth: 640 }}>
+            The Finance Copilot is an A2MCP pack. Your agent discovers tools on
+            OKX.AI or via our catalog, pays USDT0 on X Layer when the endpoint
+            returns 402, and receives JSON. No API keys on our side. No monthly
+            plan.
+          </p>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+              gap: 16,
+            }}
+          >
+            {[
+              {
+                n: "01",
+                t: "Discover",
+                d: "Browse the pack on OKX.AI or hit /api/okxasp/catalog. Each tool has a price, schema, and HTTPS endpoint.",
+              },
+              {
+                n: "02",
+                t: "Probe",
+                d: "Call without payment. You get HTTP 402 plus a Payment-Required header with amount, asset, network, and pay-to.",
+              },
+              {
+                n: "03",
+                t: "Settle",
+                d: "Agentic Wallet or onchainos payment pay signs the 402. Retry with PAYMENT-SIGNATURE.",
+              },
+              {
+                n: "04",
+                t: "Use",
+                d: "JSON comes back from OKX Web3 market data, wallet PnL, Solana risk, or FX. Spend only when the answer is worth it.",
+              },
+            ].map((s) => (
+              <div
+                key={s.n}
+                style={{
+                  padding: 18,
+                  borderRadius: 12,
+                  border: "1px solid var(--border)",
+                  background: "var(--surface-1)",
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 12,
+                    color: "#8fbf2e",
+                    marginBottom: 8,
+                  }}
+                >
+                  {s.n}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 18,
+                    fontWeight: 500,
+                    color: "var(--text-primary)",
+                    marginBottom: 8,
+                  }}
+                >
+                  {s.t}
+                </div>
+                <p style={{ ...body, fontSize: 13.5 }}>{s.d}</p>
+              </div>
+            ))}
+          </div>
         </section>
       </div>
 
@@ -468,12 +541,6 @@ const body: React.CSSProperties = {
   color: "var(--text-secondary)",
   lineHeight: 1.65,
   margin: 0,
-};
-
-const link: React.CSSProperties = {
-  color: "var(--text-primary)",
-  textDecoration: "underline",
-  textUnderlineOffset: 3,
 };
 
 const btnHeroPrimary: React.CSSProperties = {

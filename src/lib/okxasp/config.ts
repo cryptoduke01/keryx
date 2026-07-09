@@ -7,7 +7,12 @@ import type { ToolDefinition } from "@/lib/registry/seed";
 import { seedIndex } from "@/lib/registry/seed";
 
 /** Tools exposed on the OKX Finance Copilot ASP (reuse Keryx handlers). */
+/** OKX-native tools first — that is the edge for judges. */
 export const OKX_ASP_TOOL_IDS = [
+  "okx.token-price",
+  "okx.token-market",
+  "okx.wallet-pnl",
+  "okx.wallet-recent-pnl",
   "crypto.price",
   "crypto.trending",
   "crypto.btc-dominance",
@@ -16,10 +21,6 @@ export const OKX_ASP_TOOL_IDS = [
   "solana.launches",
   "finance.convert",
   "finance.exchange-rates",
-  "okx.token-price",
-  "okx.token-market",
-  "okx.wallet-pnl",
-  "okx.wallet-recent-pnl",
 ] as const;
 
 export type OkxAspToolId = (typeof OKX_ASP_TOOL_IDS)[number];

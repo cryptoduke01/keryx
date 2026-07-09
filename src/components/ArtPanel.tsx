@@ -76,9 +76,9 @@ export default function ArtPanel({
             left: 0,
             right: 0,
             bottom: 0,
-            padding: headline ? "28px 24px 22px" : "16px 18px",
+            padding: headline ? "36px 24px 28px" : "16px 18px",
             background:
-              "linear-gradient(180deg, transparent 0%, rgba(11,11,12,0.78) 70%)",
+              "linear-gradient(180deg, transparent 0%, rgba(11,11,12,0.78) 55%, rgba(11,11,12,0.92) 100%)",
             color: "#f5f4f0",
             textShadow: "0 1px 3px rgba(0,0,0,0.7)",
           }}

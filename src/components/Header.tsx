@@ -23,6 +23,11 @@ export default function Header() {
   const path = usePathname();
   const [open, setOpen] = useState(false);
 
+  // OKX ASP surface has its own chrome under /okxasp/*
+  if (path === "/okxasp" || path.startsWith("/okxasp/")) {
+    return null;
+  }
+
   return (
     <header
       style={{
