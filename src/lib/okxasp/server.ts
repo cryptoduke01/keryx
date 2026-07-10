@@ -34,17 +34,19 @@ import {
 
 /**
  * USDT0 on X Layer mainnet (6 decimals).
- * EIP-55 checksum matches OKX docs / xlayer-tokenlist.
+ * Lowercase matches OKX official 402 challenges + token-list lookups.
  */
 export const OKX_USDT0 =
-  "0x779Ded0c9e1022225f8E0630b35a9b54bE713736" as const;
+  "0x779ded0c9e1022225f8e0630b35a9b54be713736" as const;
+
+/** USDG on X Layer mainnet — second accept option (OKX official APIs offer both). */
+export const OKX_USDG =
+  "0x4ae46a509f6b1d9056937ba4500cb143933d2dc8" as const;
 
 /**
- * Match OKX's own 402 `extra` shape (see web3.okx.com dex market APIs):
- * `{ version, symbol, name, transferMethod: "eip3009" }`.
- * Missing `symbol` / `transferMethod` makes `onchainos x402-check` report
- * `tokenSymbol: "UNKNOWN"` and marketplace listing QA can reject as
- * "x402 standard validation" failed.
+ * Match OKX marketplace token list (USDT / USDG) + official 402 `extra` shape.
+ * `symbol: "USD₮0"` made x402-check report tokenSymbol UNKNOWN; their task
+ * system resolves `USDT` / `USDG` only.
  */
 class OkxExactEvmScheme extends ExactEvmScheme {
   override enhancePaymentRequirements(
@@ -59,18 +61,22 @@ class OkxExactEvmScheme extends ExactEvmScheme {
   ): Promise<PaymentRequirements> {
     return super
       .enhancePaymentRequirements(paymentRequirements, supportedKind, extensionKeys)
-      .then((req) => ({
-        ...req,
-        asset: OKX_USDT0,
-        extra: {
-          ...(req.extra ?? {}),
-          version: "1",
-          symbol: "USD₮0",
-          name: "USD₮0",
-          transferMethod: "eip3009",
-          decimals: 6,
-        },
-      }));
+      .then((req) => {
+        const asset = (req.asset ?? OKX_USDT0).toLowerCase();
+        const isUsdg = asset === OKX_USDG.toLowerCase();
+        return {
+          ...req,
+          asset: isUsdg ? OKX_USDG : OKX_USDT0,
+          extra: {
+            ...(req.extra ?? {}),
+            version: "1",
+            symbol: isUsdg ? "USDG" : "USDT",
+            name: isUsdg ? "Global Dollar" : "USD₮0",
+            transferMethod: "eip3009",
+            decimals: 6,
+          },
+        };
+      });
   }
 }
 
@@ -172,18 +178,23 @@ export function getOkxPaymentProtect(): ProtectFn {
           methodDetails: { chainId, feePayer: true },
         },
         x402: {
-          scheme: "exact",
-          network,
-          payTo,
-          price: priceUsdToOkxPrice(tool.priceUsd),
-          maxTimeoutSeconds: 300,
-          extra: {
-            version: "1",
-            symbol: "USD₮0",
-            name: "USD₮0",
-            transferMethod: "eip3009",
-            decimals: 6,
-          },
+          // Explicit accepts array — same shape OKX seller docs / official APIs use.
+          accepts: [
+            {
+              scheme: "exact",
+              network,
+              payTo,
+              price: priceUsdToOkxPrice(tool.priceUsd),
+              maxTimeoutSeconds: 300,
+              extra: {
+                version: "1",
+                symbol: "USDT",
+                name: "USD₮0",
+                transferMethod: "eip3009",
+                decimals: 6,
+              },
+            },
+          ],
           description: tool.summary,
           mimeType: "application/json",
         },
