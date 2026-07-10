@@ -721,6 +721,8 @@ export default async function Landing() {
               <FooterLink href="/sdk">SDK · @keryxhq/middleware</FooterLink>
               <FooterLink href="/docs">Integration docs</FooterLink>
               <FooterLink href="/docs#mcp">MCP for Claude Code</FooterLink>
+              <FooterLink href="/.well-known/x402">x402 discovery</FooterLink>
+              <FooterLink href="/llms.txt">llms.txt</FooterLink>
               <FooterLink href="/try">Try in 5 minutes</FooterLink>
               <FooterExternal href="https://www.npmjs.com/package/@keryxhq/middleware">
                 Package on npm

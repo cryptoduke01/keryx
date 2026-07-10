@@ -9,6 +9,24 @@
     { "url": "https://keryxhq.xyz" }
   ],
   "paths": {
+    "/.well-known/x402": {
+      "get": {
+        "summary": "x402 discovery manifest",
+        "description": "Machine-readable catalog of free surfaces and paid /api/call tools for agent discovery.",
+        "responses": {
+          "200": { "description": "Discovery JSON (version, freeResources, paid_routes, network)" }
+        }
+      }
+    },
+    "/llms.txt": {
+      "get": {
+        "summary": "LLM-oriented site map",
+        "description": "Plain-text map of free and paid endpoints for LLM agents.",
+        "responses": {
+          "200": { "description": "text/plain catalog" }
+        }
+      }
+    },
     "/api/tools": {
       "get": {
         "summary": "List all tools",

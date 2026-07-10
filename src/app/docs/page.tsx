@@ -84,6 +84,17 @@ export default function DocsPage() {
           includes the arg schema so an agent can plan calls without
           human help.
         </p>
+        <p style={pStyle}>
+          Agents that prefer a single front door can also hit{" "}
+          <a href="/.well-known/x402" style={{ textDecoration: "underline" }}>
+            /.well-known/x402
+          </a>{" "}
+          (JSON catalog of free + paid routes) or{" "}
+          <a href="/llms.txt" style={{ textDecoration: "underline" }}>
+            /llms.txt
+          </a>{" "}
+          (plain-text map for LLM agents).
+        </p>
       </Section>
 
       <Section title="For publishers · list your endpoint">
@@ -214,6 +225,7 @@ export default function DocsPage() {
           <li>Anyone can publish tools. Provide a <code>handlerUrl</code> to make them executable by Keryx surfaces.</li>
           <li>Full x402 flow + public ledger. MCP server works with Claude, Cursor, GitHub Copilot, and any MCP client.</li>
           <li>OpenAPI spec at <a href="/keryx-openapi.json" style={{ textDecoration: "underline" }}>/keryx-openapi.json</a></li>
+          <li>Agent discovery: <a href="/.well-known/x402" style={{ textDecoration: "underline" }}>/.well-known/x402</a> · <a href="/llms.txt" style={{ textDecoration: "underline" }}>/llms.txt</a></li>
           <li>Onchain registry contract (KeryxRegistry.sol) + EIP-191 publisher ownership</li>
         </ul>
       </div>

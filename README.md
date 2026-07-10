@@ -61,6 +61,7 @@ Every call (success or failure) is written to the public ledger at [/live](https
 | ⚖️ For judges (Lepton) | [keryxhq.xyz/for-judges](https://keryxhq.xyz/for-judges) |
 | 📊 Pitch deck | [keryxhq.xyz/pitch](https://keryxhq.xyz/pitch) |
 | 📦 SDK | [keryxhq.xyz/sdk](https://keryxhq.xyz/sdk) · [@keryxhq/middleware](https://www.npmjs.com/package/@keryxhq/middleware) |
+| 🤖 Agent discovery | [/.well-known/x402](https://keryxhq.xyz/.well-known/x402) · [/llms.txt](https://keryxhq.xyz/llms.txt) · [/keryx-openapi.json](https://keryxhq.xyz/keryx-openapi.json) |
 
 ---
 
@@ -69,6 +70,10 @@ Every call (success or failure) is written to the public ledger at [/live](https
 ### As an agent (curl)
 
 ```bash
+# 0. Agent front door (machine-readable)
+curl https://keryxhq.xyz/.well-known/x402
+curl https://keryxhq.xyz/llms.txt
+
 # 1. Discover tools
 curl https://keryxhq.xyz/api/tools
 
