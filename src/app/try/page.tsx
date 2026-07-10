@@ -17,14 +17,35 @@ export default function TryPage() {
         Try Keryx in five minutes.
       </h1>
       <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.65, marginBottom: 40 }}>
-        Four ways to hit Keryx yourself, ordered from easiest to most technical.
-        Every one produces a real onchain USDC transaction on Arc testnet that
-        you can look up on Arcscan afterwards.
+        Five ways to hit Keryx yourself, ordered from easiest to most technical.
+        <Link href="/ask" style={link}> /ask</Link> and MCP are Keryx-sponsored
+        (no wallet in the client). Autonomous buyers use{" "}
+        <Link href="/quickstart.ts" style={link}>/quickstart.ts</Link> against{" "}
+        <code>POST /api/call</code>. When the local facilitator is live, paid
+        calls produce Arcscan-verifiable USDC txs on{" "}
+        <Link href="/live" style={link}>/live</Link>.
       </p>
 
       <Step
         num={1}
-        title="Ask something in the playground"
+        title="Free sample before you pay"
+        seconds={15}
+        difficulty="Zero setup"
+      >
+        <P>
+          Hit{" "}
+          <Link href="/api/demo?toolId=crypto.price" style={link}>
+            /api/demo?toolId=crypto.price
+          </Link>{" "}
+          for a live upstream response with no USDC. Same shape as a paid call,
+          minus settlement. Then prove any ledger row with{" "}
+          <code>POST /api/receipt/verify</code>.
+        </P>
+      </Step>
+
+      <Step
+        num={2}
+        title="Ask something in the playground (sponsored)"
         seconds={30}
         difficulty="Zero setup"
       >
@@ -35,15 +56,15 @@ export default function TryPage() {
         </P>
         <P>
           Watch the small chip appear under the response: it shows the tool
-          being called, the price ($0.005), and after a second, a shortened
-          Arcscan tx hash you can click. That&apos;s a real USDC settlement.
-          The green pulse pill under the CTAs on the landing page ticks up
-          the moment your call lands.
+          being called, the price, and a settlement hash when the facilitator
+          is onchain. This path is sponsored by Keryx so you can feel the
+          product without wiring a wallet; autonomous agents should use the
+          quickstart instead.
         </P>
       </Step>
 
       <Step
-        num={2}
+        num={3}
         title="Curl the paid endpoint directly"
         seconds={60}
         difficulty="Terminal"
@@ -72,14 +93,15 @@ export default function TryPage() {
         </P>
         <P>
           Don&apos;t want to write a signer? Use{" "}
-          <Link href="/ask" style={link}>/ask</Link> &mdash; Keryx signs on
-          behalf of its facilitator wallet for you.
+          <Link href="/quickstart.ts" style={link}>/quickstart.ts</Link>{" "}
+          (wallet-equipped) or the sponsored{" "}
+          <Link href="/ask" style={link}>/ask</Link> playground.
         </P>
       </Step>
 
       <Step
-        num={3}
-        title="Drop Keryx into Claude Code"
+        num={4}
+        title="Drop Keryx into Claude Code (sponsored)"
         seconds={120}
         difficulty="One JSON file"
       >
@@ -104,14 +126,16 @@ export default function TryPage() {
           Restart Claude Code. Try:{" "}
           <i>&ldquo;use keryx to search for what Circle Arc is&rdquo;</i>{" "}
           or <i>&ldquo;use keryx to rug-check this Solana mint: EPjF…Dt1v&rdquo;</i>.
-          Claude picks the right tool from the registry, calls it, and
-          Keryx settles the payment onchain in the background. Every call
-          shows up on <Link href="/live" style={link}>/live</Link>.
+          Claude picks the right tool from the registry and calls it.
+          MCP is currently Keryx-sponsored (no wallet in the client); ledger
+          rows still appear on <Link href="/live" style={link}>/live</Link>.
+          For an agent that pays itself, use{" "}
+          <Link href="/quickstart.ts" style={link}>/quickstart.ts</Link>.
         </P>
       </Step>
 
       <Step
-        num={4}
+        num={5}
         title="Publish your own tool"
         seconds={180}
         difficulty="Arc wallet + testnet USDC"

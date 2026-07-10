@@ -69,6 +69,23 @@ export async function readEntries(limit = 40): Promise<LedgerEntry[]> {
   return memoryLedger.slice(0, limit);
 }
 
+/** Look up a single ledger row by id or onchain tx hash (for receipt verify). */
+export async function findLedgerEntry(opts: {
+  id?: string;
+  txHash?: string;
+}): Promise<LedgerEntry | null> {
+  const id = opts.id?.trim();
+  const txHash = opts.txHash?.trim().toLowerCase();
+  if (!id && !txHash) return null;
+
+  const window = await readEntries(MAX_ENTRIES);
+  for (const entry of window) {
+    if (id && entry.id === id) return entry;
+    if (txHash && entry.txHash?.toLowerCase() === txHash) return entry;
+  }
+  return null;
+}
+
 export async function ledgerStats(): Promise<{
   totalPaidUsd: number;
   callCount: number;

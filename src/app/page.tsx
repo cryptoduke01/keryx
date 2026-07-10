@@ -316,7 +316,7 @@ export default async function Landing() {
                 n: "03",
                 title: "USDC arrives",
                 desc:
-                  "Every call triggers a nanopayment through Circle Gateway. Your wallet updates in real time. Keryx never holds a balance.",
+                  "Every call settles USDC on Arc via x402 (local facilitator today; Circle Gateway when configured). Your publisher wallet is payTo. Keryx never custodians a balance.",
                 icon: (
                   <>
                     <circle cx="10" cy="10" r="7" strokeLinecap="round" />
@@ -723,6 +723,8 @@ export default async function Landing() {
               <FooterLink href="/docs#mcp">MCP for Claude Code</FooterLink>
               <FooterLink href="/.well-known/x402">x402 discovery</FooterLink>
               <FooterLink href="/llms.txt">llms.txt</FooterLink>
+              <FooterLink href="/api/demo?toolId=crypto.price">Free demo sample</FooterLink>
+              <FooterLink href="/quickstart.ts">Buyer quickstart (.ts)</FooterLink>
               <FooterLink href="/try">Try in 5 minutes</FooterLink>
               <FooterExternal href="https://www.npmjs.com/package/@keryxhq/middleware">
                 Package on npm

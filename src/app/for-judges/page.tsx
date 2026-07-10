@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { listTools } from "@/lib/registry/store";
 import { ledgerStats } from "@/lib/ledger";
+import { getFacilitator } from "@/lib/x402/facilitator";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,7 @@ const MCP_URL = "https://keryxhq.xyz/api/mcp";
 export default async function ForJudgesPage() {
   const [tools, stats] = await Promise.all([listTools(), ledgerStats()]);
   const executableCount = tools.filter((t) => !t.id.startsWith("demo.")).length;
+  const facilitatorMode = getFacilitator().mode;
 
   return (
     <div className="container-narrow" style={{ paddingTop: 40, paddingBottom: 96 }}>
@@ -118,17 +120,25 @@ export default async function ForJudgesPage() {
       <Section title="Judging dimensions · where we sit">
         <Dimension
           weight="30% Agentic sophistication"
-          summary="Cost-aware agent at /ask with a real economic model."
+          summary="Cost-aware agent at /ask + autonomous buyers via /api/call quickstarts."
           detail={
             <>
               The <Link href="/ask" style={inlineLink}>/ask</Link> agent is
               instructed to <b>only</b> spend when the fresh data is worth the
               cost. It refuses paid tool calls for questions it can answer from
               training data. When it does pay, it narrates the decision on
-              screen before the tool card fires. Try the &ldquo;A wallet just
-              aped $50K into this Solana mint&rdquo; prompt in the suggestions
-              &mdash; it forces a paid decision because rugcheck data changes
-              hour-to-hour.
+              screen before the tool card fires.{" "}
+              <b>/ask and MCP are Keryx-sponsored</b> (no wallet in the browser
+              client) — they still settle on Arc when the local facilitator is
+              live, but they are not autonomous payers. For full agency, use{" "}
+              <Link href="/quickstart.ts" style={inlineLink}>
+                /quickstart.ts
+              </Link>{" "}
+              or{" "}
+              <Link href="/quickstart.py" style={inlineLink}>
+                /quickstart.py
+              </Link>{" "}
+              — wallet-equipped agents that hit the real 402 path.
             </>
           }
         />
@@ -149,17 +159,33 @@ export default async function ForJudgesPage() {
         />
         <Dimension
           weight="20% Circle tool usage"
-          summary="x402 + USDC on Arc, native gas at 0x3600. Gateway integration coded in facilitator abstraction."
+          summary={`x402 + USDC on Arc (eip155:5042002). Live facilitator mode: ${facilitatorMode}.`}
           detail={
             <>
               <code style={code}>POST /api/call</code> speaks real x402: HTTP
-              402 with machine-readable requirements, EIP-3009{" "}
+              402 with machine-readable requirements and root-level Bazaar{" "}
+              <code style={code}>extensions.bazaar</code>, EIP-3009{" "}
               <code style={code}>transferWithAuthorization</code> retry via{" "}
               <code style={code}>X-PAYMENT</code>, verify + execute + settle in
-              one round trip. Circle Gateway wired via a swappable facilitator
-              (<Link href="/whitepaper#settlement" style={inlineLink}>whitepaper §Settlement</Link>).
-              Currently in demo mode on prod; <code style={code}>CIRCLE_GATEWAY_API_URL</code>{" "}
-              flips it to real batched settlement with no code change.
+              one round trip. Production currently settles via the{" "}
+              <b>{facilitatorMode}</b> facilitator
+              {facilitatorMode === "local"
+                ? " — real Arcscan tx hashes on /live"
+                : facilitatorMode === "gateway"
+                  ? " — Circle Gateway batched settlement"
+                  : " — synthetic hashes until Gateway/local key is set"}
+              . Circle Gateway is wired in code;{" "}
+              <code style={code}>CIRCLE_GATEWAY_API_URL</code> flips to batched
+              Gateway with no code change (
+              <Link href="/whitepaper#settlement" style={inlineLink}>
+                whitepaper §Settlement
+              </Link>
+              ). Free sample:{" "}
+              <Link href="/api/demo?toolId=crypto.price" style={inlineLink}>
+                /api/demo
+              </Link>
+              . Receipt proof:{" "}
+              <code style={code}>POST /api/receipt/verify</code>.
             </>
           }
         />
@@ -181,21 +207,33 @@ export default async function ForJudgesPage() {
       {/* -------------------- Try it live -------------------- */}
       <Section title="Try it live (no setup)">
         <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, marginBottom: 14 }}>
-          Three ways to hit Keryx yourself in under a minute each. Every one
-          produces a real ledger entry visible on <Link href="/live" style={inlineLink}>/live</Link>.
+          Four ways to hit Keryx yourself.{" "}
+          <Link href="/ask" style={inlineLink}>/ask</Link> and MCP are
+          sponsored demos; terminal + quickstart are the autonomous payer path.
+          Settlements appear on <Link href="/live" style={inlineLink}>/live</Link>.
         </p>
         <ol style={{ paddingLeft: 20, fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.75 }}>
           <li style={{ marginBottom: 8 }}>
-            <b style={{ color: "var(--text-primary)" }}>Web</b>:{" "}
+            <b style={{ color: "var(--text-primary)" }}>Free sample</b>:{" "}
+            <Link href="/api/demo?toolId=crypto.price" style={inlineLink}>
+              /api/demo?toolId=crypto.price
+            </Link>{" "}
+            — response shape before you spend.
+          </li>
+          <li style={{ marginBottom: 8 }}>
+            <b style={{ color: "var(--text-primary)" }}>Web (sponsored)</b>:{" "}
             <Link href="/ask" style={inlineLink}>keryxhq.xyz/ask</Link> &mdash; pick a suggested prompt.
           </li>
           <li style={{ marginBottom: 8 }}>
-            <b style={{ color: "var(--text-primary)" }}>Terminal</b>:{" "}
-            <Link href="/try" style={inlineLink}>keryxhq.xyz/try</Link> has copy-pasteable curl examples that hit the raw x402 endpoint.
+            <b style={{ color: "var(--text-primary)" }}>Autonomous buyer</b>:{" "}
+            <Link href="/quickstart.ts" style={inlineLink}>/quickstart.ts</Link>{" "}
+            or{" "}
+            <Link href="/try" style={inlineLink}>/try</Link> curl against{" "}
+            <code style={code}>POST /api/call</code>.
           </li>
           <li style={{ marginBottom: 8 }}>
-            <b style={{ color: "var(--text-primary)" }}>Claude Code / Cursor / Copilot</b>: add the MCP server URL{" "}
-            <code style={code}>{MCP_URL}</code> to your MCP config. Every Keryx tool becomes discoverable inside your agent.
+            <b style={{ color: "var(--text-primary)" }}>Claude Code / Cursor / Copilot (sponsored)</b>: add{" "}
+            <code style={code}>{MCP_URL}</code> to your MCP config.
           </li>
         </ol>
       </Section>
@@ -217,11 +255,12 @@ export default async function ForJudgesPage() {
       <Section title="Post-hackathon">
         <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65 }}>
           Keryx is intended to be maintained. Immediate next steps: flip
-          production to a real Circle Gateway facilitator, publish the first
-          three external publisher integrations (Helius / Birdeye /
-          DexScreener via the SDK), ship a Python SDK. The registry contract
-          on Arc is designed so publishers own their listings independently of
-          Keryx.
+          production facilitator from <b>{facilitatorMode}</b> to Circle Gateway
+          when credentials land, publish the first three external publisher
+          integrations (Helius / Birdeye / DexScreener via the SDK), ship a
+          Python SDK, and move the 5% platform fee from ledger accounting to a
+          real onchain split. The registry contract on Arc is designed so
+          publishers own their listings independently of Keryx.
         </p>
       </Section>
 

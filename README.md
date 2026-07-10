@@ -42,7 +42,7 @@ Payment + execution happen in the same round-trip.
 
 1. **Publish** — Register a tool with an id, price (in USD), and Arc wallet. It appears instantly in the public registry.
 2. **Discover** — Any agent calls `GET /api/tools` and receives every tool with price, schema, and example call (machine-readable).
-3. **Call & Pay** — `POST /api/call` with toolId + args. Keryx returns a 402 with payment details → agent signs (EIP-3009) → Keryx executes, splits (95% publisher / 5% platform), and returns the result + ledger entry.
+3. **Call & Pay** — `POST /api/call` with toolId + args. Keryx returns a 402 with payment details → agent signs (EIP-3009) → Keryx executes, settles USDC to the publisher `payTo` on Arc, and returns the result + ledger entry. (5% platform fee is ledger accounting today; onchain transfer is 100% to payTo until split settlement ships.)
 
 Every call (success or failure) is written to the public ledger at [/live](https://keryxhq.xyz/live).
 
@@ -61,7 +61,7 @@ Every call (success or failure) is written to the public ledger at [/live](https
 | ⚖️ For judges (Lepton) | [keryxhq.xyz/for-judges](https://keryxhq.xyz/for-judges) |
 | 📊 Pitch deck | [keryxhq.xyz/pitch](https://keryxhq.xyz/pitch) |
 | 📦 SDK | [keryxhq.xyz/sdk](https://keryxhq.xyz/sdk) · [@keryxhq/middleware](https://www.npmjs.com/package/@keryxhq/middleware) |
-| 🤖 Agent discovery | [/.well-known/x402](https://keryxhq.xyz/.well-known/x402) · [/llms.txt](https://keryxhq.xyz/llms.txt) · [/keryx-openapi.json](https://keryxhq.xyz/keryx-openapi.json) |
+| 🤖 Agent discovery | [/.well-known/x402](https://keryxhq.xyz/.well-known/x402) · [/llms.txt](https://keryxhq.xyz/llms.txt) · [/api/demo](https://keryxhq.xyz/api/demo?toolId=crypto.price) · [/api/receipt/verify](https://keryxhq.xyz/api/receipt/verify) · [/quickstart.ts](https://keryxhq.xyz/quickstart.ts) · [/quickstart.py](https://keryxhq.xyz/quickstart.py) · [/keryx-openapi.json](https://keryxhq.xyz/keryx-openapi.json) |
 
 ---
 
@@ -73,6 +73,9 @@ Every call (success or failure) is written to the public ledger at [/live](https
 # 0. Agent front door (machine-readable)
 curl https://keryxhq.xyz/.well-known/x402
 curl https://keryxhq.xyz/llms.txt
+
+# 0b. Free sample before pay (no USDC)
+curl "https://keryxhq.xyz/api/demo?toolId=crypto.price"
 
 # 1. Discover tools
 curl https://keryxhq.xyz/api/tools

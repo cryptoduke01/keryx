@@ -207,7 +207,7 @@ export default async function RegistryPage() {
                   <div>
                     <div className="text-eyebrow" style={{ marginBottom: 2 }}>Price per call</div>
                     <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}>
-                      ${tool.priceUsd.toFixed(3)} <span style={{ fontSize: 10, fontWeight: 400, color: "var(--text-muted)" }}>(95% to publisher)</span>
+                      ${tool.priceUsd.toFixed(3)} <span style={{ fontSize: 10, fontWeight: 400, color: "var(--text-muted)" }}>(payTo = publisher)</span>
                     </div>
                   </div>
                   <div>

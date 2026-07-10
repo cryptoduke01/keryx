@@ -12,7 +12,7 @@
 
 Every API on the internet was built assuming a human is present: sign up, get a key, attach a card, wait for approval. When an agent needs to answer one question with fresh data, none of that flow works. It can't fill out forms, doesn't have a card, doesn't want a $50/mo subscription for one call.
 
-**`@keryxhq/middleware` lets your existing HTTP handler accept per-call payment inline**, one call at a time, in a way agents already know how to speak. First hit returns HTTP 402 with a machine-readable price tag. Agent signs an EIP-3009 USDC authorization, retries. Your handler runs only after payment verifies. You keep 95% of every call.
+**`@keryxhq/middleware` lets your existing HTTP handler accept per-call payment inline**, one call at a time, in a way agents already know how to speak. First hit returns HTTP 402 with a machine-readable price tag. Agent signs an EIP-3009 USDC authorization, retries. Your handler runs only after payment verifies. Onchain, you are `payTo` (100% of the call today); Keryx's 5% platform fee is ledger accounting until split settlement ships.
 
 ---
 
@@ -138,7 +138,7 @@ Wrapping your endpoint is step 1. Step 2 is making it discoverable to every agen
 1. Deploy your wrapped handler at a public HTTPS URL.
 2. Visit **[keryxhq.xyz/publish](https://keryxhq.xyz/publish)**, connect your Arc wallet (must match the `wallet` field in the SDK config), and paste your handler URL.
 3. Sign the publish message with your wallet. Your tool is live in the registry immediately.
-4. Every MCP-enabled agent (Cursor, Claude Code, GitHub Copilot, custom) can now discover and call your tool by capability. You keep **95%** of every paid call. Keryx takes 5%.
+4. Every MCP-enabled agent (Cursor, Claude Code, GitHub Copilot, custom) can now discover and call your tool by capability. You are `payTo` onchain; the 5% platform fee is ledger accounting until split settlement.
 
 ---
 

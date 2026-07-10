@@ -1,14 +1,3 @@
-/**
- * Build the x402 `PaymentRequirements` object we hand back in a 402 response.
- *
- * This is the machine-readable price tag. An agent reads it, signs an EIP-3009
- * USDC authorization to `payTo` for `amount`, then retries the same call with
- * the encoded signature in the `X-PAYMENT` header.
- *
- * Kept separate from the route handler so both the real request path and the
- * docs / examples can pull the exact same shape.
- */
-
 import type { ToolDefinition } from "@/lib/registry/seed";
 import { ARC_USDC_ADDRESS } from "@/lib/chains";
 

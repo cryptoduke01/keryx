@@ -134,8 +134,12 @@ export default function DocsPage() {
         </div>
 
         <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 16 }}>
-          <strong>Note on payments:</strong> Through MCP, tool calls are currently executed in <strong>demo/subsidized mode</strong> (Keryx covers the cost while MCP clients do not yet support wallets). 
-          For real paid calls with USDC settlement on Arc, use the direct <code>/api/call</code> endpoint. The current deployment runs the facilitator in demo mode; setting <code>CIRCLE_GATEWAY_API_URL</code> or a local facilitator private key flips it to real onchain settlement without any code change.
+          <strong>Note on payments:</strong> Through MCP, tool calls are currently <strong>Keryx-sponsored</strong> (MCP clients do not yet send wallets).
+          For autonomous paid calls, use <code>POST /api/call</code> with a buyer wallet — see{" "}
+          <a href="/quickstart.ts">/quickstart.ts</a> and <a href="/quickstart.py">/quickstart.py</a>.
+          Free sample first: <a href="/api/demo?toolId=crypto.price"><code>/api/demo</code></a>.
+          Production settles via the local Arc facilitator when <code>KERYX_FACILITATOR_PRIVATE_KEY</code> is set,
+          or Circle Gateway when <code>CIRCLE_GATEWAY_API_URL</code> is set; otherwise demo (synthetic hashes).
         </p>
 
         <CodeBlock
@@ -225,7 +229,7 @@ export default function DocsPage() {
           <li>Anyone can publish tools. Provide a <code>handlerUrl</code> to make them executable by Keryx surfaces.</li>
           <li>Full x402 flow + public ledger. MCP server works with Claude, Cursor, GitHub Copilot, and any MCP client.</li>
           <li>OpenAPI spec at <a href="/keryx-openapi.json" style={{ textDecoration: "underline" }}>/keryx-openapi.json</a></li>
-          <li>Agent discovery: <a href="/.well-known/x402" style={{ textDecoration: "underline" }}>/.well-known/x402</a> · <a href="/llms.txt" style={{ textDecoration: "underline" }}>/llms.txt</a></li>
+          <li>Agent discovery: <a href="/.well-known/x402" style={{ textDecoration: "underline" }}>/.well-known/x402</a> · <a href="/llms.txt" style={{ textDecoration: "underline" }}>/llms.txt</a> · <a href="/api/demo?toolId=crypto.price" style={{ textDecoration: "underline" }}>/api/demo</a> · <a href="/api/receipt/verify" style={{ textDecoration: "underline" }}>/api/receipt/verify</a> · <a href="/quickstart.ts" style={{ textDecoration: "underline" }}>/quickstart.ts</a></li>
           <li>Onchain registry contract (KeryxRegistry.sol) + EIP-191 publisher ownership</li>
         </ul>
       </div>

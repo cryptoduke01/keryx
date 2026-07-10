@@ -144,7 +144,7 @@ async function dispatch(msg: JsonRpcRequest, req: NextRequest): Promise<unknown>
         capabilities: { tools: {} },
         serverInfo: { name: SERVER_NAME, version: SERVER_VERSION },
         instructions:
-          "Keryx exposes a registry of paid tools for AI agents. Every tool in tools/list can be called via tools/call. Payment is sponsored in demo mode; the /live ledger records each call.",
+          "Keryx exposes a registry of paid tools for AI agents. Every tool in tools/list can be called via tools/call. MCP calls are Keryx-sponsored (clients lack wallets); autonomous buyers use POST /api/call. Settlements appear on /live.",
       };
 
     case "tools/list": {
@@ -184,7 +184,7 @@ function toMcpTool(tool: ToolDefinition) {
   }
   return {
     name: tool.id,
-    description: `${tool.summary} (paid tool from ${tool.publisherName}, $${tool.priceUsd.toFixed(4)} per call, sponsored in demo mode)`,
+    description: `${tool.summary} (paid tool from ${tool.publisherName}, $${tool.priceUsd.toFixed(4)} per call; MCP path is Keryx-sponsored)`,
     inputSchema: {
       type: "object",
       properties,

@@ -83,7 +83,9 @@ export default function SdkPage() {
           <code style={inlineCode}>@keryxhq/middleware</code> wraps any HTTP
           handler so agents can pay per call with x402 + USDC on Arc. Zero
           runtime deps.{" "}
-          <b style={{ color: "var(--text-primary)" }}>You keep 95% of every call.</b>
+          <b style={{ color: "var(--text-primary)" }}>
+            You are payTo onchain (100% of the call today). The 5% platform fee is ledger accounting until split settlement ships.
+          </b>
         </p>
         <div
           style={{

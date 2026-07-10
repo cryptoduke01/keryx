@@ -87,8 +87,8 @@ export default function LiveClient({ initialEntries, initialStats }: Props) {
         >
           <span>When</span>
           <span>Tool</span>
-            <span>Publisher (gets 95%)</span>
-            <span style={{ textAlign: "right" }}>Total paid (Keryx 5%)</span>
+            <span>Publisher (payTo)</span>
+            <span style={{ textAlign: "right" }}>Paid (5% fee = ledger)</span>
           <span>Settlement</span>
           <span style={{ textAlign: "right" }}>Status</span>
         </div>

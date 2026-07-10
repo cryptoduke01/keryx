@@ -99,9 +99,29 @@ function buildGatewayFacilitator(url: string): KeryxFacilitator {
 function buildDemoFacilitator(): KeryxFacilitator {
   return {
     mode: "demo",
-    async verify(payload) {
+    async verify(payload, requirements) {
       const payer = readPayer(payload);
       if (!payer) return { valid: false, reason: "missing_payer_signature" };
+
+      // Soft shape checks so demo mode is not a total free-for-all.
+      if (!payload || typeof payload !== "object") {
+        return { valid: false, reason: "invalid_payload" };
+      }
+      const req = requirements as { amount?: string; payTo?: string; asset?: string } | null;
+      const auth = readAuthorization(payload);
+      if (!auth) return { valid: false, reason: "missing_authorization" };
+      if (req?.payTo && auth.to && auth.to.toLowerCase() !== req.payTo.toLowerCase()) {
+        return { valid: false, reason: "payTo_mismatch" };
+      }
+      if (req?.amount && auth.value) {
+        try {
+          if (BigInt(auth.value) !== BigInt(req.amount)) {
+            return { valid: false, reason: "amount_mismatch" };
+          }
+        } catch {
+          return { valid: false, reason: "amount_unparseable" };
+        }
+      }
       return { valid: true, payer };
     },
     async settle(payload) {
@@ -112,6 +132,27 @@ function buildDemoFacilitator(): KeryxFacilitator {
         payer: readPayer(payload),
       } as FacilitatorSettleResult;
     },
+  };
+}
+
+function readAuthorization(payload: unknown): {
+  to?: string;
+  value?: string;
+  asset?: string;
+} | null {
+  if (!payload || typeof payload !== "object") return null;
+  const p = (payload as Record<string, unknown>).payload;
+  if (!p || typeof p !== "object") return null;
+  const authorization = (p as Record<string, unknown>).authorization;
+  if (!authorization || typeof authorization !== "object") return null;
+  const a = authorization as Record<string, unknown>;
+  return {
+    to: typeof a.to === "string" ? a.to : undefined,
+    value:
+      typeof a.value === "string" || typeof a.value === "number"
+        ? String(a.value)
+        : undefined,
+    asset: typeof a.asset === "string" ? a.asset : undefined,
   };
 }
 

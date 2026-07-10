@@ -24,6 +24,7 @@ import { executeTool } from "@/lib/registry/handlers";
 import { quoteCall } from "@/lib/x402-price";
 import { recordEntry } from "@/lib/ledger";
 import { requirementsForTool } from "@/lib/x402/requirements";
+import { bazaarExtensionForTool } from "@/lib/x402/bazaar";
 import { getFacilitator } from "@/lib/x402/facilitator";
 
 export const runtime = "nodejs";
@@ -34,6 +35,23 @@ const CallSchema = z.object({
 });
 
 const X402_VERSION = 1;
+
+function paymentRequiredBody(
+  tool: NonNullable<Awaited<ReturnType<typeof getTool>>>,
+  origin: string,
+  error: string,
+) {
+  const requirements = requirementsForTool(tool, origin);
+  return {
+    x402Version: X402_VERSION,
+    error,
+    accepts: [requirements],
+    // x402 v2 bazaar: root-level extensions (not nested under accepts[])
+    extensions: {
+      bazaar: bazaarExtensionForTool(tool),
+    },
+  };
+}
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -69,11 +87,7 @@ export async function POST(req: NextRequest) {
   // No signed payment yet — reply with the 402 price tag.
   if (!paymentHeader) {
     return NextResponse.json(
-      {
-        x402Version: X402_VERSION,
-        error: "X-PAYMENT header is required",
-        accepts: [requirements],
-      },
+      paymentRequiredBody(tool, origin, "X-PAYMENT header is required"),
       { status: 402 },
     );
   }
@@ -85,11 +99,7 @@ export async function POST(req: NextRequest) {
     payload = decodePaymentSignatureHeader(paymentHeader);
   } catch {
     return NextResponse.json(
-      {
-        x402Version: X402_VERSION,
-        error: "invalid_payment_header",
-        accepts: [requirements],
-      },
+      paymentRequiredBody(tool, origin, "invalid_payment_header"),
       { status: 402 },
     );
   }
@@ -100,10 +110,8 @@ export async function POST(req: NextRequest) {
   if (!verify.valid) {
     return NextResponse.json(
       {
-        x402Version: X402_VERSION,
-        error: "payment_invalid",
+        ...paymentRequiredBody(tool, origin, "payment_invalid"),
         reason: verify.reason ?? "unspecified",
-        accepts: [requirements],
       },
       { status: 402 },
     );

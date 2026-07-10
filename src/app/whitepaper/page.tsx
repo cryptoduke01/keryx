@@ -288,11 +288,12 @@ export default function WhitepaperPage() {
         </P>
         <H3>4. Settle</H3>
         <P>
-          Every call splits 95% to the publisher's wallet and 5% to the
-          Keryx treasury. See{" "}
-          <a href="#settlement" style={linkStyle}>Settlement</a> for how
-          that split currently moves versus how it will move once onchain
-          settlement is fully live.
+          Onchain, <code style={codeInline}>transferWithAuthorization</code>{" "}
+          pays 100% of the call price to the publisher&apos;s{" "}
+          <code style={codeInline}>payTo</code> wallet. The 5% platform fee is
+          recorded on the public ledger today; a separate treasury split
+          transfer is roadmap. See{" "}
+          <a href="#settlement" style={linkStyle}>Settlement</a>.
         </P>
       </Section>
 
@@ -321,17 +322,17 @@ export default function WhitepaperPage() {
         </P>
         <P>
           Verification and settlement route through a swappable
-          facilitator. When{" "}
-          <code style={codeInline}>CIRCLE_GATEWAY_API_URL</code> is set,
-          Keryx uses{" "}
-          <code style={codeInline}>@circle-fin/x402-batching</code>'s
-          Gateway client &mdash; verify happens against Circle's endpoint
-          and settlement is batched onchain. Without that variable, Keryx
-          falls back to a demo facilitator that accepts well-formed
-          payloads and records a synthetic tx hash; the{" "}
-          <a href="/live" style={linkStyle}>/live</a> ledger tags those
-          entries as <b>demo</b> so nothing on the page misrepresents
-          onchain state.
+          facilitator, preferred in this order: (1) Circle Gateway when{" "}
+          <code style={codeInline}>CIRCLE_GATEWAY_API_URL</code> is set; (2)
+          local Arc facilitator when{" "}
+          <code style={codeInline}>KERYX_FACILITATOR_PRIVATE_KEY</code> is
+          set — real <code style={codeInline}>transferWithAuthorization</code>{" "}
+          broadcasts with Arcscan hashes; (3) demo facilitator that accepts
+          well-formed payloads and records a synthetic{" "}
+          <code style={codeInline}>demo_0x…</code> hash. The{" "}
+          <a href="/live" style={linkStyle}>/live</a> ledger tags{" "}
+          <b>gateway</b> / <b>local</b> / <b>demo</b> on every row. Production
+          at keryxhq.xyz typically runs <b>local</b> (real testnet USDC).
         </P>
         <P>
           The reason to batch through Circle Gateway rather than settle
@@ -394,11 +395,13 @@ export default function WhitepaperPage() {
 
       <Section id="economics" title="Economics">
         <P>
-          Keryx takes a flat 5% platform fee on every call, computed at
-          quote time and split at settlement. There is no listing fee, no
-          minimum volume, and no subscription on either side of the
-          market. A publisher earns from the first call. An agent pays
-          for exactly the calls it makes and nothing else.
+          Keryx quotes a flat 5% platform fee on every call. Today the
+          onchain transfer pays 100% of the call price to the publisher{" "}
+          <code style={codeInline}>payTo</code>; the 5% is ledger
+          accounting until split settlement ships. There is no listing
+          fee, no minimum volume, and no subscription. A publisher earns
+          from the first call. An agent pays for exactly the calls it
+          makes and nothing else.
         </P>
         <P>
           This only works economically because the calls themselves are
@@ -416,8 +419,9 @@ export default function WhitepaperPage() {
         </p>
         <Ul items={[
           <>✓ Clear handler contract for community publishers (publish a <code>handlerUrl</code>; Keryx forwards after payment). Seeded catalog at 20 practical tools (Solana onchain research, weather, finance/rates, geo, search, crypto market signals, utilities, time/uuid, etc.).</>,
-          <>○ Circle Gateway: fully implemented in code (prefers <code>CIRCLE_GATEWAY_API_URL</code> → real batched Gateway; falls back to local facilitator if private key present; otherwise demo). The production deployment at keryxhq.xyz is currently on demo (synthetic hashes). Nothing in the code prevents flipping — it is waiting on provisioning a real Circle Gateway account/URL.</>,
-          <>✓ Basic OpenAPI spec published at /keryx-openapi.json. First-party SDKs (Node/Python middleware) — not started (planned next).</>,
+          <>✓ Local Arc facilitator live on prod (real testnet USDC + Arcscan hashes). Circle Gateway coded and preferred when <code>CIRCLE_GATEWAY_API_URL</code> is set; otherwise local key; otherwise demo.</>,
+          <>✓ Agent discovery: <code>/.well-known/x402</code>, <code>/llms.txt</code>, free <code>/api/demo</code>, Bazaar-style <code>extensions.bazaar</code> on 402s, <code>/api/receipt/verify</code>, buyer quickstarts (<code>/quickstart.ts</code>, <code>/quickstart.py</code>).</>,
+          <>✓ Basic OpenAPI spec at /keryx-openapi.json. <code>@keryxhq/middleware</code> on npm. First-party Python SDK — planned next.</>,
         ]} />
         <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 8 }}>
           The three bullets below are the original aspirational list; the checkmarks above reflect what actually shipped.
@@ -434,15 +438,14 @@ export default function WhitepaperPage() {
           This is a v0.1 build, and this document is written to be honest
           about it rather than to oversell it. The x402 protocol path (402 +
           signed X-PAYMENT retry + verify/execute/settle) is real end-to-end.
-          The deployed site currently runs in <b>demo</b> mode (synthetic
-          hashes). When <code>CIRCLE_GATEWAY_API_URL</code> is set it uses
-          real batched Circle Gateway; when a local facilitator key is
-          configured it broadcasts directly on Arc. Persistence is Redis
-          when configured, otherwise in-memory (resets on cold start).
-          20 seeded tools are implemented and executable (Keryx calls real
-          public APIs). Community tools are executable when the publisher
-          supplies a <code>handlerUrl</code>. Not every interesting data
-          source has a cheap, machine-friendly public endpoint yet.
+          Production typically runs the <b>local</b> Arc facilitator (real
+          testnet USDC). Gateway is preferred when configured; demo is the
+          cold-clone fallback. Onchain settlement pays 100% to{" "}
+          <code>payTo</code>; the 5% platform fee is ledger accounting until
+          split settlement ships. <code>/ask</code> and MCP are sponsored
+          (not autonomous payers). Persistence is Redis when configured,
+          otherwise in-memory. Seeded tools hit live public APIs; community
+          tools need a <code>handlerUrl</code>.
         </P>
       </Section>
 

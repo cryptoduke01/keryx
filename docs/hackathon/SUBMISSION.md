@@ -25,7 +25,7 @@ Keryx solves the missing toll booth: a registry where publishers list tools at a
 **What it does:**
 - **Publishers** register HTTP tools with a price (USD) and Arc wallet at `/publish`. Paste an address to preview; sign with wallet to go live.
 - **Agents** discover tools via `GET /api/tools`, MCP (`/api/mcp`), or the `/ask` playground — a cost-aware agent that only spends when fresh data is worth the price.
-- **Pay per call:** `POST /api/call` returns HTTP 402 with machine-readable x402 requirements → agent signs EIP-3009 `transferWithAuthorization` → Keryx verifies, executes the handler, splits 95% publisher / 5% platform, and writes every call to a public ledger at `/live`.
+- **Pay per call:** `POST /api/call` returns HTTP 402 with machine-readable x402 requirements (plus root-level `extensions.bazaar`) → agent signs EIP-3009 `transferWithAuthorization` → Keryx verifies, executes the handler, settles USDC to publisher `payTo` on Arc, and writes every call to a public ledger at `/live`. The 5% platform fee is ledger accounting today (onchain transfer is 100% to payTo until split settlement).
 
 **Built during Lepton:**
 - Shipped **@keryxhq/middleware** on npm — wrap any Next.js or Express handler into a paid x402 endpoint in one line.
