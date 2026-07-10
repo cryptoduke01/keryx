@@ -90,7 +90,7 @@
     "/api/receipt/verify": {
       "post": {
         "summary": "Verify a settlement receipt",
-        "description": "Look up a public ledger entry by id or txHash. Returns proof tier R0–R4 + Arcscan link when onchain.",
+        "description": "Look up a public ledger entry by id or txHash. Returns proof tier R0–R5 (R5 = Arc eth_getTransactionReceipt success) + Arcscan link.",
         "requestBody": {
           "required": true,
           "content": {

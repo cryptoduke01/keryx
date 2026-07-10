@@ -1,12 +1,13 @@
 /**
  * POST /api/receipt/verify — free settlement trust check.
  * Agents (and judges) can prove a paid call beyond "we returned 200"
- * by looking up the public ledger entry + Arcscan link.
+ * by looking up the public ledger entry + Arc RPC receipt (R5).
  */
 
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { findLedgerEntry } from "@/lib/ledger";
+import { createPublicClient, http, type Hex } from "viem";
+import { findLedgerEntry, type LedgerEntry } from "@/lib/ledger";
 import { arcTestnet } from "@/lib/chains";
 
 export const runtime = "nodejs";
@@ -20,10 +21,57 @@ const BodySchema = z.object({
 
 type ProofTier = "R0" | "R1" | "R2" | "R3" | "R4" | "R5";
 
-function classify(entry: NonNullable<Awaited<ReturnType<typeof findLedgerEntry>>>): {
+interface ClassifyResult {
   tier: ProofTier;
   reasons: string[];
-} {
+  onchain?: {
+    status: "success" | "reverted" | "not_found";
+    blockNumber?: string;
+    blockHash?: string;
+    gasUsed?: string;
+    from?: string;
+    to?: string;
+  };
+}
+
+function isOnchainHash(txHash: string | undefined): txHash is string {
+  return Boolean(
+    txHash &&
+      txHash.startsWith("0x") &&
+      !txHash.startsWith("demo_") &&
+      txHash.length >= 66,
+  );
+}
+
+async function fetchArcReceipt(txHash: string): Promise<ClassifyResult["onchain"]> {
+  try {
+    const client = createPublicClient({
+      chain: arcTestnet,
+      transport: http(
+        process.env.NEXT_PUBLIC_ARC_RPC_URL ?? "https://rpc.testnet.arc.network",
+        { timeout: 8_000 },
+      ),
+    });
+    const receipt = await client.getTransactionReceipt({
+      hash: txHash as Hex,
+    });
+    if (!receipt) {
+      return { status: "not_found" };
+    }
+    return {
+      status: receipt.status === "success" ? "success" : "reverted",
+      blockNumber: receipt.blockNumber.toString(),
+      blockHash: receipt.blockHash,
+      gasUsed: receipt.gasUsed.toString(),
+      from: receipt.from,
+      to: receipt.to ?? undefined,
+    };
+  } catch {
+    return { status: "not_found" };
+  }
+}
+
+async function classify(entry: LedgerEntry): Promise<ClassifyResult> {
   const reasons: string[] = [];
   let tier: ProofTier = "R0";
 
@@ -51,17 +99,30 @@ function classify(entry: NonNullable<Awaited<ReturnType<typeof findLedgerEntry>>
   }
 
   if (
-    entry.txHash &&
-    entry.txHash.startsWith("0x") &&
-    !entry.txHash.startsWith("demo_") &&
+    isOnchainHash(entry.txHash) &&
     (entry.settlementMode === "local" || entry.settlementMode === "gateway")
   ) {
     tier = "R4";
     reasons.push("onchain_hash_shape_ok");
   }
 
-  // R5 reserved for future: RPC receipt confirmation against Arc.
-  return { tier, reasons };
+  let onchain: ClassifyResult["onchain"];
+  if (
+    isOnchainHash(entry.txHash) &&
+    (entry.settlementMode === "local" || entry.settlementMode === "gateway")
+  ) {
+    onchain = await fetchArcReceipt(entry.txHash);
+    if (onchain?.status === "success") {
+      tier = "R5";
+      reasons.push("arc_rpc_receipt_success");
+    } else if (onchain?.status === "reverted") {
+      reasons.push("arc_rpc_receipt_reverted");
+    } else {
+      reasons.push("arc_rpc_receipt_not_found");
+    }
+  }
+
+  return { tier, reasons, onchain };
 }
 
 export async function POST(req: Request) {
@@ -102,13 +163,10 @@ export async function POST(req: Request) {
     );
   }
 
-  const { tier, reasons } = classify(entry);
+  const { tier, reasons, onchain } = await classify(entry);
   const explorerBase = arcTestnet.blockExplorers?.default.url;
   const arcscan =
-    entry.txHash &&
-    entry.txHash.startsWith("0x") &&
-    !entry.txHash.startsWith("demo_") &&
-    explorerBase
+    isOnchainHash(entry.txHash) && explorerBase
       ? `${explorerBase}/tx/${entry.txHash}`
       : null;
 
@@ -117,6 +175,7 @@ export async function POST(req: Request) {
     found: true,
     tier,
     reasons,
+    onchain: onchain ?? null,
     entry: {
       id: entry.id,
       ts: entry.ts,
@@ -150,7 +209,10 @@ export async function GET() {
       R2: "Tx hash recorded",
       R3: "Settled via local or gateway facilitator (not demo)",
       R4: "Onchain-shaped hash + real facilitator mode",
-      R5: "Reserved — live RPC receipt confirmation",
+      R5: "Arc RPC eth_getTransactionReceipt confirmed success",
+    },
+    example: {
+      curl: `curl -sS -X POST https://keryxhq.xyz/api/receipt/verify -H 'content-type: application/json' -d '{"txHash":"0xeccf6b588a2ab9d53efa100796eadcd930d5aa4a6525109d2dadf45ea4a3cab8"}'`,
     },
   });
 }

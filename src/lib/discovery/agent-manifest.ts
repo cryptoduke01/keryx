@@ -118,7 +118,7 @@ export async function buildLlmsTxt(origin = KERYX_ORIGIN): Promise<string> {
     "",
     `- [${origin}/api/tools](${origin}/api/tools) — full registry (id, price, args schema, sampleArgs)`,
     `- [${origin}/api/demo](${origin}/api/demo)?toolId=crypto.price — free sample before pay (live upstream, no USDC)`,
-    `- [${origin}/api/receipt/verify](${origin}/api/receipt/verify) — POST {id|txHash} to prove a settlement (R0–R4 tiers)`,
+    `- [${origin}/api/receipt/verify](${origin}/api/receipt/verify) — POST {id|txHash} to prove a settlement (R0–R5; R5 = Arc RPC receipt)`,
     `- [${origin}/.well-known/x402](${origin}/.well-known/x402) — machine-readable x402 discovery manifest`,
     `- [${origin}/llms.txt](${origin}/llms.txt) — this file`,
     `- [${origin}/keryx-openapi.json](${origin}/keryx-openapi.json) — OpenAPI 3.1`,
