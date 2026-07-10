@@ -54,3 +54,6 @@ packages/*/node_modules
 .claude/
 .cursor/
 .cursor-plugin/
+
+# Local traction fleet wallets (never commit keys)
+.local/

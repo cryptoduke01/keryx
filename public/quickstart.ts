@@ -17,6 +17,7 @@ import { privateKeyToAccount } from "viem/accounts";
 
 const ORIGIN = process.env.KERYX_ORIGIN ?? "https://keryxhq.xyz";
 const TOOL_ID = process.env.KERYX_TOOL_ID ?? "crypto.price";
+const AGENT = process.env.KERYX_AGENT ?? "quickstart-ts";
 const ARGS = { ids: "bitcoin,ethereum" };
 
 async function main() {
@@ -44,7 +45,7 @@ async function main() {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      "x-keryx-agent": "quickstart-ts",
+      "x-keryx-agent": AGENT,
     },
     body: JSON.stringify({ toolId: TOOL_ID, args: ARGS }),
   });

@@ -41,9 +41,6 @@ importers:
       '@x402/core':
         specifier: ^2.15.0
         version: 2.17.0
-      '@x402/evm':
-        specifier: ^2.15.0
-        version: 2.17.0(typescript@5.9.3)
       '@x402/next':
         specifier: ^2.15.0
         version: 2.17.0(next@16.2.10(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(typescript@5.9.3)
@@ -90,6 +87,12 @@ importers:
       '@types/react-dom':
         specifier: ^19
         version: 19.2.3(@types/react@19.2.17)
+      '@x402/evm':
+        specifier: ^2.15.0
+        version: 2.17.0(typescript@5.9.3)
+      '@x402/fetch':
+        specifier: ^2.17.0
+        version: 2.17.0
       puppeteer:
         specifier: ^25.3.0
         version: 25.3.0
@@ -836,6 +839,9 @@ packages:
 
   '@x402/extensions@2.17.0':
     resolution: {integrity: sha512-oYQPLJkRWiSutEVAsyNxwKh4EyviG//s8Ms7Jwkx4J8csm1gd7TfCQTsLwDmieYA5B2Qp8ajebdTkL+bT9/sQA==}
+
+  '@x402/fetch@2.17.0':
+    resolution: {integrity: sha512-iy6ar1JTgs4gzdlc2q2Z7nuL5keBkQhoD4v5niVlTwLoivVvHnAA0p/wK5WTWRrJ1b+el8pthkjFS0Jc3nMIIg==}
 
   '@x402/next@2.17.0':
     resolution: {integrity: sha512-bVIifpst8kuTMtuwIkdQCus/fq7IkT93f9jKHeX122weRTAXn7tWzKernE9X3bXXWf9X8+ZEVacXu/q2RUJCgQ==}
@@ -2106,6 +2112,10 @@ snapshots:
       - ethers
       - typescript
       - utf-8-validate
+
+  '@x402/fetch@2.17.0':
+    dependencies:
+      '@x402/core': 2.17.0
 
   '@x402/next@2.17.0(next@16.2.10(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(typescript@5.9.3)':
     dependencies:
