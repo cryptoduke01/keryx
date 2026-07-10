@@ -1,10 +1,21 @@
 # Lepton Agents Hackathon — Submission Copy
 
-Paste these into the Google Form. Update the **video URL** after you upload your demo to YouTube (unlisted is fine).
+**Form is closed.** Keep this file as the source of truth for Discord / X redirects to judges.
 
-**Judge one-pager:** https://keryxhq.xyz/for-judges  
+**Judge one-pager (start here):** https://keryxhq.xyz/for-judges  
+**Autonomous buyer:** https://keryxhq.xyz/quickstart.ts · https://keryxhq.xyz/quickstart.py  
+**Receipt R5:** `POST https://keryxhq.xyz/api/receipt/verify`  
 **Pitch deck:** https://keryxhq.xyz/pitch  
 **SDK:** https://keryxhq.xyz/sdk · https://www.npmjs.com/package/@keryxhq/middleware
+
+---
+
+## Discord / X redirect (paste this)
+
+> Video shows the sponsored `/ask` UX. **Score agency on Step 1 of https://keryxhq.xyz/for-judges** — wallet quickstart → `POST /api/call` → receipt verify (R5 via Arc RPC) → Arcscan.  
+> Example R5:  
+> `curl -sS -X POST https://keryxhq.xyz/api/receipt/verify -H 'content-type: application/json' -d '{"txHash":"0xeccf6b588a2ab9d53efa100796eadcd930d5aa4a6525109d2dadf45ea4a3cab8"}'`  
+> Lepton track = Arc + USDC. `/okxasp` is a separate OKX.AI Genesis surface — do not mix rails.
 
 ---
 
@@ -24,37 +35,38 @@ Keryx solves the missing toll booth: a registry where publishers list tools at a
 
 **What it does:**
 - **Publishers** register HTTP tools with a price (USD) and Arc wallet at `/publish`. Paste an address to preview; sign with wallet to go live.
-- **Agents** discover tools via `GET /api/tools`, MCP (`/api/mcp`), or the `/ask` playground — a cost-aware agent that only spends when fresh data is worth the price.
-- **Pay per call:** `POST /api/call` returns HTTP 402 with machine-readable x402 requirements (plus root-level `extensions.bazaar`) → agent signs EIP-3009 `transferWithAuthorization` → Keryx verifies, executes the handler, settles USDC to publisher `payTo` on Arc, and writes every call to a public ledger at `/live`. The 5% platform fee is ledger accounting today (onchain transfer is 100% to payTo until split settlement).
+- **Agents (autonomous):** discover via `GET /api/tools`, `/.well-known/x402`, `/llms.txt`, then pay with `POST /api/call` (see `/quickstart.ts`).
+- **Agents (sponsored UX):** `/ask` and MCP are cost-aware / discoverable but **Keryx-sponsored** (no wallet in the client) — useful demos, not the agency score.
+- **Pay per call:** `POST /api/call` returns HTTP 402 with machine-readable x402 requirements + root-level `extensions.bazaar` → agent signs EIP-3009 `transferWithAuthorization` → Keryx verifies, executes, settles USDC to publisher `payTo` on Arc, writes `/live`. Prove with `POST /api/receipt/verify` (R5 = Arc `eth_getTransactionReceipt`). Onchain pay is 100% to `payTo`; 5% platform fee is ledger accounting until split settlement.
 
 **Built during Lepton:**
-- Shipped **@keryxhq/middleware** on npm — wrap any Next.js or Express handler into a paid x402 endpoint in one line.
-- MCP server so Cursor, Claude Code, and Copilot discover the full catalog without custom integration.
-- Cost-aware agent at `/ask` with economic reasoning before paid tool calls.
-- 20+ seeded tools (Solana price, token activity, web search, etc.) hitting real public APIs.
-- `KeryxRegistry.sol` deployed on Arc testnet; facilitator abstraction ready for Circle Gateway (`CIRCLE_GATEWAY_API_URL` flips prod from demo to real batched settlement).
+- **@keryxhq/middleware** on npm — wrap Next.js/Express into a paid x402 endpoint in one line.
+- MCP server for Cursor / Claude Code / Copilot (sponsored settlement).
+- Cost-aware `/ask` agent (sponsored).
+- 20+ seeded tools hitting real public APIs + free `/api/demo` samples.
+- Agent discovery: `/.well-known/x402`, `/llms.txt`, bazaar extensions, receipt verify, buyer quickstarts.
+- `KeryxRegistry.sol` on Arc testnet; facilitator: **local** (preferred, real Arcscan) → Gateway when `CIRCLE_GATEWAY_PREFERRED=true` + URL → demo fallback.
 
-**Stack:** Next.js 16, TypeScript, x402, USDC on Circle Arc (chain 5042002), EIP-3009 + EIP-191 publisher auth, MCP JSON-RPC, Vercel, `@keryxhq/middleware` (npm).
+**RFB fit (honest):** RFB05 nanopayment tooling + agent↔API commerce. **Not** claiming RFB01 agent-to-agent networks yet.
 
-**Try in 60 seconds:** https://keryxhq.xyz/try · https://keryxhq.xyz/ask · MCP URL: `https://keryxhq.xyz/api/mcp`
+**Stack:** Next.js 16, TypeScript, x402, USDC on Circle Arc (5042002), EIP-3009 + EIP-191, MCP, Vercel, `@keryxhq/middleware`.
+
+**Try in 60 seconds (agency path):**  
+https://keryxhq.xyz/for-judges → Step 1 · or `curl -O https://keryxhq.xyz/quickstart.ts && npx tsx quickstart.ts`  
+Free sample: https://keryxhq.xyz/api/demo?toolId=crypto.price
 
 ---
 
 ## Traction
 
-**Live product usage (as of submission):**
-- **402 paid tool calls** settled through the registry (public ledger: https://keryxhq.xyz/live)
-- **116 unique agent callers** (distinct `x-keryx-agent` identities)
-- **$1.06+ USDC** volume on testnet
-- **11 executable tools** in registry + publisher submissions
-
-**Distribution & validation:**
-- **@keryxhq/middleware** published on npm during the Lepton window
-- MCP listing submitted to Cursor Directory (agent discovery path)
+**Live product usage (update after tomorrow's wallet runs):**
+- Paid tool calls on public ledger: https://keryxhq.xyz/live
+- Prefer Arcscan-linked `local` rows and non-`web-*` caller IDs when citing volume
+- **@keryxhq/middleware** on npm during the Lepton window
 - Public repo: https://github.com/cryptoduke01/keryx (MIT)
 - X: [@keryxhq](https://x.com/keryxhq) · builder: [@dukedotsol](https://x.com/dukedotsol)
 
-Every call — success or failure — is auditable on `/live` with tool, price, caller, and settlement mode. Judges can reproduce a paid call in under a minute via `/try` or `/ask`.
+Judges: reproduce an **autonomous** paid call via `/quickstart.ts`, then `POST /api/receipt/verify`. Sponsored `/ask` is optional UX only.
 
 ---
 
@@ -76,13 +88,9 @@ Judge shortcuts: https://keryxhq.xyz/for-judges · https://keryxhq.xyz/pitch · 
 
 ## Project Video Demo
 
-**→ Upload `remotion/out/KeryxDemo-final.mp4` to YouTube (unlisted) and paste URL here.**
+**Locked in the Google Form** (~2:12): registry → `/ask` → ledger → publish → MCP.
 
-Suggested title: *Keryx — Paid tool registry for AI agents (Lepton demo)*
-
-Video covers (~2:12): registry browse → cost-aware agent at /ask → public ledger → publish flow → MCP integration → close.
-
-Subtitles are burned in.
+**Important for async judges:** the video shows sponsored UX. Score **agency** on https://keryxhq.xyz/for-judges Step 1 (wallet quickstart), not the playground alone.
 
 ---
 
@@ -96,48 +104,13 @@ Circle's `circlefin/arc-*` repos cover wallets, samples, and primitives. Keryx a
 
 | Primitive | What builders get |
 |-----------|-------------------|
-| **@keryxhq/middleware** | Drop-in x402 wrapper for Next.js / Express — 402, verify, settle without reimplementing payment headers |
-| **Facilitator abstraction** | Swap demo / local / Circle Gateway via env — same handler code |
-| **MCP registry pattern** | One URL exposes your entire paid tool catalog to Claude, Cursor, Copilot |
-| **Publisher flow** | EIP-191 signed listings + optional onchain mirror (`KeryxRegistry.sol`) |
-| **Agent playground** | Reference cost-aware agent that evaluates price before spending |
-
-A builder can: `npm i @keryxhq/middleware` → wrap their API → list on Keryx (or self-host the registry) → agents pay in USDC on Arc per call. That's a flow the Arc ecosystem doesn't have in one place today.
+| **@keryxhq/middleware** | Drop-in x402 wrapper for Next.js / Express |
+| **Facilitator abstraction** | Swap local / Circle Gateway / demo via env |
+| **Registry + MCP + discovery** | Catalog, `/.well-known/x402`, bazaar extensions, receipt R5 |
+| **KeryxRegistry.sol** | Onchain listing mirror on Arc |
 
 ---
 
-## Circle / Arc Feedback
+## Separate track
 
-**What worked:**
-- Arc testnet finality (~<500ms) makes per-call micropayments feel real — agents don't wait on L1 confirmations.
-- USDC-native gas at `0x3600` removes "fund wallet with ETH first" friction for agent wallets.
-- x402 + EIP-3009 is the right shape for machine callers: one signed authorization, one retry, one result.
-- Arcscan testnet explorer made demo verification easy for judges.
-
-**Where Arc can improve:**
-- **Gateway docs for agent builders:** The path from "I have a 402 endpoint" to "Circle Gateway settles batched USDC" could be one end-to-end tutorial with env vars and test vectors — we built a facilitator swap for this but it took reading multiple repos.
-- **Testnet USDC faucet reliability:** Onboarding new agent wallets during demos sometimes stalled on faucet rate limits; a dedicated builder faucet or higher limits would help hackathon velocity.
-- **MCP + x402 examples:** Most Arc samples assume human-initiated wallet flows; agent-initiated micropayment loops (402 → sign → retry) deserve a first-class sample alongside the wallet SDK demos.
-
----
-
-## General Feedback (Canteen / Lepton)
-
-**What worked:**
-- Lepton's agentic focus pushed us to ship a *cost-aware* agent, not just a payment demo — that made the product sharper.
-- Circle/Arc tooling was enough to get real USDC settlement on testnet without building our own chain infra.
-- The judging dimensions (agentic sophistication, traction, Circle usage, innovation) were clear and shaped what we prioritized.
-
-**What could improve:**
-- Earlier clarity on **returning builder** vs. new submission expectations would help teams scope "build progress during Lepton" vs. full greenfield.
-- A shared **demo video checklist** (length, subtitles, must-show flows) earlier in the sprint would reduce last-minute scramble.
-- Optional **office hours slot** specifically for x402 + Gateway integration questions — several teams hit the same facilitator wiring issues.
-
----
-
-## Quick checklist before submit
-
-- [ ] Upload video to YouTube → paste URL in form
-- [ ] Confirm repo is public: https://github.com/cryptoduke01/keryx
-- [ ] Smoke test: https://keryxhq.xyz/ask and https://keryxhq.xyz/live
-- [ ] Point judges to https://keryxhq.xyz/for-judges
+**OKX.AI Genesis** (`/okxasp`) is X Layer + USDT0 + Agent Payments Protocol — same builder, **not** the Lepton/Arc submission.

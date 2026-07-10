@@ -100,7 +100,7 @@ export default async function ForJudgesPage() {
       >
         <Stat label="Paid calls settled" value={String(stats.callCount)} />
         <Stat label="Executable tools" value={String(executableCount)} />
-        <Stat label="Unique agent callers" value={String(Math.max(1, stats.callerCount))} />
+        <Stat label="Unique agent callers" value={String(stats.callerCount)} />
         <Stat label="Facilitator" value={facilitatorMode} />
       </div>
 
@@ -195,9 +195,11 @@ npx tsx quickstart.ts`}
           <li style={{ marginBottom: 8 }}>
             <b style={{ color: "var(--text-primary)" }}>gateway</b> = Circle
             Gateway batched settlement when{" "}
-            <code style={code}>CIRCLE_GATEWAY_API_URL</code> is set. Coded in{" "}
-            <code style={code}>src/lib/x402/facilitator.ts</code>; awaiting
-            Circle account provisioning to flip default.
+            <code style={code}>CIRCLE_GATEWAY_PREFERRED=true</code> and{" "}
+            <code style={code}>CIRCLE_GATEWAY_API_URL</code> are set. Coded in{" "}
+            <code style={code}>src/lib/x402/facilitator.ts</code>. Local is the
+            default when a facilitator key is present (Gateway was failing
+            sponsored settles when preferred blindly).
           </li>
           <li style={{ marginBottom: 8 }}>
             <b style={{ color: "var(--text-primary)" }}>demo</b> = cold-clone
@@ -285,7 +287,7 @@ npx tsx quickstart.ts`}
         />
         <Dimension
           weight="30% Traction"
-          summary={`${stats.callCount} paid calls · ${Math.max(1, stats.callerCount)} unique callers · SDK on npm.`}
+          summary={`${stats.callCount} paid calls · ${stats.callerCount} unique callers · SDK on npm.`}
           detail={
             <>
               Public ledger at{" "}
@@ -307,9 +309,9 @@ npx tsx quickstart.ts`}
             <>
               Real 402 → EIP-3009 → settle on Arc. Bazaar{" "}
               <code style={code}>extensions.bazaar</code> on 402 root. Receipt
-              verify reaches <b>R5</b> via Arc RPC. Circle Gateway flips on{" "}
-              <code style={code}>CIRCLE_GATEWAY_API_URL</code> with no code
-              change (
+              verify reaches <b>R5</b> via Arc RPC. Local facilitator is the
+              default when a key is present; Circle Gateway is opt-in via{" "}
+              <code style={code}>CIRCLE_GATEWAY_PREFERRED=true</code> (
               <Link href="/whitepaper#settlement" style={inlineLink}>
                 whitepaper
               </Link>

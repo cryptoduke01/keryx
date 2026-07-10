@@ -614,12 +614,12 @@ async function handleDemoContentBlock(ctx: CallContext) {
   const snippets: Record<string, string> = {
     "what is x402": "x402 is the HTTP 402 Payment Required standard for pay-per-request APIs. Client gets 402 with price, signs USDC auth, retries with X-Payment header.",
     "arc": "Arc is Circle's stablecoin-native L1. Gas in USDC, sub-second finality, designed for micropayments and agents.",
-    general: "This is a demo paid snippet. In production the publisher would return their real content after Keryx settled the 95%.",
+    general: "This is a demo paid snippet. In production the publisher returns real content after Keryx settles USDC to their payTo wallet.",
   };
   return {
     topic,
     snippet: snippets[topic] || snippets.general,
-    note: "Demo external publisher tool — 95% would settle to the listed publisher wallet.",
+    note: "Demo external publisher tool — onchain settlement pays 100% of the call price to the listed publisher wallet (payTo).",
     source: "demo-external-publisher",
   };
 }

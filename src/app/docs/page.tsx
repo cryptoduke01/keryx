@@ -138,8 +138,11 @@ export default function DocsPage() {
           For autonomous paid calls, use <code>POST /api/call</code> with a buyer wallet — see{" "}
           <a href="/quickstart.ts">/quickstart.ts</a> and <a href="/quickstart.py">/quickstart.py</a>.
           Free sample first: <a href="/api/demo?toolId=crypto.price"><code>/api/demo</code></a>.
-          Production settles via the local Arc facilitator when <code>KERYX_FACILITATOR_PRIVATE_KEY</code> is set,
-          or Circle Gateway when <code>CIRCLE_GATEWAY_API_URL</code> is set; otherwise demo (synthetic hashes).
+          Production settles via the <b>local</b> Arc facilitator when a
+          facilitator key is present (real Arcscan txs). Set{" "}
+          <code>CIRCLE_GATEWAY_PREFERRED=true</code> +{" "}
+          <code>CIRCLE_GATEWAY_API_URL</code> to force Circle Gateway; otherwise
+          demo (synthetic hashes) on cold clones.
         </p>
 
         <CodeBlock

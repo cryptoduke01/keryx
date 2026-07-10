@@ -10,7 +10,7 @@
 [![x402](https://img.shields.io/badge/x402-micropayments-orange?style=flat)](https://github.com/coinbase/x402)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Live:** [keryxhq.xyz](https://keryxhq.xyz) • **Docs:** [keryxhq.xyz/docs](https://keryxhq.xyz/docs) • **Ledger:** [keryxhq.xyz/live](https://keryxhq.xyz/live)
+**Live:** [keryxhq.xyz](https://keryxhq.xyz) • **Judges:** [keryxhq.xyz/for-judges](https://keryxhq.xyz/for-judges) • **Docs:** [keryxhq.xyz/docs](https://keryxhq.xyz/docs) • **Ledger:** [keryxhq.xyz/live](https://keryxhq.xyz/live)
 
 </div>
 
@@ -32,7 +32,7 @@ Agents are becoming the primary consumers of software — yet they still have to
 
 - A tool is just an HTTP endpoint + price + wallet.
 - An agent pays exactly once per call using x402 micropayments.
-- Settlement is real (or demo), fast, and auditable on a public ledger.
+- Settlement is real USDC on Arc (local facilitator; Circle Gateway when preferred), fast, and auditable on a public ledger.
 
 Payment + execution happen in the same round-trip.
 
@@ -197,7 +197,7 @@ v0.1. The payment rail is real.
 
 - `POST /api/call` correctly returns HTTP 402 + machine-readable payment requirements.
 - Publisher ownership is enforced with EIP-191 signatures.
-- Real on-chain settlement when `CIRCLE_GATEWAY_*` vars are set.
+- Real on-chain settlement via local Arc facilitator (`KERYX_FACILITATOR_PRIVATE_KEY`) or Circle Gateway (`CIRCLE_GATEWAY_PREFERRED=true` + `CIRCLE_GATEWAY_API_URL`).
 - Community tools are accepted but flagged `verified: false` until reviewed.
 - Next milestone on the [whitepaper](https://keryxhq.xyz/whitepaper): external handler hosting so publishers run their own endpoints.
 

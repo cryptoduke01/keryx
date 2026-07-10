@@ -345,7 +345,7 @@ export const SEEDED_TOOLS: ToolDefinition[] = [
   {
     id: "demo.content-block",
     name: "Paid Creator Snippet",
-    summary: "Example of a paid creator tool. Returns a monetized knowledge snippet. 95% of the fee lands directly in the external creator's Arc wallet (0x3AfD…B34E), not the Keryx treasury. Click the tx hash on /live to verify onchain.",
+    summary: "Example of a paid creator tool. Returns a monetized knowledge snippet. Onchain payTo is the external creator's Arc wallet (0x3AfD…B34E), not the Keryx treasury — click the tx hash on /live to verify.",
     category: "web",
     priceUsd: 0.004,
     publisherWallet: "0x3AfD3EF93cd406eBBd76fc1b32C58492FAd4B34E" as const,

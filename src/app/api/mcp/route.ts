@@ -10,11 +10,10 @@
  * response body is one JSON-RPC message. No SSE, no sessions. That's enough
  * for tools/list + tools/call, which are the two verbs that matter.
  *
- * Payment: MCP callers don't carry wallets today, so this route bypasses
- * x402 and executes tools directly. The demo is subsidized by Keryx and the
- * ledger tags calls as mode="demo" (see settlementMode on LedgerEntry). When
- * MCP grows a wallet primitive, this route will start routing through
- * /api/call with a signed X-PAYMENT header instead.
+ * Payment: MCP callers don't carry wallets today, so this route is
+ * Keryx-sponsored. In `local` mode we still settle onchain via
+ * signSelfAuthorization (facilitator wallet pays); ledger tags the real
+ * facilitator mode. Autonomous buyers should use POST /api/call + a wallet.
  */
 
 import { NextResponse, type NextRequest } from "next/server";

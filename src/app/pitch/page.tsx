@@ -93,7 +93,7 @@ export default function PitchPage() {
             <li>Any developer publishes an HTTP endpoint at a price, points it at an Arc wallet, and it's live in a minute. No accounts.</li>
             <li>Any AI agent — <strong>Cursor, Claude, GitHub Copilot, custom</strong> — discovers it via MCP and pays per call in USDC on Circle Arc.</li>
             <li style={{ fontSize: "0.95em", opacity: 0.9 }}>Works in Cursor, Claude (connectors), GitHub Copilot, and any MCP client. One-line config.</li>
-            <li>The unit of access is the call, not the account. 95% to the publisher, 5% to Keryx, no listing fee, no minimum. Paste address supported for preview (sign to publish).</li>
+            <li>The unit of access is the call, not the account. Publisher is payTo onchain (100% of the call today); 5% platform fee is ledger accounting until split settlement. No listing fee, no minimum. Paste address supported for preview (sign to publish).</li>
             <li>Every payment settles onchain in under half a second. Every settlement has a real Arcscan tx hash.</li>
             <li><i>Not</i> "pay for things that are free on the web". Keryx is the payment + discovery layer for capabilities agents are willing to pay for — today public data with reliability, tomorrow paid creator tools and proprietary sources.</li>
           </ul>

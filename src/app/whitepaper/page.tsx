@@ -322,12 +322,13 @@ export default function WhitepaperPage() {
         </P>
         <P>
           Verification and settlement route through a swappable
-          facilitator, preferred in this order: (1) Circle Gateway when{" "}
-          <code style={codeInline}>CIRCLE_GATEWAY_API_URL</code> is set; (2)
-          local Arc facilitator when{" "}
+          facilitator, preferred in this order: (1) local Arc facilitator when{" "}
           <code style={codeInline}>KERYX_FACILITATOR_PRIVATE_KEY</code> is
           set — real <code style={codeInline}>transferWithAuthorization</code>{" "}
-          broadcasts with Arcscan hashes; (3) demo facilitator that accepts
+          broadcasts with Arcscan hashes; (2) Circle Gateway when{" "}
+          <code style={codeInline}>CIRCLE_GATEWAY_PREFERRED=true</code> and{" "}
+          <code style={codeInline}>CIRCLE_GATEWAY_API_URL</code> are set (or
+          when no local key exists); (3) demo facilitator that accepts
           well-formed payloads and records a synthetic{" "}
           <code style={codeInline}>demo_0x…</code> hash. The{" "}
           <a href="/live" style={linkStyle}>/live</a> ledger tags{" "}
@@ -419,7 +420,7 @@ export default function WhitepaperPage() {
         </p>
         <Ul items={[
           <>✓ Clear handler contract for community publishers (publish a <code>handlerUrl</code>; Keryx forwards after payment). Seeded catalog at 20 practical tools (Solana onchain research, weather, finance/rates, geo, search, crypto market signals, utilities, time/uuid, etc.).</>,
-          <>✓ Local Arc facilitator live on prod (real testnet USDC + Arcscan hashes). Circle Gateway coded and preferred when <code>CIRCLE_GATEWAY_API_URL</code> is set; otherwise local key; otherwise demo.</>,
+          <>✓ Local Arc facilitator preferred on prod when <code>KERYX_FACILITATOR_PRIVATE_KEY</code> is set (real testnet USDC + Arcscan). Circle Gateway when <code>CIRCLE_GATEWAY_PREFERRED=true</code> + <code>CIRCLE_GATEWAY_API_URL</code>; otherwise demo.</>,
           <>✓ Agent discovery: <code>/.well-known/x402</code>, <code>/llms.txt</code>, free <code>/api/demo</code>, Bazaar-style <code>extensions.bazaar</code> on 402s, <code>/api/receipt/verify</code>, buyer quickstarts (<code>/quickstart.ts</code>, <code>/quickstart.py</code>).</>,
           <>✓ Basic OpenAPI spec at /keryx-openapi.json. <code>@keryxhq/middleware</code> on npm. First-party Python SDK — planned next.</>,
         ]} />
@@ -435,17 +436,19 @@ export default function WhitepaperPage() {
 
       <Section id="risks" title="Known limitations">
         <P>
-          This is a v0.1 build, and this document is written to be honest
-          about it rather than to oversell it. The x402 protocol path (402 +
-          signed X-PAYMENT retry + verify/execute/settle) is real end-to-end.
-          Production typically runs the <b>local</b> Arc facilitator (real
-          testnet USDC). Gateway is preferred when configured; demo is the
-          cold-clone fallback. Onchain settlement pays 100% to{" "}
-          <code>payTo</code>; the 5% platform fee is ledger accounting until
-          split settlement ships. <code>/ask</code> and MCP are sponsored
-          (not autonomous payers). Persistence is Redis when configured,
-          otherwise in-memory. Seeded tools hit live public APIs; community
-          tools need a <code>handlerUrl</code>.
+          This is a v0.1 build, written to be honest rather than oversold.
+          The x402 path (402 + signed X-PAYMENT + verify/execute/settle) is
+          real end-to-end. Production settles via the <b>local</b> Arc
+          facilitator when a facilitator key is present (real Arcscan txs).
+          Circle Gateway is coded and flips on with{" "}
+          <code style={codeInline}>CIRCLE_GATEWAY_PREFERRED=true</code> +{" "}
+          <code style={codeInline}>CIRCLE_GATEWAY_API_URL</code>. Without
+          either, cold clones run <b>demo</b> (synthetic hashes). Persistence
+          is Redis when configured, otherwise in-memory. Onchain settlement
+          pays 100% to <code>payTo</code>; the 5% platform fee is ledger
+          accounting until split settlement ships. <code>/ask</code> and MCP
+          are sponsored (not autonomous payers). Seeded tools hit live public
+          APIs; community tools need a <code>handlerUrl</code>.
         </P>
       </Section>
 

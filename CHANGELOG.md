@@ -14,7 +14,7 @@
 **Billing clarification (unchanged behavior, clearer wording in `/docs#mcp`):**
 
 - Direct HTTP calls to `POST /api/call` speak real x402: HTTP 402 with machine-readable payment requirements, EIP-3009 `transferWithAuthorization` retry via `X-PAYMENT`, verify + execute + settle in one round trip.
-- MCP-initiated calls (from Cursor, Claude, GitHub Copilot, and other MCP clients) are currently subsidized in demo mode: the endpoint executes the tool and logs the call to the public ledger, but does not require a signed payment authorization because current MCP clients do not carry an agent wallet. This is explicitly stated on the docs page. When MCP clients gain a payment-header primitive, the same endpoint will require an `X-PAYMENT` header and stop subsidizing.
+- MCP-initiated calls (from Cursor, Claude, GitHub Copilot, and other MCP clients) are currently **Keryx-sponsored**: the endpoint executes the tool and may settle onchain via the local facilitator wallet (`signSelfAuthorization`), but the MCP client does not present its own payment. This is stated on `/docs` and `/llms.txt`. Autonomous buyers use `POST /api/call` + a wallet (see `/quickstart.ts`).
 - No behavior in this plugin release changes billing. The plugin exposes the MCP endpoint (`https://keryxhq.xyz/api/mcp`). Where and how each call settles is determined by the transport, and both paths are documented.
 
 ## 0.1.2 — earlier

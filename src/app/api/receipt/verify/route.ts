@@ -2,6 +2,9 @@
  * POST /api/receipt/verify — free settlement trust check.
  * Agents (and judges) can prove a paid call beyond "we returned 200"
  * by looking up the public ledger entry + Arc RPC receipt (R5).
+ *
+ * If the ledger row has rotated out but a real 0x txHash is supplied,
+ * we still run Arc RPC and can return R5 from chain alone.
  */
 
 import { NextResponse } from "next/server";
@@ -21,17 +24,19 @@ const BodySchema = z.object({
 
 type ProofTier = "R0" | "R1" | "R2" | "R3" | "R4" | "R5";
 
+interface OnchainReceipt {
+  status: "success" | "reverted" | "not_found";
+  blockNumber?: string;
+  blockHash?: string;
+  gasUsed?: string;
+  from?: string;
+  to?: string;
+}
+
 interface ClassifyResult {
   tier: ProofTier;
   reasons: string[];
-  onchain?: {
-    status: "success" | "reverted" | "not_found";
-    blockNumber?: string;
-    blockHash?: string;
-    gasUsed?: string;
-    from?: string;
-    to?: string;
-  };
+  onchain?: OnchainReceipt;
 }
 
 function isOnchainHash(txHash: string | undefined): txHash is string {
@@ -43,7 +48,7 @@ function isOnchainHash(txHash: string | undefined): txHash is string {
   );
 }
 
-async function fetchArcReceipt(txHash: string): Promise<ClassifyResult["onchain"]> {
+async function fetchArcReceipt(txHash: string): Promise<OnchainReceipt> {
   try {
     const client = createPublicClient({
       chain: arcTestnet,
@@ -71,7 +76,7 @@ async function fetchArcReceipt(txHash: string): Promise<ClassifyResult["onchain"
   }
 }
 
-async function classify(entry: LedgerEntry): Promise<ClassifyResult> {
+async function classifyFromLedger(entry: LedgerEntry): Promise<ClassifyResult> {
   const reasons: string[] = [];
   let tier: ProofTier = "R0";
 
@@ -106,16 +111,16 @@ async function classify(entry: LedgerEntry): Promise<ClassifyResult> {
     reasons.push("onchain_hash_shape_ok");
   }
 
-  let onchain: ClassifyResult["onchain"];
+  let onchain: OnchainReceipt | undefined;
   if (
     isOnchainHash(entry.txHash) &&
     (entry.settlementMode === "local" || entry.settlementMode === "gateway")
   ) {
     onchain = await fetchArcReceipt(entry.txHash);
-    if (onchain?.status === "success") {
+    if (onchain.status === "success") {
       tier = "R5";
       reasons.push("arc_rpc_receipt_success");
-    } else if (onchain?.status === "reverted") {
+    } else if (onchain.status === "reverted") {
       reasons.push("arc_rpc_receipt_reverted");
     } else {
       reasons.push("arc_rpc_receipt_not_found");
@@ -123,6 +128,33 @@ async function classify(entry: LedgerEntry): Promise<ClassifyResult> {
   }
 
   return { tier, reasons, onchain };
+}
+
+async function classifyFromChainOnly(txHash: string): Promise<ClassifyResult> {
+  const reasons = ["ledger_row_missing", "chain_lookup_only"];
+  if (!isOnchainHash(txHash)) {
+    return { tier: "R0", reasons: [...reasons, "not_onchain_hash"] };
+  }
+  const onchain = await fetchArcReceipt(txHash);
+  if (onchain.status === "success") {
+    return {
+      tier: "R5",
+      reasons: [...reasons, "arc_rpc_receipt_success"],
+      onchain,
+    };
+  }
+  if (onchain.status === "reverted") {
+    return {
+      tier: "R0",
+      reasons: [...reasons, "arc_rpc_receipt_reverted"],
+      onchain,
+    };
+  }
+  return {
+    tier: "R0",
+    reasons: [...reasons, "arc_rpc_receipt_not_found"],
+    onchain,
+  };
 }
 
 export async function POST(req: Request) {
@@ -150,21 +182,38 @@ export async function POST(req: Request) {
   }
 
   const entry = await findLedgerEntry({ id, txHash });
+  const explorerBase = arcTestnet.blockExplorers?.default.url;
+
   if (!entry) {
+    if (txHash && isOnchainHash(txHash)) {
+      const { tier, reasons, onchain } = await classifyFromChainOnly(txHash);
+      const arcscan = explorerBase ? `${explorerBase}/tx/${txHash}` : null;
+      return NextResponse.json({
+        ok: tier === "R5",
+        found: false,
+        tier,
+        reasons,
+        onchain: onchain ?? null,
+        entry: null,
+        economicsNote:
+          "Ledger row not in the public window; proof is from Arc RPC only.",
+        arcscan,
+        live: "https://keryxhq.xyz/live",
+      });
+    }
     return NextResponse.json(
       {
         ok: false,
         found: false,
         tier: "R0" as ProofTier,
         reasons: ["not_in_public_ledger_window"],
-        hint: "Ledger is a ring buffer; older entries may have rotated out.",
+        hint: "Ledger is a ring buffer; older entries may have rotated out. Pass a real 0x txHash for chain-only R5.",
       },
       { status: 404 },
     );
   }
 
-  const { tier, reasons, onchain } = await classify(entry);
-  const explorerBase = arcTestnet.blockExplorers?.default.url;
+  const { tier, reasons, onchain } = await classifyFromLedger(entry);
   const arcscan =
     isOnchainHash(entry.txHash) && explorerBase
       ? `${explorerBase}/tx/${entry.txHash}`
@@ -209,7 +258,7 @@ export async function GET() {
       R2: "Tx hash recorded",
       R3: "Settled via local or gateway facilitator (not demo)",
       R4: "Onchain-shaped hash + real facilitator mode",
-      R5: "Arc RPC eth_getTransactionReceipt confirmed success",
+      R5: "Arc RPC eth_getTransactionReceipt confirmed success (ledger or chain-only)",
     },
     example: {
       curl: `curl -sS -X POST https://keryxhq.xyz/api/receipt/verify -H 'content-type: application/json' -d '{"txHash":"0xeccf6b588a2ab9d53efa100796eadcd930d5aa4a6525109d2dadf45ea4a3cab8"}'`,

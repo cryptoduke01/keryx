@@ -12,8 +12,9 @@
  *     result + a ledger entry that carries the tx hash.
  *
  * Which facilitator runs is decided by env (see src/lib/x402/facilitator.ts):
- * Circle Gateway when configured, demo when not. The wire protocol is the same
- * either way, so the /docs curl example works in both.
+ * local Arc facilitator when KERYX_FACILITATOR_PRIVATE_KEY is set (preferred),
+ * Circle Gateway when CIRCLE_GATEWAY_API_URL is set (or forced via
+ * CIRCLE_GATEWAY_PREFERRED=true), otherwise demo. Wire protocol is identical.
  */
 
 import { NextResponse, type NextRequest } from "next/server";

@@ -3,20 +3,17 @@
  *
  * Three settlement modes, picked from env at boot:
  *
- *  1. `gateway`  — real Circle Gateway. Batched onchain USDC on Arc.
- *                  Requires CIRCLE_GATEWAY_API_URL (+ credentials Circle issues you).
- *                  This is the production path we want to be on for the demo.
+ *  1. `local`    — Keryx's own facilitator wallet broadcasts USDC
+ *                  transferWithAuthorization on Arc. Requires
+ *                  KERYX_FACILITATOR_PRIVATE_KEY. Preferred when present —
+ *                  this is the proven production path (real Arcscan txs).
  *
- *  2. `local`    — Keryx's own facilitator wallet broadcasts USDC transfers
- *                  directly on Arc. Requires KERYX_FACILITATOR_PRIVATE_KEY and
- *                  an RPC. Useful when Gateway creds aren't in hand yet but the
- *                  wallet has testnet USDC.
+ *  2. `gateway`  — Circle Gateway batched settlement. Requires
+ *                  CIRCLE_GATEWAY_API_URL. Used when no local key is set,
+ *                  or when CIRCLE_GATEWAY_PREFERRED=true forces Gateway.
  *
- *  3. `demo`     — no external calls. Accepts any well-formed X-PAYMENT payload
- *                  as valid and returns a synthetic tx hash. This is what a
- *                  cold-cloned fork runs by default; the /live ledger clearly
- *                  labels demo-mode entries so nothing misrepresents onchain
- *                  state.
+ *  3. `demo`     — no external calls. Accepts well-formed X-PAYMENT payloads
+ *                  and returns a synthetic demo_0x… hash. Cold-clone default.
  *
  * The x402 protocol shape (402 + PaymentRequirements + X-PAYMENT retry) is
  * identical across all three modes; only verify/settle differ.
@@ -51,13 +48,22 @@ let cached: KeryxFacilitator | null = null;
 export function getFacilitator(): KeryxFacilitator {
   if (cached) return cached;
 
-  const gatewayUrl = process.env.CIRCLE_GATEWAY_API_URL;
+  const gatewayUrl = process.env.CIRCLE_GATEWAY_API_URL?.trim();
+  const preferGateway = process.env.CIRCLE_GATEWAY_PREFERRED === "true";
+  const local = tryBuildLocalFacilitator();
+
+  // Prefer proven local Arc settlement when a facilitator key is present.
+  // Gateway is opt-in via CIRCLE_GATEWAY_PREFERRED=true (or when no local key).
+  if (local && !preferGateway) {
+    cached = local;
+    return cached;
+  }
+
   if (gatewayUrl) {
     cached = buildGatewayFacilitator(gatewayUrl);
     return cached;
   }
 
-  const local = tryBuildLocalFacilitator();
   if (local) {
     cached = local;
     return cached;
