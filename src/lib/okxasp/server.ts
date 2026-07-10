@@ -32,13 +32,19 @@ import {
   slugForToolId,
 } from "@/lib/okxasp/config";
 
-/** USDT0 on X Layer mainnet (6 decimals). */
-export const OKX_USDT0 = "0x779ded0c9e1022225f8e0630b35a9b54be713736" as const;
+/**
+ * USDT0 on X Layer mainnet (6 decimals).
+ * EIP-55 checksum matches OKX docs / xlayer-tokenlist.
+ */
+export const OKX_USDT0 =
+  "0x779Ded0c9e1022225f8E0630b35a9b54bE713736" as const;
 
 /**
- * Exact scheme that keeps USDT0 `decimals` on the 402 challenge.
- * Marketplace / x402-check fail when the asset is outside their token list
- * and `extra.decimals` is missing. Stock ExactEvmScheme only writes name/version.
+ * Match OKX's own 402 `extra` shape (see web3.okx.com dex market APIs):
+ * `{ version, symbol, name, transferMethod: "eip3009" }`.
+ * Missing `symbol` / `transferMethod` makes `onchainos x402-check` report
+ * `tokenSymbol: "UNKNOWN"` and marketplace listing QA can reject as
+ * "x402 standard validation" failed.
  */
 class OkxExactEvmScheme extends ExactEvmScheme {
   override enhancePaymentRequirements(
@@ -55,8 +61,13 @@ class OkxExactEvmScheme extends ExactEvmScheme {
       .enhancePaymentRequirements(paymentRequirements, supportedKind, extensionKeys)
       .then((req) => ({
         ...req,
+        asset: OKX_USDT0,
         extra: {
           ...(req.extra ?? {}),
+          version: "1",
+          symbol: "USD₮0",
+          name: "USD₮0",
+          transferMethod: "eip3009",
           decimals: 6,
         },
       }));
@@ -166,7 +177,13 @@ export function getOkxPaymentProtect(): ProtectFn {
           payTo,
           price: priceUsdToOkxPrice(tool.priceUsd),
           maxTimeoutSeconds: 300,
-          extra: { decimals: 6 },
+          extra: {
+            version: "1",
+            symbol: "USD₮0",
+            name: "USD₮0",
+            transferMethod: "eip3009",
+            decimals: 6,
+          },
           description: tool.summary,
           mimeType: "application/json",
         },

@@ -136,6 +136,16 @@ async function ensureProtocolChallengeBody(res: Response): Promise<Response> {
 
     const headers = new Headers(res.headers);
     headers.set("Content-Type", "application/json");
+    // Match OKX seller APIs — expose PAYMENT-REQUIRED for browser/agent clients.
+    const expose = headers.get("Access-Control-Expose-Headers") ?? "";
+    if (!/PAYMENT-REQUIRED/i.test(expose)) {
+      headers.set(
+        "Access-Control-Expose-Headers",
+        expose
+          ? `${expose}, PAYMENT-REQUIRED, WWW-Authenticate`
+          : "PAYMENT-REQUIRED, WWW-Authenticate",
+      );
+    }
     return new Response(JSON.stringify(challenge), {
       status: res.status,
       headers,
