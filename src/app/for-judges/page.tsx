@@ -19,7 +19,7 @@ const NPM = "https://www.npmjs.com/package/@keryxhq/middleware";
 const MCP_URL = "https://keryxhq.xyz/api/mcp";
 /** Fallback proof tx if the live ledger window has no onchain paid row. */
 const FALLBACK_TX =
-  "0xeccf6b588a2ab9d53efa100796eadcd930d5aa4a6525109d2dadf45ea4a3cab8";
+  "0xf1d3afcef3a0037036b4ac2cf24560d67ba7d5aee10bf23850243dcbc381cec1";
 
 export default async function ForJudgesPage() {
   const [tools, stats, recent] = await Promise.all([
@@ -99,6 +99,10 @@ export default async function ForJudgesPage() {
         }}
       >
         <Stat label="Paid calls settled" value={String(stats.callCount)} />
+        <Stat
+          label="Volume settled"
+          value={`$${stats.totalPaidUsd.toFixed(3)}`}
+        />
         <Stat label="Executable tools" value={String(executableCount)} />
         <Stat label="Unique agent callers" value={String(stats.callerCount)} />
         <Stat label="Facilitator" value={facilitatorMode} />
@@ -287,14 +291,15 @@ npx tsx quickstart.ts`}
         />
         <Dimension
           weight="30% Traction"
-          summary={`${stats.callCount} paid calls · ${stats.callerCount} unique callers · SDK on npm.`}
+          summary={`${stats.callCount} paid calls · $${stats.totalPaidUsd.toFixed(3)} USDC · ${stats.callerCount} unique callers · SDK on npm.`}
           detail={
             <>
               Public ledger at{" "}
               <Link href="/live" style={inlineLink}>/live</Link>. Prefer
               Arcscan-linked <code style={code}>local</code> rows over
               sponsored <code style={code}>web-*</code> playground traffic when
-              reading volume.{" "}
+              reading volume. Fleet + wallet quickstarts settle onchain; R5 via{" "}
+              <code style={code}>POST /api/receipt/verify</code>.{" "}
               <a href={NPM} target="_blank" rel="noreferrer" style={inlineLink}>
                 @keryxhq/middleware
               </a>{" "}

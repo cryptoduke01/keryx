@@ -186,6 +186,7 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 - [x] Settlement proof tx on X Layer testnet: `0x20a15b12c65d4813f6af197257555a0ad0e284b2d81752b581b5cb34f3369273`
 - [x] Listing submitted — status: **Listing under review** (AI quality review suggested pass)
 - [x] Funded Agentic Wallet (~0.2 OKB + 10 USDT) for paid-call smoke tests
+- [ ] **Avatar fix (OKX feedback Jul 10):** replace classical/art avatar with Finance Copilot icon → `public/inspo/okx-asp-avatar.png` → resubmit listing via Onchain OS agent chat
 - [ ] Wait for marketplace approval / go live on OKX.AI
 - [ ] Google form before Jul 17, 00:00 UTC: https://forms.gle/mddEUagmDbyV37ws8
 - [ ] X post with `#okxai` + ≤90s demo

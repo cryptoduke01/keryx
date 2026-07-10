@@ -1,20 +1,24 @@
 # Lepton Agents Hackathon — Submission Copy
 
-**Form is closed.** Keep this file as the source of truth for Discord / X redirects to judges.
+**Form is closed.** Keep this file as the source of truth for **X** (and Discord) redirects to judges.
+
+**Where to post:** reply under **your Lepton submission on X** (that is the thread judges open). Discord is optional backup only if you also posted there.
 
 **Judge one-pager (start here):** https://keryxhq.xyz/for-judges  
 **Autonomous buyer:** https://keryxhq.xyz/quickstart.ts · https://keryxhq.xyz/quickstart.py  
 **Receipt R5:** `POST https://keryxhq.xyz/api/receipt/verify`  
 **Pitch deck:** https://keryxhq.xyz/pitch  
-**SDK:** https://keryxhq.xyz/sdk · https://www.npmjs.com/package/@keryxhq/middleware
+**SDK:** https://keryxhq.xyz/sdk · https://www.npmjs.com/package/@keryxhq/middleware  
+**Live ledger:** https://keryxhq.xyz/live · ~418 paid calls · ~$1.08 USDC · R5 Arc receipts
 
 ---
 
-## Discord / X redirect (paste this)
+## X redirect (paste as a reply under your submission)
 
 > Video shows the sponsored `/ask` UX. **Score agency on Step 1 of https://keryxhq.xyz/for-judges** — wallet quickstart → `POST /api/call` → receipt verify (R5 via Arc RPC) → Arcscan.  
-> Example R5:  
-> `curl -sS -X POST https://keryxhq.xyz/api/receipt/verify -H 'content-type: application/json' -d '{"txHash":"0xeccf6b588a2ab9d53efa100796eadcd930d5aa4a6525109d2dadf45ea4a3cab8"}'`  
+> Example R5 (paid onchain):  
+> `curl -sS -X POST https://keryxhq.xyz/api/receipt/verify -H 'content-type: application/json' -d '{"txHash":"0xf1d3afcef3a0037036b4ac2cf24560d67ba7d5aee10bf23850243dcbc381cec1"}'`  
+> Arcscan: https://testnet.arcscan.app/tx/0xf1d3afcef3a0037036b4ac2cf24560d67ba7d5aee10bf23850243dcbc381cec1  
 > Lepton track = Arc + USDC. `/okxasp` is a separate OKX.AI Genesis surface — do not mix rails.
 
 ---

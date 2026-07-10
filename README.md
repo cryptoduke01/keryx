@@ -20,6 +20,29 @@ Keryx is the **paid tool registry for AI agents**.
 
 Developers publish tools. Agents discover them, pay per call in sub-cent USDC on [Arc](https://www.arc.network/), and get results instantly. No accounts, no API keys, no subscriptions, no human gatekeepers.
 
+### Live traction (Arc testnet)
+
+Numbers from the public ledger — refresh [keryxhq.xyz/live](https://keryxhq.xyz/live) / `GET /api/ledger`:
+
+| Metric | Live |
+|--------|------|
+| Paid calls settled | **~418** |
+| Volume | **~$1.08 USDC** |
+| Unique callers | **~122** |
+| Publishers | **2** |
+| Settlement | Local facilitator · Arcscan tx hashes |
+| Receipt proof | `POST /api/receipt/verify` → **R5** (Arc `eth_getTransactionReceipt`) |
+
+Example R5:
+
+```bash
+curl -sS -X POST https://keryxhq.xyz/api/receipt/verify \
+  -H 'content-type: application/json' \
+  -d '{"txHash":"0xf1d3afcef3a0037036b4ac2cf24560d67ba7d5aee10bf23850243dcbc381cec1"}'
+```
+
+Autonomous buyer (wallet pays): [quickstart.ts](https://keryxhq.xyz/quickstart.ts) · Judge one-pager: [for-judges](https://keryxhq.xyz/for-judges)
+
 ---
 
 ## Why Keryx

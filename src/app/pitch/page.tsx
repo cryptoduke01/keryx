@@ -246,11 +246,11 @@ export default function PitchPage() {
             when="Now"
             items={[
               "KeryxRegistry.sol on Arc testnet",
-              "20 seeded executable tools (Solana, weather, finance, geo, search, crypto, utilities, time...)",
-              "Real x402 endpoint",
-              "MCP server — native in Cursor, Claude, GitHub Copilot, Codex + any MCP client",
-              "Publisher wallet verification (EIP-191)",
-              "Public ledger with real Arcscan hashes",
+              "Seeded executable tools + public registry (Solana, weather, finance, geo, search, crypto, utilities…)",
+              "Real x402 path: wallet agents pay via /quickstart.ts → Arc USDC",
+              "POST /api/receipt/verify — R5 Arc eth_getTransactionReceipt proofs",
+              "MCP server — Cursor, Claude, GitHub Copilot, Codex + any MCP client",
+              "Public ledger (/live) with Arcscan hashes · local facilitator settles",
             ]}
           />
           <RoadmapCol
