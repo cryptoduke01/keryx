@@ -130,6 +130,7 @@ Full schemas and agent SDK snippets live in the [docs](https://keryxhq.xyz/docs)
 | `crypto.price` | CoinGecko simple price | $0.002 |
 | `utility.qr` | QR code generator | $0.001 |
 | `geo.country` | RestCountries | $0.001 |
+- [JMT x402 Agent Tools](https://jmt-x402-proxy.jmthomasofficial.workers.dev) — 25 paid x402 endpoints on Base mainnet: web search, AI analysis, crypto/stock data, SEC filings, company intel, news, sentiment, macro dashboard. $0.001-$0.15/call USDC. Local LLM-powered.
 
 20 seeded executable tools (Solana research, weather, finance, geo, crypto market signals, search, utilities, time, uuid, etc.). More added regularly. Community tools can be published by anyone; only those with a handlerUrl are auto-executable by Keryx surfaces.
 
