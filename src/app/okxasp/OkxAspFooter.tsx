@@ -64,7 +64,7 @@ export default function OkxAspFooter() {
             <FooterLink href="/okxasp">Finance Copilot</FooterLink>
             <FooterLink href="/okxasp#agent-loop">Agent loop</FooterLink>
             <FooterLink href="/api/okxasp/catalog">Catalog API</FooterLink>
-            <FooterExternal href="https://okx.ai">OKX.AI marketplace</FooterExternal>
+            <FooterExternal href="https://okx.ai/agents/4759">LIVE on OKX.AI</FooterExternal>
           </div>
 
           <div>

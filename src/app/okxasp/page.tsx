@@ -125,7 +125,7 @@ export default function OkxAspPage() {
                   background: "#fff",
                 }}
               />
-              Finance Copilot · ASP #{ASP_ID}
+              Finance Copilot · ASP #{ASP_ID} · LIVE on OKX.AI
             </div>
           </div>
         </div>
@@ -157,7 +157,7 @@ export default function OkxAspPage() {
                     "0 2px 24px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.6)",
                 }}
               >
-                Finance Copilot for agents.
+                Finance Copilot for agents.<br />Live on OKX.AI.
               </h1>
               <p
                 style={{
@@ -207,6 +207,22 @@ export default function OkxAspPage() {
           <Stat label="OKX-native" value={String(okxNative)} />
           <Stat label="Settlement" value="X Layer" />
           <Stat label="Asset" value="USDT0" />
+        </div>
+
+        <div style={{
+          margin: "0 0 40px",
+          padding: "14px 18px",
+          background: "rgba(184,255,60,0.08)",
+          border: "1px solid rgba(184,255,60,0.3)",
+          borderRadius: 10,
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          flexWrap: "wrap"
+        }}>
+          <span style={{fontWeight: 700, color: "#b8ff3c"}}>● NOW LIVE</span>
+          <span>Search "Keryx Finance Copilot" on OKX.AI or go to</span>
+          <a href="https://okx.ai/agents/4759" target="_blank" rel="noopener noreferrer" style={{color: "#b8ff3c", fontWeight: 600, textDecoration: "underline"}}>okx.ai/agents/4759</a>
         </div>
 
         <div id="agent-loop" style={{ marginBottom: 40 }}>

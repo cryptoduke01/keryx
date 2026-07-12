@@ -167,45 +167,45 @@ export async function POST(req: Request) {
         // We do not await it, so the stream to the user stays fast.
         void (async () => {
           try {
-            const facilitator = getFacilitator();
-            const requirements = requirementsForTool(tool, "https://keryxhq.xyz");
-            const payload =
-              facilitator.mode === "local"
-                ? await signSelfAuthorization({
-                    payTo: tool.publisherWallet,
-                    atomicUsdc: BigInt(Math.round(tool.priceUsd * 1_000_000)),
-                  })
-                : undefined;
-            const settle = await facilitator.settle(payload, requirements);
-            await recordEntry({
-              toolId: tool.id,
-              toolName: tool.name,
-              publisherName: tool.publisherName,
-              publisherWallet: tool.publisherWallet,
-              callerId,
-              priceUsd: quote.priceUsd,
-              platformFeeUsd: quote.platformFeeUsd,
-              netToPublisherUsd: quote.netToPublisherUsd,
-              status: "paid",
-              txHash: settle.txHash,
-              settlementMode: facilitator.mode,
-            });
+          const facilitator = getFacilitator();
+          const requirements = requirementsForTool(tool, "https://keryxhq.xyz");
+          const payload =
+            facilitator.mode === "local"
+              ? await signSelfAuthorization({
+                  payTo: tool.publisherWallet,
+                  atomicUsdc: BigInt(Math.round(tool.priceUsd * 1_000_000)),
+                })
+              : undefined;
+          const settle = await facilitator.settle(payload, requirements);
+          await recordEntry({
+            toolId: tool.id,
+            toolName: tool.name,
+            publisherName: tool.publisherName,
+            publisherWallet: tool.publisherWallet,
+            callerId,
+            priceUsd: quote.priceUsd,
+            platformFeeUsd: quote.platformFeeUsd,
+            netToPublisherUsd: quote.netToPublisherUsd,
+            status: "paid",
+            txHash: settle.txHash,
+            settlementMode: facilitator.mode,
+          });
           } catch {
             // If settlement fails we still recorded the call attempt above in some paths;
             // best-effort is acceptable for the playground.
-            await recordEntry({
-              toolId: tool.id,
-              toolName: tool.name,
-              publisherName: tool.publisherName,
-              publisherWallet: tool.publisherWallet,
-              callerId,
-              priceUsd: quote.priceUsd,
-              platformFeeUsd: quote.platformFeeUsd,
-              netToPublisherUsd: quote.netToPublisherUsd,
-              status: "failed",
-              settlementMode: getFacilitator().mode,
-            });
-          }
+          await recordEntry({
+            toolId: tool.id,
+            toolName: tool.name,
+            publisherName: tool.publisherName,
+            publisherWallet: tool.publisherWallet,
+            callerId,
+            priceUsd: quote.priceUsd,
+            platformFeeUsd: quote.platformFeeUsd,
+            netToPublisherUsd: quote.netToPublisherUsd,
+            status: "failed",
+            settlementMode: getFacilitator().mode,
+          });
+        }
         })();
 
         return provisional;

@@ -11,7 +11,7 @@ const NAV = [
   { href: "/okxasp/docs", label: "Docs" },
   { href: "/okxasp/whitepaper", label: "Product note" },
   { href: "/api/okxasp/catalog", label: "Catalog", external: true },
-  { href: "https://okx.ai", label: "Marketplace", external: true },
+  { href: "https://okx.ai/agents/4759", label: "LIVE on OKX.AI", external: true },
 ] as const;
 
 function isActive(path: string, href: string, exact?: boolean): boolean {
