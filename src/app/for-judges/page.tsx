@@ -30,14 +30,26 @@ export default async function ForJudgesPage() {
   const executableCount = tools.filter((t) => !t.id.startsWith("demo.")).length;
   const facilitatorMode = getFacilitator().mode;
 
+  const paidOnchain = recent.filter(
+    (e) =>
+      e.status === "paid" &&
+      e.txHash?.startsWith("0x") &&
+      !e.txHash.startsWith("demo_") &&
+      (e.settlementMode === "local" || e.settlementMode === "gateway"),
+  );
+  /** Prefer real market tools over uuid/time demos when pinning proof. */
+  const preferredTools = [
+    "crypto.price",
+    "solana.token-activity",
+    "solana.rug-check",
+    "solana.launches",
+    "finance.exchange-rates",
+    "okx.token-price",
+  ];
   const proof =
-    recent.find(
-      (e) =>
-        e.status === "paid" &&
-        e.txHash?.startsWith("0x") &&
-        !e.txHash.startsWith("demo_") &&
-        (e.settlementMode === "local" || e.settlementMode === "gateway"),
-    ) ?? null;
+    paidOnchain.find((e) => preferredTools.includes(e.toolId)) ??
+    paidOnchain[0] ??
+    null;
   const proofTx = proof?.txHash ?? FALLBACK_TX;
   const proofArcscan = `https://testnet.arcscan.app/tx/${proofTx}`;
   const proofLedgerId = proof?.id;
@@ -182,6 +194,59 @@ npx tsx quickstart.ts`}
           <a href={proofArcscan} target="_blank" rel="noreferrer" style={chipLink}>
             Example Arcscan tx →
           </a>
+        </div>
+
+        <div style={{ marginTop: 22 }}>
+          <div
+            className="text-eyebrow"
+            style={{ marginBottom: 10, color: "var(--text-muted)" }}
+          >
+            Receipt tiers (what verify returns)
+          </div>
+          <div style={{ overflowX: "auto" }}>
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: 13,
+                color: "var(--text-secondary)",
+              }}
+            >
+              <thead>
+                <tr style={{ borderBottom: "1px solid var(--border)", textAlign: "left" }}>
+                  <th style={thStyle}>Tier</th>
+                  <th style={thStyle}>Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={trStyle}>
+                  <td style={tdStyle}><code style={code}>R0–R2</code></td>
+                  <td style={tdStyle}>Ledger / shape checks only — not full onchain proof</td>
+                </tr>
+                <tr style={trStyle}>
+                  <td style={tdStyle}><code style={code}>R3–R4</code></td>
+                  <td style={tdStyle}>Stronger local evidence; still prefer R5 for scoring</td>
+                </tr>
+                <tr style={trStyle}>
+                  <td style={tdStyle}>
+                    <code style={code}>R5</code>{" "}
+                    <b style={{ color: "var(--text-primary)" }}>← target</b>
+                  </td>
+                  <td style={tdStyle}>
+                    Arc RPC <code style={code}>eth_getTransactionReceipt</code>{" "}
+                    success + paid ledger row. Cold-judge bar.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 10, lineHeight: 1.5 }}>
+            Pinned proof tool:{" "}
+            <code style={code}>{proof?.toolId ?? "crypto.price"}</code>
+            {" · "}
+            Prefer real market tools over utility demos when reading{" "}
+            <Link href="/live" style={inlineLink}>/live</Link>.
+          </p>
         </div>
       </Section>
 
@@ -391,8 +456,17 @@ npx tsx quickstart.ts`}
           different hackathon / settlement network.
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+          <a href="/okxasp/for-judges" style={chipLink}>OKX judge one-pager →</a>
           <a href="/okxasp" style={chipLink}>OKX Finance Copilot →</a>
           <a href="/okxasp/docs" style={chipLink}>OKX docs →</a>
+          <a
+            href="https://okx.ai/agents/4759"
+            target="_blank"
+            rel="noreferrer"
+            style={chipLink}
+          >
+            ASP #4759 →
+          </a>
         </div>
       </Section>
 
@@ -437,6 +511,21 @@ function Section({ title, children }: { title: string; children: React.ReactNode
     </section>
   );
 }
+
+const thStyle: React.CSSProperties = {
+  padding: "8px 10px 8px 0",
+  fontWeight: 600,
+  color: "var(--text-primary)",
+  fontSize: 12,
+  letterSpacing: "0.04em",
+  textTransform: "uppercase",
+};
+const tdStyle: React.CSSProperties = {
+  padding: "10px 10px 10px 0",
+  verticalAlign: "top",
+  borderBottom: "1px solid var(--border)",
+};
+const trStyle: React.CSSProperties = {};
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (

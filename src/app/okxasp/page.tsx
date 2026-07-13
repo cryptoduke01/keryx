@@ -353,23 +353,26 @@ export default function OkxAspPage() {
                         }}
                       >
                         {tool.name}
-                        {isOkx && (
-                          <span
-                            style={{
-                              fontSize: 10,
-                              fontFamily: "var(--font-sans)",
-                              fontWeight: 600,
-                              letterSpacing: "0.06em",
-                              textTransform: "uppercase",
-                              padding: "2px 7px",
-                              borderRadius: 999,
-                              border: "1px solid rgba(184,255,60,0.35)",
-                              color: "#8fbf2e",
-                            }}
-                          >
-                            OKX Web3
-                          </span>
-                        )}
+                        <span
+                          style={{
+                            fontSize: 10,
+                            fontFamily: "var(--font-sans)",
+                            fontWeight: 600,
+                            letterSpacing: "0.06em",
+                            textTransform: "uppercase",
+                            padding: "2px 7px",
+                            borderRadius: 999,
+                            border: isOkx
+                              ? "1px solid rgba(184,255,60,0.35)"
+                              : "1px solid var(--border)",
+                            color: isOkx ? "#8fbf2e" : "var(--text-muted)",
+                            background: isOkx
+                              ? "rgba(184,255,60,0.08)"
+                              : "transparent",
+                          }}
+                        >
+                          {isOkx ? "OKX Web3 · native" : "Coverage"}
+                        </span>
                       </div>
                       <div
                         style={{

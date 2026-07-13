@@ -105,7 +105,7 @@ Every paid settlement is on [/live](https://keryxhq.xyz/live).
 | What | Link |
 |------|------|
 | Product | [keryxhq.xyz](https://keryxhq.xyz) |
-| **For judges (Lepton)** | [keryxhq.xyz/for-judges](https://keryxhq.xyz/for-judges) |
+| **For judges (Lepton)** | [keryxhq.xyz/for-judges](https://keryxhq.xyz/for-judges) · `pnpm judge:agency` |
 | Integration docs | [keryxhq.xyz/docs](https://keryxhq.xyz/docs) |
 | Public ledger | [keryxhq.xyz/live](https://keryxhq.xyz/live) |
 | Publish a tool | [keryxhq.xyz/publish](https://keryxhq.xyz/publish) |
@@ -276,6 +276,7 @@ Same monorepo ships a **parallel** ASP for [OKX.AI Genesis](https://web3.okx.com
 | **Listing** | [okx.ai/agents/4759](https://okx.ai/agents/4759) |
 | **Site** | [keryxhq.xyz/okxasp](https://keryxhq.xyz/okxasp) |
 | **Docs** | [keryxhq.xyz/okxasp/docs](https://keryxhq.xyz/okxasp/docs) |
+| **For judges (OKX only)** | [keryxhq.xyz/okxasp/for-judges](https://keryxhq.xyz/okxasp/for-judges) · `pnpm okx:smoke` |
 | **Catalog** | [GET /api/okxasp/catalog](https://keryxhq.xyz/api/okxasp/catalog) |
 | **Chain / asset** | X Layer (`eip155:196`) · USDT0 |
 | **Protocol** | OKX Agent Payments Protocol (A2MCP, 402 → pay → JSON) |

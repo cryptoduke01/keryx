@@ -9,6 +9,7 @@ import { OKX_ASP_ID, OKX_ASP_LISTING_URL } from "@/lib/okxasp/config";
 
 const NAV = [
   { href: "/okxasp", label: "Copilot", exact: true },
+  { href: "/okxasp/for-judges", label: "For judges" },
   { href: "/okxasp/docs", label: "Docs" },
   { href: "/okxasp/whitepaper", label: "Product note" },
   { href: "/api/okxasp/catalog", label: "Catalog", external: true },
