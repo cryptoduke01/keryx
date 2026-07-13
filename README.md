@@ -10,13 +10,32 @@
 [![x402](https://img.shields.io/badge/x402-micropayments-orange?style=flat)](https://github.com/coinbase/x402)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Live:** [keryxhq.xyz](https://keryxhq.xyz) • **Judges:** [keryxhq.xyz/for-judges](https://keryxhq.xyz/for-judges) • **Docs:** [keryxhq.xyz/docs](https://keryxhq.xyz/docs) • **Ledger:** [keryxhq.xyz/live](https://keryxhq.xyz/live)
+**Live:** [keryxhq.xyz](https://keryxhq.xyz) • **OKX ASP:** [keryxhq.xyz/okxasp](https://keryxhq.xyz/okxasp) · [okx.ai/agents/4759](https://okx.ai/agents/4759) • **Judges:** [keryxhq.xyz/for-judges](https://keryxhq.xyz/for-judges) • **Docs:** [keryxhq.xyz/docs](https://keryxhq.xyz/docs) • **Ledger:** [keryxhq.xyz/live](https://keryxhq.xyz/live)
 
 </div>
 
 ---
 
-Keryx is the **paid tool registry for AI agents**.
+## Two surfaces (do not mix them up)
+
+Keryx ships **two parallel products**. Settlement, metadata, and docs are separate on purpose.
+
+| | **Arc registry** (main site) | **OKX.AI Finance Copilot** (ASP) |
+|--|------------------------------|----------------------------------|
+| **What** | Paid tool registry for any publisher | Ready-to-use finance tool pack for agents |
+| **URL** | [keryxhq.xyz](https://keryxhq.xyz) | [keryxhq.xyz/okxasp](https://keryxhq.xyz/okxasp) |
+| **Marketplace** | Keryx registry | [OKX.AI ASP **#4759**](https://okx.ai/agents/4759) · **LIVE** |
+| **Asset / chain** | USDC on **Arc** | **USDT0** on **X Layer** |
+| **API** | `POST /api/call` · `GET /api/tools` | `GET/POST /api/okxasp/tools/*` · `GET /api/okxasp/catalog` |
+| **Social / SEO** | Root OG: “toll booth / Arc” | `/okxasp` OG: Finance Copilot · ASP #4759 · neon OKX card |
+| **Protocol** | x402 (Arc path) | OKX Agent Payments Protocol (402 → pay → JSON) |
+
+**Share `/okxasp` when talking about OKX.AI Genesis / Finance Copilot.**  
+**Share the root site when talking about the Arc registry / publishers.**
+
+---
+
+Keryx is the **paid tool registry for AI agents** (Arc surface).
 
 Developers publish tools. Agents discover them, pay per call in sub-cent USDC on [Arc](https://www.arc.network/), and get results instantly. No accounts, no API keys, no subscriptions, no human gatekeepers.
 
@@ -75,9 +94,13 @@ Every call (success or failure) is written to the public ledger at [/live](https
 
 | What | Link |
 |------|------|
-| 🌐 Product | [keryxhq.xyz](https://keryxhq.xyz) |
-| 📖 Integration Docs | [keryxhq.xyz/docs](https://keryxhq.xyz/docs) |
-| 📊 Public Ledger | [keryxhq.xyz/live](https://keryxhq.xyz/live) |
+| 🌐 Product (Arc) | [keryxhq.xyz](https://keryxhq.xyz) |
+| 🟢 **OKX Finance Copilot** | [keryxhq.xyz/okxasp](https://keryxhq.xyz/okxasp) · [ASP #4759 on OKX.AI](https://okx.ai/agents/4759) |
+| 🟢 OKX ASP docs | [keryxhq.xyz/okxasp/docs](https://keryxhq.xyz/okxasp/docs) |
+| 🟢 OKX catalog API | [keryxhq.xyz/api/okxasp/catalog](https://keryxhq.xyz/api/okxasp/catalog) |
+| 🟢 OKX health | [keryxhq.xyz/api/okxasp/health](https://keryxhq.xyz/api/okxasp/health) |
+| 📖 Integration Docs (Arc) | [keryxhq.xyz/docs](https://keryxhq.xyz/docs) |
+| 📊 Public Ledger (Arc) | [keryxhq.xyz/live](https://keryxhq.xyz/live) |
 | 🧪 Agent Playground | [keryxhq.xyz/ask](https://keryxhq.xyz/ask) |
 | 📝 Publish a tool | [keryxhq.xyz/publish](https://keryxhq.xyz/publish) |
 | 🗂️ Browse registry | [keryxhq.xyz/registry](https://keryxhq.xyz/registry) |
@@ -90,7 +113,23 @@ Every call (success or failure) is written to the public ledger at [/live](https
 
 ## Try it right now
 
-### As an agent (curl)
+### OKX.AI Finance Copilot (USDT0 · X Layer)
+
+```bash
+# Catalog + health (free)
+curl -sS https://keryxhq.xyz/api/okxasp/catalog | head
+curl -sS https://keryxhq.xyz/api/okxasp/health
+
+# Unpaid probe → HTTP 402 + PAYMENT-REQUIRED (agent then pays via OKX protocol)
+curl -sS -D - -o /dev/null \
+  "https://keryxhq.xyz/api/okxasp/tools/crypto-price?ids=bitcoin" \
+  -H "Accept: application/json" \
+  -H "User-Agent: OKX-A2MCP-Client/1.0"
+```
+
+Product: [keryxhq.xyz/okxasp](https://keryxhq.xyz/okxasp) · Listing: [okx.ai/agents/4759](https://okx.ai/agents/4759) · Docs: [keryxhq.xyz/okxasp/docs](https://keryxhq.xyz/okxasp/docs)
+
+### Arc registry (USDC · Arc)
 
 ```bash
 # 0. Agent front door (machine-readable)

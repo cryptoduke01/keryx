@@ -1,11 +1,15 @@
 import Link from "next/link";
 import ArtPanel from "@/components/ArtPanel";
 
-export const metadata = {
-  title: "Product note · Keryx Finance Copilot",
+import { okxAspMetadata } from "@/lib/okxasp/metadata";
+
+export const metadata = okxAspMetadata({
+  title: "Product note · Keryx Finance Copilot · ASP #4759",
   description:
-    "Why Keryx ships a Finance Copilot ASP on OKX.AI: pay-per-call market intel for agents on X Layer, including OKX-native data.",
-};
+    "Why Keryx ships Finance Copilot on OKX.AI: pay-per-call market intel for agents in USDT0 on X Layer. ASP #4759 — separate from the Arc registry product.",
+  path: "/okxasp/whitepaper",
+  ogType: "article",
+});
 
 export default function OkxAspWhitepaperPage() {
   return (

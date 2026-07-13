@@ -5,13 +5,18 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Wordmark from "@/components/Wordmark";
 import ThemeToggle from "@/components/ThemeToggle";
+import { OKX_ASP_ID, OKX_ASP_LISTING_URL } from "@/lib/okxasp/config";
 
 const NAV = [
   { href: "/okxasp", label: "Copilot", exact: true },
   { href: "/okxasp/docs", label: "Docs" },
   { href: "/okxasp/whitepaper", label: "Product note" },
   { href: "/api/okxasp/catalog", label: "Catalog", external: true },
-  { href: "https://okx.ai/agents/4759", label: "LIVE on OKX.AI", external: true },
+  {
+    href: OKX_ASP_LISTING_URL,
+    label: `LIVE · #${OKX_ASP_ID}`,
+    external: true,
+  },
 ] as const;
 
 function isActive(path: string, href: string, exact?: boolean): boolean {

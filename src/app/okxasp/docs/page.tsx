@@ -7,11 +7,14 @@ import {
   slugForToolId,
 } from "@/lib/okxasp/config";
 
-export const metadata = {
-  title: "OKX.AI docs · Keryx Finance Copilot",
+import { okxAspMetadata } from "@/lib/okxasp/metadata";
+
+export const metadata = okxAspMetadata({
+  title: "Docs · Keryx Finance Copilot · ASP #4759 on OKX.AI",
   description:
-    "How to call Keryx Finance Copilot tools on OKX.AI. Pay per call on X Layer with Agentic Wallet.",
-};
+    "Call Keryx Finance Copilot (ASP #4759) on OKX.AI. Catalog, 402 challenge, USDT0 pay on X Layer, JSON results. No Arc registry — this is the OKX ASP surface.",
+  path: "/okxasp/docs",
+});
 
 export default function OkxAspDocsPage() {
   const tools = listOkxAspTools();

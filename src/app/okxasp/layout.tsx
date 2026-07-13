@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import OkxAspHeader from "./OkxAspHeader";
 import OkxAspFooter from "./OkxAspFooter";
+import { okxAspMetadata } from "@/lib/okxasp/metadata";
 
-/** OKX.AI Finance Copilot surface: own nav + footer. */
+/**
+ * OKX.AI Finance Copilot surface: own nav + footer + social metadata.
+ * Metadata here overrides root Arc/USDC registry tags so /okxasp shares
+ * never look like the main Keryx product.
+ */
+export const metadata: Metadata = okxAspMetadata();
+
 export default function OkxAspLayout({
   children,
 }: {

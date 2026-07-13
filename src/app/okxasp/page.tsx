@@ -5,15 +5,17 @@ import Reveal from "@/components/motion/Reveal";
 import OkxAgentLoop from "./OkxAgentLoop";
 import {
   listOkxAspTools,
+  OKX_ASP_ID,
   priceUsdToOkxPrice,
   slugForToolId,
 } from "@/lib/okxasp/config";
+import { okxAspMetadata } from "@/lib/okxasp/metadata";
 
-export const metadata = {
-  title: "Finance Copilot · Keryx on OKX.AI",
-  description:
-    "Pay-per-call finance for AI agents on OKX.AI. OKX Web3 prices, wallet PnL, token risk, and FX on X Layer.",
-};
+/** Page-level override keeps title explicit; layout already sets full OG. */
+export const metadata = okxAspMetadata({
+  title: "Keryx Finance Copilot · ASP #4759 · LIVE on OKX.AI",
+  path: "/okxasp",
+});
 
 /** Short consumer copy. Registry summaries stay agent-oriented. */
 const BLURBS: Record<string, string> = {
@@ -32,7 +34,7 @@ const BLURBS: Record<string, string> = {
   "okx.wallet-recent-pnl": "OKX Web3 recent per-token PnL for a wallet.",
 };
 
-const ASP_ID = "4759";
+const ASP_ID = OKX_ASP_ID;
 /** First successful X Layer settle (facilitator returned success + tx). */
 const PROOF_TX =
   "0x20a15b12c65d4813f6af197257555a0ad0e284b2d81752b581b5cb34f3369273";

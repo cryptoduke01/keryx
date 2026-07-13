@@ -20,6 +20,8 @@ Review: OKX says ASP listing review is typically **within 24 hours** (email + ag
 
 Same repo, same handlers where useful, **separate settlement path**. Judges on OKX.AI never need Arc. Arc users never need OKX keys.
 
+**Social / SEO:** `/okxasp` uses its own metadata + OG/twitter image (`src/lib/okxasp/metadata.ts`, `src/app/okxasp/opengraph-image.tsx`) so shares never show the root “Arc toll booth” card. Always share `https://keryxhq.xyz/okxasp` or `https://okx.ai/agents/4759` for this track.
+
 ```
 Agent on OKX.AI
     → A2MCP call to keryxhq.xyz/api/okxasp/...

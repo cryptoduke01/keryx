@@ -5,6 +5,9 @@ import {
   okxNetwork,
   okxPayTo,
   slugForToolId,
+  OKX_ASP_DISPLAY_NAME,
+  OKX_ASP_ID,
+  OKX_ASP_LISTING_URL,
 } from "@/lib/okxasp/config";
 
 /**
@@ -22,11 +25,15 @@ export async function GET(req: Request) {
   return NextResponse.json({
     ok: true,
     feature: "keryx-finance-copilot",
+    asp: OKX_ASP_DISPLAY_NAME,
+    aspId: OKX_ASP_ID,
+    listing: OKX_ASP_LISTING_URL,
+    status: "LIVE",
     aspType: "A2MCP",
     marketplace: "OKX.AI",
     coexistence: {
-      arcKeryx: "unchanged",
-      okxAsp: "parallel",
+      arcKeryx: "unchanged — USDC on Arc at / and /api/call",
+      okxAsp: "parallel — USDT0 on X Layer at /okxasp and /api/okxasp/*",
     },
     xlayer: {
       network: okxNetwork(),

@@ -6,6 +6,9 @@ import {
   okxPayTo,
   priceUsdToOkxPrice,
   slugForToolId,
+  OKX_ASP_DISPLAY_NAME,
+  OKX_ASP_ID,
+  OKX_ASP_LISTING_URL,
   OKX_ASP_PRIMARY_SLUG,
 } from "@/lib/okxasp/config";
 
@@ -35,13 +38,24 @@ export async function GET(req: Request) {
   });
 
   return NextResponse.json({
-    asp: "Keryx Finance Copilot",
+    asp: OKX_ASP_DISPLAY_NAME,
+    aspId: OKX_ASP_ID,
     aspType: "A2MCP",
     marketplace: "OKX.AI",
+    listing: OKX_ASP_LISTING_URL,
+    status: "LIVE",
     network: okxNetwork(),
     payTo: okxPayTo(),
     credentialsReady: okxCredentialsReady(),
     asset: "USDT0",
+    chain: "X Layer",
+    /** Explicit so agents do not mix this catalog with Arc /api/tools. */
+    settlement: "USDT0 on X Layer via OKX Agent Payments Protocol",
+    not: {
+      arcRegistry: true,
+      usdcOnArc: true,
+      path: "/api/tools",
+    },
     primaryEndpoint: `${origin}/api/okxasp/tools/${OKX_ASP_PRIMARY_SLUG}`,
     docs: `${origin}/okxasp/docs`,
     product: `${origin}/okxasp`,

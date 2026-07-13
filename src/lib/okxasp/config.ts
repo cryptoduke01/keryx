@@ -1,10 +1,18 @@
 /**
  * OKX.AI ASP config — parallel to Arc settlement.
  * Does not import or mutate Arc facilitator / USDC paths.
+ *
+ * Listing identity (marketplace, not Arc registry):
+ *   ASP #4759 · Keryx Finance Copilot · https://okx.ai/agents/4759
  */
 
 import type { ToolDefinition } from "@/lib/registry/seed";
 import { seedIndex } from "@/lib/registry/seed";
+
+/** Marketplace ASP id on OKX.AI (live listing). */
+export const OKX_ASP_ID = "4759" as const;
+export const OKX_ASP_LISTING_URL = `https://okx.ai/agents/${OKX_ASP_ID}` as const;
+export const OKX_ASP_DISPLAY_NAME = "Keryx Finance Copilot" as const;
 
 /** Tools exposed on the OKX Finance Copilot ASP (reuse Keryx handlers). */
 /** OKX-native first. Coverage kept tight so the pack does not read as a wrapper. */
