@@ -4,63 +4,73 @@
 
 **The toll booth for the agent economy.**
 
+Paid tool registry for AI agents — **USDC on Circle Arc**.
+
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 [![Arc](https://img.shields.io/badge/Arc-Circle_L1-00C4B4?style=flat)](https://www.arc.network/)
 [![x402](https://img.shields.io/badge/x402-micropayments-orange?style=flat)](https://github.com/coinbase/x402)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Live:** [keryxhq.xyz](https://keryxhq.xyz) • **OKX ASP:** [keryxhq.xyz/okxasp](https://keryxhq.xyz/okxasp) · [okx.ai/agents/4759](https://okx.ai/agents/4759) • **Judges:** [keryxhq.xyz/for-judges](https://keryxhq.xyz/for-judges) • **Docs:** [keryxhq.xyz/docs](https://keryxhq.xyz/docs) • **Ledger:** [keryxhq.xyz/live](https://keryxhq.xyz/live)
+### Lepton / Arc judges — start here only
+
+| | |
+|--|--|
+| **Judge one-pager** | [keryxhq.xyz/for-judges](https://keryxhq.xyz/for-judges) |
+| **Agency path** | [quickstart.ts](https://keryxhq.xyz/quickstart.ts) → `POST /api/call` → [receipt R5](https://keryxhq.xyz/api/receipt/verify) |
+| **Product** | [keryxhq.xyz](https://keryxhq.xyz) |
+| **Ledger** | [keryxhq.xyz/live](https://keryxhq.xyz/live) |
+| **Docs** | [keryxhq.xyz/docs](https://keryxhq.xyz/docs) |
 
 </div>
 
----
-
-## Two surfaces (do not mix them up)
-
-Keryx ships **two parallel products**. Settlement, metadata, and docs are separate on purpose.
-
-| | **Arc registry** (main site) | **OKX.AI Finance Copilot** (ASP) |
-|--|------------------------------|----------------------------------|
-| **What** | Paid tool registry for any publisher | Ready-to-use finance tool pack for agents |
-| **URL** | [keryxhq.xyz](https://keryxhq.xyz) | [keryxhq.xyz/okxasp](https://keryxhq.xyz/okxasp) |
-| **Marketplace** | Keryx registry | [OKX.AI ASP **#4759**](https://okx.ai/agents/4759) · **LIVE** |
-| **Asset / chain** | USDC on **Arc** | **USDT0** on **X Layer** |
-| **API** | `POST /api/call` · `GET /api/tools` | `GET/POST /api/okxasp/tools/*` · `GET /api/okxasp/catalog` |
-| **Social / SEO** | Root OG: “toll booth / Arc” | `/okxasp` OG: Finance Copilot · ASP #4759 · neon OKX card |
-| **Protocol** | x402 (Arc path) | OKX Agent Payments Protocol (402 → pay → JSON) |
-
-**Share `/okxasp` when talking about OKX.AI Genesis / Finance Copilot.**  
-**Share the root site when talking about the Arc registry / publishers.**
+> **Hard rule for Lepton judges:** Score **Arc + USDC + `/api/call` + R5** only.  
+> **Ignore** `/okxasp`, OKX.AI ASP #4759, USDT0, and X Layer. That surface is a **separate** OKX.AI Genesis product (see [Appendix A](#appendix-a--okxai-genesis-surface--not-lepton) at the bottom). Mixing rails is a scoring error.
 
 ---
 
-Keryx is the **paid tool registry for AI agents** (Arc surface).
+## Same monorepo, two products (do not blend)
 
-Developers publish tools. Agents discover them, pay per call in sub-cent USDC on [Arc](https://www.arc.network/), and get results instantly. No accounts, no API keys, no subscriptions, no human gatekeepers.
+| | **Lepton product (this README body)** | **OKX.AI Genesis (appendix only)** |
+|--|---------------------------------------|-------------------------------------|
+| **Name** | Keryx — paid tool registry | Keryx Finance Copilot (ASP) |
+| **Chain / asset** | **Arc** · **USDC** | **X Layer** · **USDT0** |
+| **APIs** | `/api/call` · `/api/tools` · `/api/receipt/verify` | `/api/okxasp/*` only |
+| **UI** | `/` · `/for-judges` · `/live` · `/publish` · `/ask` | `/okxasp` · okx.ai/agents/4759 |
+| **Hackathon** | Lepton Agents (Arc / x402) | OKX.AI Genesis |
 
-### Live traction (Arc testnet)
+Paths under `src/app/okxasp/` and `src/lib/okxasp/` are **out of scope** for Lepton scoring.
 
-Numbers from the public ledger — refresh [keryxhq.xyz/live](https://keryxhq.xyz/live) / `GET /api/ledger`:
+---
 
-| Metric | Live |
-|--------|------|
-| Paid calls settled | **~418** |
-| Volume | **~$1.08 USDC** |
-| Unique callers | **~122** |
-| Publishers | **2** |
-| Settlement | Local facilitator · Arcscan tx hashes |
-| Receipt proof | `POST /api/receipt/verify` → **R5** (Arc `eth_getTransactionReceipt`) |
+## What Keryx is (Arc)
 
-Example R5:
+Keryx is the **paid tool registry for AI agents**.
+
+Developers publish HTTP tools at a price. Agents discover them, pay **per call in USDC on [Arc](https://www.arc.network/)**, and get results in one round trip. No accounts, no API keys, no human checkout forms.
+
+### Prove agency (not the sponsored playground)
+
+Judges score **wallet-equipped agents that pay**. Start at [for-judges](https://keryxhq.xyz/for-judges) **Step 1**:
+
+1. Run [quickstart.ts](https://keryxhq.xyz/quickstart.ts) (or `.py`) with an Arc testnet key + test USDC  
+2. Script hits `POST /api/call` → HTTP **402** → EIP-3009 pay → **200** + result  
+3. Prove onchain: `POST /api/receipt/verify` → expect **`tier: "R5"`** + Arcscan  
+
+`/ask` and MCP discovery can be **Keryx-sponsored** (no wallet in the browser). Useful demos — **not** the agency score.
+
+### Settlement proof (R5)
 
 ```bash
 curl -sS -X POST https://keryxhq.xyz/api/receipt/verify \
   -H 'content-type: application/json' \
   -d '{"txHash":"0xf1d3afcef3a0037036b4ac2cf24560d67ba7d5aee10bf23850243dcbc381cec1"}'
+# expect: "tier":"R5", "onchain":{"status":"success", ...}
 ```
 
-Autonomous buyer (wallet pays): [quickstart.ts](https://keryxhq.xyz/quickstart.ts) · Judge one-pager: [for-judges](https://keryxhq.xyz/for-judges)
+Ledger (open): [keryxhq.xyz/live](https://keryxhq.xyz/live) · `GET /api/ledger`  
+
+When citing volume: prefer **R5-proven** Arcscan-linked `local` rows over raw call totals (demos / cheap utilities / sponsored `web-*` traffic inflate counts).
 
 ---
 
@@ -68,81 +78,60 @@ Autonomous buyer (wallet pays): [quickstart.ts](https://keryxhq.xyz/quickstart.t
 
 Every API on the internet was designed for humans.
 
-Agents are becoming the primary consumers of software — yet they still have to pretend to be people: sign up, generate keys, add cards, wait for webhooks.
+Agents are becoming primary consumers of software — yet they still pretend to be people: sign up, generate keys, add cards, wait for webhooks.
 
-**Keryx removes the human-shaped friction.**
+**Keryx removes that friction.**
 
-- A tool is just an HTTP endpoint + price + wallet.
-- An agent pays exactly once per call using x402 micropayments.
-- Settlement is real USDC on Arc (local facilitator; Circle Gateway when preferred), fast, and auditable on a public ledger.
+- A tool is an HTTP endpoint + price + Arc wallet (`payTo`).
+- An agent pays once per call with x402 micropayments.
+- Settlement is real USDC on Arc (local facilitator; Circle Gateway when preferred), auditable on a public ledger.
 
 Payment + execution happen in the same round-trip.
 
 ---
 
-## How it works
+## How it works (Arc)
 
-1. **Publish** — Register a tool with an id, price (in USD), and Arc wallet. It appears instantly in the public registry.
-2. **Discover** — Any agent calls `GET /api/tools` and receives every tool with price, schema, and example call (machine-readable).
-3. **Call & Pay** — `POST /api/call` with toolId + args. Keryx returns a 402 with payment details → agent signs (EIP-3009) → Keryx executes, settles USDC to the publisher `payTo` on Arc, and returns the result + ledger entry. (5% platform fee is ledger accounting today; onchain transfer is 100% to payTo until split settlement ships.)
+1. **Publish** — Register a tool with id, price (USD), and Arc wallet. It appears in the public registry.  
+2. **Discover** — `GET /api/tools`, `/.well-known/x402`, `/llms.txt` (machine-readable).  
+3. **Call & pay** — `POST /api/call` with `toolId` + args → **402** + requirements (+ bazaar extensions) → agent signs EIP-3009 → Keryx executes, settles **100% onchain to `payTo`**, returns result + ledger entry. (5% platform fee is ledger accounting until split settlement.)
 
-Every call (success or failure) is written to the public ledger at [/live](https://keryxhq.xyz/live).
+Every paid settlement is on [/live](https://keryxhq.xyz/live).
 
 ---
 
-## Live Links
+## Live links (Lepton / Arc only)
 
 | What | Link |
 |------|------|
-| 🌐 Product (Arc) | [keryxhq.xyz](https://keryxhq.xyz) |
-| 🟢 **OKX Finance Copilot** | [keryxhq.xyz/okxasp](https://keryxhq.xyz/okxasp) · [ASP #4759 on OKX.AI](https://okx.ai/agents/4759) |
-| 🟢 OKX ASP docs | [keryxhq.xyz/okxasp/docs](https://keryxhq.xyz/okxasp/docs) |
-| 🟢 OKX catalog API | [keryxhq.xyz/api/okxasp/catalog](https://keryxhq.xyz/api/okxasp/catalog) |
-| 🟢 OKX health | [keryxhq.xyz/api/okxasp/health](https://keryxhq.xyz/api/okxasp/health) |
-| 📖 Integration Docs (Arc) | [keryxhq.xyz/docs](https://keryxhq.xyz/docs) |
-| 📊 Public Ledger (Arc) | [keryxhq.xyz/live](https://keryxhq.xyz/live) |
-| 🧪 Agent Playground | [keryxhq.xyz/ask](https://keryxhq.xyz/ask) |
-| 📝 Publish a tool | [keryxhq.xyz/publish](https://keryxhq.xyz/publish) |
-| 🗂️ Browse registry | [keryxhq.xyz/registry](https://keryxhq.xyz/registry) |
-| ⚖️ For judges (Lepton) | [keryxhq.xyz/for-judges](https://keryxhq.xyz/for-judges) |
-| 📊 Pitch deck | [keryxhq.xyz/pitch](https://keryxhq.xyz/pitch) |
-| 📦 SDK | [keryxhq.xyz/sdk](https://keryxhq.xyz/sdk) · [@keryxhq/middleware](https://www.npmjs.com/package/@keryxhq/middleware) |
-| 🤖 Agent discovery | [/.well-known/x402](https://keryxhq.xyz/.well-known/x402) · [/llms.txt](https://keryxhq.xyz/llms.txt) · [/api/demo](https://keryxhq.xyz/api/demo?toolId=crypto.price) · [/api/receipt/verify](https://keryxhq.xyz/api/receipt/verify) · [/quickstart.ts](https://keryxhq.xyz/quickstart.ts) · [/quickstart.py](https://keryxhq.xyz/quickstart.py) · [/keryx-openapi.json](https://keryxhq.xyz/keryx-openapi.json) |
+| Product | [keryxhq.xyz](https://keryxhq.xyz) |
+| **For judges (Lepton)** | [keryxhq.xyz/for-judges](https://keryxhq.xyz/for-judges) |
+| Integration docs | [keryxhq.xyz/docs](https://keryxhq.xyz/docs) |
+| Public ledger | [keryxhq.xyz/live](https://keryxhq.xyz/live) |
+| Publish a tool | [keryxhq.xyz/publish](https://keryxhq.xyz/publish) |
+| Registry | [keryxhq.xyz/registry](https://keryxhq.xyz/registry) |
+| Pitch deck | [keryxhq.xyz/pitch](https://keryxhq.xyz/pitch) |
+| SDK | [keryxhq.xyz/sdk](https://keryxhq.xyz/sdk) · [@keryxhq/middleware](https://www.npmjs.com/package/@keryxhq/middleware) |
+| Autonomous buyer | [/quickstart.ts](https://keryxhq.xyz/quickstart.ts) · [/quickstart.py](https://keryxhq.xyz/quickstart.py) |
+| Receipt verify | [POST /api/receipt/verify](https://keryxhq.xyz/api/receipt/verify) |
+| Free sample | [/api/demo?toolId=crypto.price](https://keryxhq.xyz/api/demo?toolId=crypto.price) |
+| Agent discovery | [/.well-known/x402](https://keryxhq.xyz/.well-known/x402) · [/llms.txt](https://keryxhq.xyz/llms.txt) · [/keryx-openapi.json](https://keryxhq.xyz/keryx-openapi.json) |
+| Sponsored playground (optional) | [keryxhq.xyz/ask](https://keryxhq.xyz/ask) |
 
 ---
 
-## Try it right now
-
-### OKX.AI Finance Copilot (USDT0 · X Layer)
+## Try it (Arc)
 
 ```bash
-# Catalog + health (free)
-curl -sS https://keryxhq.xyz/api/okxasp/catalog | head
-curl -sS https://keryxhq.xyz/api/okxasp/health
-
-# Unpaid probe → HTTP 402 + PAYMENT-REQUIRED (agent then pays via OKX protocol)
-curl -sS -D - -o /dev/null \
-  "https://keryxhq.xyz/api/okxasp/tools/crypto-price?ids=bitcoin" \
-  -H "Accept: application/json" \
-  -H "User-Agent: OKX-A2MCP-Client/1.0"
-```
-
-Product: [keryxhq.xyz/okxasp](https://keryxhq.xyz/okxasp) · Listing: [okx.ai/agents/4759](https://okx.ai/agents/4759) · Docs: [keryxhq.xyz/okxasp/docs](https://keryxhq.xyz/okxasp/docs)
-
-### Arc registry (USDC · Arc)
-
-```bash
-# 0. Agent front door (machine-readable)
+# Discovery
 curl https://keryxhq.xyz/.well-known/x402
 curl https://keryxhq.xyz/llms.txt
-
-# 0b. Free sample before pay (no USDC)
-curl "https://keryxhq.xyz/api/demo?toolId=crypto.price"
-
-# 1. Discover tools
 curl https://keryxhq.xyz/api/tools
 
-# 2. Call a tool (you will get a 402 first)
+# Free sample (no USDC)
+curl "https://keryxhq.xyz/api/demo?toolId=crypto.price"
+
+# Paid path without a wallet → HTTP 402
 curl -X POST https://keryxhq.xyz/api/call \
   -H "content-type: application/json" \
   -H "x-keryx-agent: my-agent" \
@@ -150,11 +139,14 @@ curl -X POST https://keryxhq.xyz/api/call \
     "toolId": "solana.token-activity",
     "args": { "mintOrSymbol": "BONK" }
   }'
+
+# Full agency (wallet pays):
+#   curl -O https://keryxhq.xyz/quickstart.ts
+#   export PRIVATE_KEY=0x…   # Arc testnet + test USDC
+#   npx tsx quickstart.ts
 ```
 
-The 402 response contains a machine-readable `accepts` block. Sign it and retry with the `X-PAYMENT` header.
-
-### As a publisher
+### As a publisher (Arc wallet)
 
 ```bash
 curl -X POST https://keryxhq.xyz/api/publishers/tools \
@@ -170,11 +162,11 @@ curl -X POST https://keryxhq.xyz/api/publishers/tools \
   }'
 ```
 
-Full schemas and agent SDK snippets live in the [docs](https://keryxhq.xyz/docs).
+Schemas and SDK snippets: [docs](https://keryxhq.xyz/docs).
 
 ---
 
-## Seeded Tools (all real data, executable by Keryx)
+## Seeded tools (Arc registry)
 
 | id | Source | Price |
 |----|--------|-------|
@@ -193,40 +185,43 @@ Full schemas and agent SDK snippets live in the [docs](https://keryxhq.xyz/docs)
 | `utility.qr` | QR code generator | $0.001 |
 | `geo.country` | RestCountries | $0.001 |
 
-20 seeded executable tools (Solana research, weather, finance, geo, crypto market signals, search, utilities, time, uuid, etc.). More added regularly. Community tools can be published by anyone; only those with a handlerUrl are auto-executable by Keryx surfaces.
-
-Additional community tools (with `verified: false`) can be published by anyone.
-Keryx's goal is a large, always-on catalog (50–100+) of micro-tasks an average web2 or web3 user/agent reaches for daily: weather, rates, geo, domain info, HN, repo facts, prices, QR, country data, and many more. Seeded tools are implemented and maintained by the Keryx team against real public endpoints.
+Executable seeded tools hit real public APIs. Community tools can be published; only those with a `handlerUrl` / registered handler are auto-executable. Goal: a large catalog of micro-tasks agents reach for daily.
 
 ---
 
-## Architecture
+## Architecture (Arc core)
 
 **Stack**
-- Next.js 16 (App Router) + TypeScript + Tailwind v4 + Turbopack
-- Arc testnet (chain id `5042002`) — USDC native, ultra-cheap
-- x402 + Circle Gateway for real micropayments
-- Upstash Redis (optional) or in-memory fallback
-- Vercel AI SDK + OpenAI for the `/ask` playground agent
-- wagmi + viem for wallet flows
+- Next.js 16 (App Router) + TypeScript + Tailwind v4 + Turbopack  
+- Arc testnet (chain id `5042002`) — USDC, ultra-cheap  
+- x402 + local Arc facilitator and optional Circle Gateway  
+- Upstash Redis (optional) or in-memory fallback  
+- Vercel AI SDK + OpenAI for **sponsored** `/ask`  
+- wagmi + viem for wallet flows  
 
-**Key routes**
+**Key routes (Lepton-relevant)**
 
 ```
 app/
 ├── api/
-│   ├── call/                 # POST — paid execution + settlement
-│   ├── tools/                # GET — full registry
-│   ├── tools/[id]/           # GET — single tool schema
-│   ├── publishers/tools/     # POST — register new tool (signed)
+│   ├── call/                 # POST — paid execution + Arc settlement
+│   ├── tools/                # GET — registry
+│   ├── tools/[id]/
+│   ├── publishers/tools/     # POST — register tool (signed)
 │   ├── ledger/               # GET — public history + stats
-│   └── ask/                  # POST — agent playground
-├── ask/                      # Chat UI that actually pays for tools
-├── docs/                     # Human + agent integration guides
+│   ├── receipt/verify/       # POST — R5 Arc receipt proof
+│   ├── demo/                 # GET — free unpaid sample
+│   └── ask/                  # POST — sponsored playground (not agency)
+├── for-judges/               # Lepton one-pager
 ├── live/                     # Public settlement ledger
 ├── publish/                  # Publisher form
-└── registry/                 # Browse tools
+├── registry/                 # Browse tools
+├── docs/ · ask/ · pitch/ · sdk/
+└── okxasp/                   # ⚠️ OKX Genesis only — NOT Lepton (see Appendix A)
 ```
+
+Settlement for Arc lives under `src/lib/x402/` and `src/app/api/call/`.  
+OKX settlement lives under `src/lib/okxasp/` — **do not use for Lepton review.**
 
 ---
 
@@ -236,32 +231,30 @@ app/
 git clone https://github.com/cryptoduke01/keryx.git
 cd keryx
 pnpm install
-cp .env.example .env.local   # sane defaults exist
+cp .env.example .env.local
 pnpm dev
 ```
 
 Open http://localhost:3000.
 
-The playground at `/ask` works with just an `OPENAI_API_KEY`. Everything else gracefully falls back to in-memory mode.
+`/ask` needs `OPENAI_API_KEY`. Arc settle needs facilitator / wallet env (see `.env.example`).
 
 ```bash
 pnpm build
 pnpm typecheck
 ```
 
-See `.env.example` for Redis, WalletConnect, and real Circle Gateway settlement.
-
 ---
 
-## Status & Roadmap notes
+## Status
 
-v0.1. The payment rail is real.
+v0.1. Arc payment rail is real.
 
-- `POST /api/call` correctly returns HTTP 402 + machine-readable payment requirements.
-- Publisher ownership is enforced with EIP-191 signatures.
-- Real on-chain settlement via local Arc facilitator (`KERYX_FACILITATOR_PRIVATE_KEY`) or Circle Gateway (`CIRCLE_GATEWAY_PREFERRED=true` + `CIRCLE_GATEWAY_API_URL`).
-- Community tools are accepted but flagged `verified: false` until reviewed.
-- Next milestone on the [whitepaper](https://keryxhq.xyz/whitepaper): external handler hosting so publishers run their own endpoints.
+- `POST /api/call` returns HTTP 402 + machine-readable requirements.  
+- Publisher ownership via EIP-191.  
+- On-chain settle via local Arc facilitator (`KERYX_FACILITATOR_PRIVATE_KEY`) or Circle Gateway when preferred.  
+- Receipt verify reaches **R5** against Arc RPC.  
+- Community tools flagged `verified: false` until reviewed.  
 
 ---
 
@@ -271,8 +264,43 @@ MIT
 
 ---
 
+# Appendix A — OKX.AI Genesis surface (NOT Lepton)
+
+> **Lepton judges: stop here.** Nothing below is part of the Arc / USDC / Lepton scorecard.
+
+Same monorepo ships a **parallel** ASP for [OKX.AI Genesis](https://web3.okx.com/xlayer/build-x-series):
+
+| | |
+|--|--|
+| **Product** | Keryx Finance Copilot |
+| **Listing** | [okx.ai/agents/4759](https://okx.ai/agents/4759) |
+| **Site** | [keryxhq.xyz/okxasp](https://keryxhq.xyz/okxasp) |
+| **Docs** | [keryxhq.xyz/okxasp/docs](https://keryxhq.xyz/okxasp/docs) |
+| **Catalog** | [GET /api/okxasp/catalog](https://keryxhq.xyz/api/okxasp/catalog) |
+| **Chain / asset** | X Layer (`eip155:196`) · USDT0 |
+| **Protocol** | OKX Agent Payments Protocol (A2MCP, 402 → pay → JSON) |
+
+```bash
+# Free discovery (OKX rail only)
+curl -sS https://keryxhq.xyz/api/okxasp/catalog | head
+curl -sS https://keryxhq.xyz/api/okxasp/health
+
+# Unpaid probe → HTTP 402 (buyer wallet must ≠ seller payTo)
+curl -sS -D - -o /dev/null \
+  "https://keryxhq.xyz/api/okxasp/tools/crypto-price?ids=bitcoin" \
+  -H "Accept: application/json" \
+  -H "User-Agent: OKX-A2MCP-Client/1.0"
+```
+
+Code: `src/app/okxasp/**`, `src/lib/okxasp/**`, `src/app/api/okxasp/**`.  
+Does **not** use Arc USDC or `POST /api/call`.
+
+---
+
 <div align="center">
 
 **Built by duke.sol** • [keryxhq.xyz](https://keryxhq.xyz) • [@dukedotsol](https://x.com/dukedotsol)
+
+Lepton: Arc + USDC · OKX Genesis: see Appendix A only
 
 </div>
