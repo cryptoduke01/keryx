@@ -149,7 +149,7 @@ Seller SDK: https://web3.okx.com/onchainos/dev-docs/payments/service-seller-sdk
 ## Build order (Best Product, not a thin wrapper)
 
 1. **API keys** — done (`.env.local`).
-2. **Scaffold + x402 wire** — done: `/okxasp`, catalog, 12 paid tools via `@okxweb3/x402-next` (4 OKX Web3 native: price, market, wallet PnL, recent PnL).
+2. **Scaffold + x402 wire** — done: `/okxasp`, catalog, **9** paid tools via `@okxweb3/x402-next` (4 OKX Web3 native: price, market, wallet PnL, recent PnL + 5 coverage).
 3. **Install `onchainos` CLI** — done (`~/.local/bin/onchainos`). Skills install OK for Cursor; PromptScript failures are harmless.
 4. **Agentic Wallet login** (you — OTP to email):
    ```bash
@@ -181,18 +181,16 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 ## Checklist before Jul 17
 
 - [x] OKX API key + secret + passphrase in `.env.local` + Vercel production
-- [x] Agentic Wallet logged in (`0x6adab0c9c761c3459208bfa90ef2f924f986833c`)
-- [x] Deployed: https://keryxhq.xyz/okxasp + `/api/okxasp/*` (402 confirmed)
-- [x] ASP **#4759** registered — *Keryx Finance Copilot* · **9** A2MCP services (4 OKX Web3 native + 5 coverage) · category SOFTWARE_SERVICES (description is Finance Copilot; CLI has no category retag)
+- [x] Agentic Wallet logged in (seller payTo `0x6adab0c9c761c3459208bfa90ef2f924f986833c`)
+- [x] Deployed: https://keryxhq.xyz/okxasp + `/api/okxasp/*` (402 confirmed, X Layer mainnet `eip155:196`)
+- [x] ASP **#4759** **LIVE** on OKX.AI — *Keryx Finance Copilot* · **9** A2MCP services (4 OKX Web3 native + 5 coverage) · https://okx.ai/agents/4759
 - [x] Custom browser 402 paywall (shows real USDT0 amount; Mozilla + Accept: text/html)
-- [x] Settlement proof tx on X Layer testnet: `0x20a15b12c65d4813f6af197257555a0ad0e284b2d81752b581b5cb34f3369273`
-- [x] Listing submitted — status: **Listing under review** (AI quality review suggested pass)
-- [x] Funded Agentic Wallet (~0.2 OKB + 10 USDT) for paid-call smoke tests
-- [x] **Avatar fix (OKX feedback Jul 10):** uploaded Finance Copilot icon (`public/inspo/okx-asp-avatar.png`) → CDN `…/3034630a-4f01-4a32-867c-64a9a6854422.png` → `agent update` + `activate` → **Listing under review** (AI quality review suggested pass)
-- [ ] Wait for marketplace approval / go live on OKX.AI
-- [ ] Google form before Jul 17, 00:00 UTC: https://forms.gle/mddEUagmDbyV37ws8
-- [ ] X post with `#okxai` + ≤90s demo
-- [ ] Arc/Keryx Lepton paths still green (no regressions)
+- [x] Early settle proof (testnet): `0x20a15b12c65d4813f6af197257555a0ad0e284b2d81752b581b5cb34f3369273`
+- [x] Mainnet paid smoke: buyer wallets ≠ payTo (platform `payer_blocked` if seller pays self); Sold tracked on marketplace
+- [x] Avatar: Finance Copilot icon on listing CDN
+- [x] Google form submitted (Genesis entry)
+- [x] X post with `#OKXAI` + ≤90s demo
+- [x] Arc/Keryx Lepton paths still green (parallel rail; do not mix)
 
 ### ASP #4759 quick refs
 
@@ -217,14 +215,14 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 
 ---
 
-## After listing approval (~24h)
+## After listing (current)
 
-1. Confirm ASP #4759 shows **listed / live** on https://okx.ai (search "Keryx").
-2. Smoke a **real paid call** with Agentic Wallet (0.2 OKB + 10 USDT is enough).
-3. Switch network to mainnet only if judges expect mainnet settle (`OKX_X402_NETWORK=eip155:196`) and you have mainnet USDT0/OKB.
-4. Film ≤90s demo: problem → 402 → pay → JSON → marketplace card. Post on X with `#okxai`.
-5. Submit Google form: https://forms.gle/mddEUagmDbyV37ws8 (ASP id, links, X post).
-6. Drive usage for Revenue Rocket / Social Buzz (friends, agents, thread replies).
+1. ~~Confirm live~~ → https://okx.ai/agents/4759  
+2. Paid calls from **buyer wallets ≠ payTo** (seller self-pay → `payer_blocked`).  
+3. Network: **`OKX_X402_NETWORK=eip155:196`** (mainnet).  
+4. Demo + X + form: done.  
+5. Traction: prefer **third-party** buyers/reviews for Revenue Rocket; marketplace Sold is source of truth.  
+6. Catalog exposes `native: true/false` and `buyerNote` for honest agent discovery.
 
 ## Grand prize audit (updated)
 
@@ -234,12 +232,13 @@ Catalog: `https://keryxhq.xyz/api/okxasp/catalog`
 - JSON sample on product page (“what you get back”).
 - 4 OKX Web3 native tools (token price, market snapshot, wallet PnL, recent PnL).
 - Custom browser 402 paywall with real USDT0 amount.
-- Settlement proof tx on X Layer testnet (Agentic Wallet).
-- ASP #4759 under review; description screams Finance Copilot.
+- Settle-timeout recovery with `payment.provisional` when facilitator lags.
+- ASP #4759 **listed live**; dual-rail metadata so /okxasp is not the Arc product card.
 
-### Still blocked on approval
-- Marketplace “listed” + sold count / Revenue Rocket volume.
-- Demo + `#okxai` + Google form (after live).
+### Still weak (honest)
+- Organic third-party demand (not founder wallets) for Revenue Rocket.
+- Social reach beyond one launch post.
+- Coverage tools are public APIs — labeled in catalog, do not oversell as OKX-native.
 
 ### Mainnet note
-`OKX_X402_NETWORK=eip155:196` is required for marketplace listing review. ASP #4759 is registered on chainIndex 196. Testnet (`1952`) 402s fail protocol review even when x402-check returns valid. Fund the Agentic Wallet with mainnet USDT0 + OKB before paid smoke tests.
+`OKX_X402_NETWORK=eip155:196` is required. Testnet (`1952`) fails marketplace protocol review. Fund **buyer** wallets with mainnet USDT0 (+ OKB for gas if needed); keep seller as payTo only.

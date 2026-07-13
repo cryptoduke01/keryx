@@ -111,9 +111,12 @@ export default async function ForJudgesPage() {
       {/* -------------------- STEP 1: Autonomous hero -------------------- */}
       <Section title="1 · Prove agency (wallet agent pays)">
         <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, marginBottom: 14 }}>
-          Judges score &ldquo;AI decides and pays.&rdquo; Start here — not the
-          sponsored browser playground. A wallet-equipped buyer hits the real
-          x402 path, settles USDC on Arc, then proves the receipt onchain.
+          <b style={{ color: "var(--text-primary)" }}>Score this step first.</b>{" "}
+          Agency = wallet agent pays on Arc — not the sponsored{" "}
+          <code style={code}>/ask</code> playground (that is Step &ldquo;optional&rdquo;).
+          Path: quickstart → <code style={code}>POST /api/call</code> → 402 →
+          EIP-3009 → settle USDC → <code style={code}>POST /api/receipt/verify</code>{" "}
+          → expect <code style={code}>tier: R5</code> + Arcscan.
         </p>
 
         <ol style={{ paddingLeft: 20, fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: 18 }}>
@@ -291,19 +294,22 @@ npx tsx quickstart.ts`}
         />
         <Dimension
           weight="30% Traction"
-          summary={`${stats.callCount} paid calls · $${stats.totalPaidUsd.toFixed(3)} USDC · ${stats.callerCount} unique callers · SDK on npm.`}
+          summary={`R5-proven Arc settlement · ledger open · ${stats.callerCount} callers · SDK on npm. Do not over-read raw call totals.`}
           detail={
             <>
               Public ledger at{" "}
               <Link href="/live" style={inlineLink}>/live</Link>. Prefer
-              Arcscan-linked <code style={code}>local</code> rows over
-              sponsored <code style={code}>web-*</code> playground traffic when
-              reading volume. Fleet + wallet quickstarts settle onchain; R5 via{" "}
-              <code style={code}>POST /api/receipt/verify</code>.{" "}
+              Arcscan-linked <code style={code}>local</code> rows and real tool
+              ids over demo utilities / sponsored <code style={code}>web-*</code>{" "}
+              traffic. Prove a single receipt with{" "}
+              <code style={code}>POST /api/receipt/verify</code> (tier R5) rather
+              than quoting aggregate call counts alone.{" "}
               <a href={NPM} target="_blank" rel="noreferrer" style={inlineLink}>
                 @keryxhq/middleware
               </a>{" "}
-              shipped during the Lepton window.
+              shipped during the Lepton window.{" "}
+              <b style={{ color: "var(--text-primary)" }}>OKX.AI ASP #4759</b>{" "}
+              is a separate X Layer product — not this Arc scorecard.
             </>
           }
         />

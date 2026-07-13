@@ -14,6 +14,11 @@ export const OKX_ASP_ID = "4759" as const;
 export const OKX_ASP_LISTING_URL = `https://okx.ai/agents/${OKX_ASP_ID}` as const;
 export const OKX_ASP_DISPLAY_NAME = "Keryx Finance Copilot" as const;
 
+/** OKX Web3–signed tools vs public coverage APIs. */
+export function isOkxNativeToolId(toolId: string): boolean {
+  return toolId.startsWith("okx.");
+}
+
 /** Tools exposed on the OKX Finance Copilot ASP (reuse Keryx handlers). */
 /** OKX-native first. Coverage kept tight so the pack does not read as a wrapper. */
 export const OKX_ASP_TOOL_IDS = [

@@ -28,9 +28,11 @@ export async function GET(req: Request) {
     asp: OKX_ASP_DISPLAY_NAME,
     aspId: OKX_ASP_ID,
     listing: OKX_ASP_LISTING_URL,
-    status: "LIVE",
+    listingStatus: "listed",
     aspType: "A2MCP",
     marketplace: "OKX.AI",
+    buyerNote:
+      "Do not pay from the seller payTo wallet — OKX returns payer_blocked. Use a separate buyer wallet.",
     coexistence: {
       arcKeryx: "unchanged — USDC on Arc at / and /api/call",
       okxAsp: "parallel — USDT0 on X Layer at /okxasp and /api/okxasp/*",

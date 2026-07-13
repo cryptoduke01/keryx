@@ -170,29 +170,50 @@ curl -H "PAYMENT-SIGNATURE: $SIG" \\
           />
           <p style={pStyle}>
             If the facilitator returns <code style={codeInline}>timeout</code>{" "}
-            after a successful authorize, we poll settlement and still return
-            the tool JSON when the tx lands. Do not treat timeout as a failed
-            spend without checking the tx hash.
+            after a successful authorize (tx already present), we still return
+            the tool JSON and mark{" "}
+            <code style={codeInline}>payment.provisional: true</code>. Reconcile
+            by <code style={codeInline}>payment.transaction</code> before treating
+            the spend as final. Do not assume timeout means no USDT0 moved.
           </p>
         </Section>
 
-        <Section title="4. OKX-native tools (use these first)">
+        <Section title="4. Buyer wallet ≠ seller payTo">
+          <p style={pStyle}>
+            The ASP <code style={codeInline}>payTo</code> address cannot pay its
+            own services. The marketplace returns{" "}
+            <code style={codeInline}>payer_blocked</code> when buyer == seller.
+            Use a <b>separate Agentic Wallet account</b> as the buyer (funded with
+            USDT0 on X Layer). Seller Account stays as payTo only.
+          </p>
+          <p style={pStyle}>
+            Catalog field <code style={codeInline}>buyerNote</code> repeats this
+            for agents. Sold / reviews on the listing are the marketplace source
+            of truth — not this site&apos;s health endpoint.
+          </p>
+        </Section>
+
+        <Section title="5. OKX-native tools (use these first)">
           <p style={pStyle}>
             These hit OKX Web3 market and wallet APIs with our seller
-            credentials. That is the edge versus wrapping CoinGecko alone.
+            credentials (<code style={codeInline}>native: true</code> in the
+            catalog). That is the edge versus wrapping CoinGecko alone.
           </p>
           <ToolTable tools={okxNative} />
         </Section>
 
-        <Section title="5. Coverage tools">
+        <Section title="6. Coverage tools">
           <p style={pStyle}>
-            Commodity feeds so the agent does not leave the pack for price,
-            Solana risk, or FX.
+            Public feeds so the agent does not leave the pack for multi-coin
+            price, Solana risk, or FX. Catalog marks them{" "}
+            <code style={codeInline}>native: false</code> with an honest{" "}
+            <code style={codeInline}>sourceHint</code> (CoinGecko-class /
+            DexScreener / rugcheck / FX APIs).
           </p>
           <ToolTable tools={rest} />
         </Section>
 
-        <Section title="6. Health check">
+        <Section title="7. Health check">
           <p style={pStyle}>
             Confirms seller credentials and network config without spending.
           </p>
@@ -202,7 +223,7 @@ curl -H "PAYMENT-SIGNATURE: $SIG" \\
           />
         </Section>
 
-        <Section title="7. Agent loop (browser)">
+        <Section title="8. Agent loop (browser)">
           <p style={pStyle}>
             Prefer a visual walkthrough? The product page has a live agent loop
             that probes 402, shows the price, and walks the settle path.

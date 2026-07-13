@@ -197,15 +197,28 @@ async function attachPaymentResponse(
   const status = delivered.status;
   try {
     const data = (await delivered.json()) as Record<string, unknown>;
+    // Facilitator lag often reports status "timeout" with success+tx already
+    // on-chain. Deliver tool JSON, but mark provisional so clients can reconcile.
+    const provisional =
+      settled.status === "timeout" ||
+      settled.status === "pending" ||
+      settled.status === "confirming";
+
     return NextResponse.json(
       {
         ...data,
         payment: {
           status: settled.status,
           success: true,
+          provisional,
           transaction: settled.transaction,
           network: settled.network ?? okxNetwork(),
           payer: settled.payer,
+          ...(provisional
+            ? {
+                note: "Facilitator confirmation lagged; USDT0 transfer likely landed. Reconcile by tx hash before treating as final.",
+              }
+            : {}),
         },
       },
       { status: status === 502 ? 502 : 200, headers },

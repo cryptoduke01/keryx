@@ -57,7 +57,7 @@ If you call an endpoint from a browser with a normal Accept header, you see a pa
 
 ## Progress so far
 
-We registered **ASP #4759** (*Keryx Finance Copilot*) and submitted it for listing on OKX.AI. Status at write time: listing under review (AI quality review suggested pass). Review often lands within about a day by email and agent chat.
+We registered **ASP #4759** (*Keryx Finance Copilot*) on OKX.AI. It is **live** at https://okx.ai/agents/4759 (A2MCP, USDT0 on X Layer).
 
 Shipped on our side:
 

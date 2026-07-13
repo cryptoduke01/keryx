@@ -9,7 +9,7 @@
 **Receipt R5:** `POST https://keryxhq.xyz/api/receipt/verify`  
 **Pitch deck:** https://keryxhq.xyz/pitch  
 **SDK:** https://keryxhq.xyz/sdk · https://www.npmjs.com/package/@keryxhq/middleware  
-**Live ledger:** https://keryxhq.xyz/live · ~418 paid calls · ~$1.08 USDC · R5 Arc receipts
+**Live ledger:** https://keryxhq.xyz/live · cite **R5-proven** receipts (not raw call counts) · Arc USDC
 
 ---
 
@@ -63,14 +63,16 @@ Free sample: https://keryxhq.xyz/api/demo?toolId=crypto.price
 
 ## Traction
 
-**Live product usage (update after tomorrow's wallet runs):**
-- Paid tool calls on public ledger: https://keryxhq.xyz/live
-- Prefer Arcscan-linked `local` rows and non-`web-*` caller IDs when citing volume
-- **@keryxhq/middleware** on npm during the Lepton window
-- Public repo: https://github.com/cryptoduke01/keryx (MIT)
+**How to cite volume (honest):**
+- Do **not** lead with raw call counts (ledger includes demos / cheap utilities / self-tests).
+- Lead with **agency proof**: `/quickstart.ts` → `POST /api/call` → `POST /api/receipt/verify` → **tier R5** + Arcscan.
+- Prefer Arcscan-linked `local` rows and non-`web-*` callers on https://keryxhq.xyz/live
+- **@keryxhq/middleware** on npm · public repo MIT
 - X: [@keryxhq](https://x.com/keryxhq) · builder: [@dukedotsol](https://x.com/dukedotsol)
 
-Judges: reproduce an **autonomous** paid call via `/quickstart.ts`, then `POST /api/receipt/verify`. Sponsored `/ask` is optional UX only.
+Judges: score **agency** on Step 1 of https://keryxhq.xyz/for-judges (wallet pays). Sponsored `/ask` is optional UX only — not the autonomy score.
+
+**OKX.AI Genesis** (`/okxasp`, ASP #4759) is a **separate** rail (USDT0 · X Layer). Do not mix into Lepton scoring.
 
 ---
 
