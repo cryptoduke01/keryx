@@ -7,7 +7,25 @@ import Reveal from "@/components/motion/Reveal";
 export const dynamic = "force-dynamic";
 
 export default async function Landing() {
-  const [tools, stats] = await Promise.all([listTools(), ledgerStats()]);
+  const emptyStats = {
+    totalPaidUsd: 0,
+    callCount: 0,
+    publisherCount: 0,
+    callerCount: 0,
+    toolCount: 0,
+  };
+  let tools: Awaited<ReturnType<typeof listTools>> = [];
+  let stats = emptyStats;
+  try {
+    [tools, stats] = await Promise.all([listTools(), ledgerStats()]);
+  } catch (err) {
+    console.error("[page] landing data failed", err);
+    try {
+      tools = await listTools();
+    } catch {
+      tools = [];
+    }
+  }
   const nfmt = (n: number) =>
     n >= 1000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, "")}k` : String(n);
 
