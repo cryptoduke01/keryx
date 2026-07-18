@@ -193,7 +193,8 @@ Executable seeded tools hit real public APIs. Community tools can be published; 
 
 **Stack**
 - Next.js 16 (App Router) + TypeScript + Tailwind v4 + Turbopack  
-- Arc testnet (chain id `5042002`) — USDC, ultra-cheap  
+- Arc network (default **testnet** `5042002`; mainnet via env when Circle publishes) — USDC  
+- Header **network dropdown** · `GET /api/arc-network` · settle with `NEXT_PUBLIC_ARC_NETWORK`
 - x402 + local Arc facilitator and optional Circle Gateway  
 - Upstash Redis (optional) or in-memory fallback  
 - Vercel AI SDK + OpenAI for **sponsored** `/ask`  

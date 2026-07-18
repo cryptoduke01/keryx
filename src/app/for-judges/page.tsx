@@ -74,8 +74,12 @@ export default async function ForJudgesPage() {
         Keryx is a <b style={{ color: "var(--text-primary)" }}>paid tool
         registry for AI agents</b> on Arc: discover → HTTP 402 → EIP-3009 USDC
         → result. This page is the <b style={{ color: "var(--text-primary)" }}>
-        Lepton / Arc</b> track. OKX.AI Genesis is a separate product surface
-        (see bottom) — do not score them as one submission.
+        Lepton / Arc</b> track. Default settlement is{" "}
+        <b style={{ color: "var(--text-primary)" }}>Arc Testnet</b> (chain{" "}
+        <code style={{ fontFamily: "var(--font-mono)", fontSize: 13 }}>5042002</code>
+        ). Header network dropdown shows Mainnet as soon as public params are
+        configured — not required for Lepton scoring. OKX.AI Genesis is a
+        separate product surface (see bottom).
       </p>
 
       <div

@@ -10,7 +10,9 @@ import {
   useChainId,
   useSwitchChain,
 } from "wagmi";
-import { arcTestnet } from "@/lib/chains";
+import { getActiveArcNetwork } from "@/lib/chains";
+
+const publishChain = getActiveArcNetwork().chain;
 
 type Category =
   | "solana"
@@ -38,7 +40,7 @@ export default function PublishClient() {
   const [connectError, setConnectError] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [manualAddress, setManualAddress] = useState("");
-  const wrongNetwork = isConnected && chainId !== arcTestnet.id;
+  const wrongNetwork = isConnected && chainId !== publishChain.id;
 
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
@@ -395,7 +397,7 @@ export default function PublishClient() {
             return;
           }
           try {
-            await connectAsync({ connector: c, chainId: arcTestnet.id });
+            await connectAsync({ connector: c, chainId: publishChain.id });
           } catch (err) {
             const msg = err instanceof Error ? err.message : "connect_failed";
             if (/not installed|no provider|window\.ethereum/i.test(msg)) {
@@ -410,7 +412,7 @@ export default function PublishClient() {
         onSwitchNetwork={async () => {
           setConnectError(null);
           try {
-            await switchChainAsync({ chainId: arcTestnet.id });
+            await switchChainAsync({ chainId: publishChain.id });
           } catch (err) {
             const msg = err instanceof Error ? err.message : "switch_failed";
             setConnectError(

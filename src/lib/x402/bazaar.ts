@@ -7,6 +7,7 @@
  */
 
 import type { ToolDefinition } from "@/lib/registry/seed";
+import { getActiveArcNetwork } from "@/lib/chains";
 
 /** JSON Schema Draft 2020-12 fragment validating `info`. */
 const BAZAAR_INFO_SCHEMA = {
@@ -86,7 +87,7 @@ export function bazaarExtensionForTool(tool: ToolDefinition): BazaarExtension {
           settlement: {
             mode: "local|gateway|demo",
             txHash: "0x…",
-            network: "eip155:5042002",
+            network: getActiveArcNetwork().caip2,
           },
         },
       },

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Wordmark from "@/components/Wordmark";
 import ThemeToggle from "@/components/ThemeToggle";
+import NetworkSwitcher from "@/components/NetworkSwitcher";
 
 const NAV = [
   { href: "/ask", label: "Ask" },
@@ -129,11 +130,13 @@ export default function Header() {
             />
             Try it live
           </Link>
+          <NetworkSwitcher />
           <ThemeToggle />
         </div>
 
         {/* Mobile: theme toggle + hamburger */}
         <div className="flex md:hidden" style={{ alignItems: "center", gap: 8 }}>
+          <NetworkSwitcher />
           <ThemeToggle />
           <button
             type="button"

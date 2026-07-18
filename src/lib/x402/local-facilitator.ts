@@ -1,18 +1,7 @@
 /**
  * Local x402 facilitator that broadcasts real USDC transferWithAuthorization
- * calls on Arc testnet. Activates when KERYX_FACILITATOR_PRIVATE_KEY is set.
- *
- * Flow (for a real X-PAYMENT header from an external agent):
- *   1. verify(): recover the signer from the EIP-712 signature the payload
- *      carries and check it matches `authorization.from`.
- *   2. settle(): submit the same authorization to USDC.transferWithAuthorization
- *      onchain. Facilitator wallet pays gas (USDC-as-gas on Arc). Returns the
- *      broadcast tx hash.
- *
- * When Keryx itself is the caller (as in /ask or MCP), we sign the
- * authorization on behalf of a self-controlled agent wallet first via
- * signSelfAuthorization(), then hand it to verify + settle. USDC still moves
- * onchain — from the facilitator/agent wallet to the publisher wallet.
+ * on the active Arc network (testnet by default; mainnet when env-ready).
+ * Activates when KERYX_FACILITATOR_PRIVATE_KEY is set.
  */
 
 import {
@@ -29,19 +18,12 @@ import {
   type PublicClient,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { arcTestnet, ARC_USDC_ADDRESS } from "@/lib/chains";
+import { getActiveArcNetwork } from "@/lib/chains";
 import type { KeryxFacilitator } from "@/lib/x402/facilitator";
 
 const USDC_ABI = parseAbi([
   "function transferWithAuthorization(address from, address to, uint256 value, uint256 validAfter, uint256 validBefore, bytes32 nonce, uint8 v, bytes32 r, bytes32 s)",
 ]);
-
-const DOMAIN = {
-  name: "USDC",
-  version: "2",
-  chainId: arcTestnet.id,
-  verifyingContract: ARC_USDC_ADDRESS as Address,
-} as const;
 
 const TYPES = {
   TransferWithAuthorization: [
@@ -68,23 +50,47 @@ interface DecodedAuthorization extends Authorization {
 }
 
 let cached: {
+  networkId: string;
   facilitator: KeryxFacilitator;
   pubClient: PublicClient;
   walletClient: WalletClient;
   account: ReturnType<typeof privateKeyToAccount>;
+  domain: {
+    name: string;
+    version: string;
+    chainId: number;
+    verifyingContract: Address;
+  };
+  caip2: string;
+  usdc: Address;
 } | null = null;
 
 export function tryBuildLocalFacilitator(): KeryxFacilitator | null {
   const pk = process.env.KERYX_FACILITATOR_PRIVATE_KEY;
   if (!pk) return null;
-  if (cached) return cached.facilitator;
+
+  const net = getActiveArcNetwork();
+  if (cached && cached.networkId === net.id) return cached.facilitator;
 
   const account = privateKeyToAccount(pk.startsWith("0x") ? (pk as Hex) : (`0x${pk}` as Hex));
-  const pubClient = createPublicClient({ chain: arcTestnet, transport: http() });
+  const chain = net.chain;
+  const usdc = net.usdcAddress as Address;
+  const rpc =
+    chain.rpcUrls.default.http[0] ??
+    process.env.NEXT_PUBLIC_ARC_RPC_URL ??
+    "https://rpc.testnet.arc.network";
+  const domain = {
+    name: "USDC",
+    version: "2",
+    chainId: chain.id,
+    verifyingContract: usdc,
+  } as const;
+
+  const pubClient = createPublicClient({ chain, transport: http(rpc) });
   const walletClient = createWalletClient({
     account,
-    chain: arcTestnet,
-    transport: http(),
+    chain,
+    transport: http(rpc),
   });
 
   const facilitator: KeryxFacilitator = {
@@ -94,7 +100,7 @@ export function tryBuildLocalFacilitator(): KeryxFacilitator | null {
       if (!decoded) return { valid: false, reason: "invalid_payload" };
       const ok = await pubClient.verifyTypedData({
         address: decoded.from,
-        domain: DOMAIN,
+        domain,
         types: TYPES,
         primaryType: "TransferWithAuthorization",
         message: {
@@ -116,9 +122,9 @@ export function tryBuildLocalFacilitator(): KeryxFacilitator | null {
       const { v, r, s } = splitSig(decoded.signature);
       try {
         const txHash = await walletClient.writeContract({
-          chain: arcTestnet,
+          chain,
           account,
-          address: ARC_USDC_ADDRESS as Address,
+          address: usdc,
           abi: USDC_ABI,
           functionName: "transferWithAuthorization",
           args: [
@@ -136,7 +142,7 @@ export function tryBuildLocalFacilitator(): KeryxFacilitator | null {
         return {
           success: true,
           txHash,
-          network: "eip155:5042002",
+          network: net.caip2,
         };
       } catch (err) {
         return {
@@ -147,7 +153,16 @@ export function tryBuildLocalFacilitator(): KeryxFacilitator | null {
     },
   };
 
-  cached = { facilitator, pubClient, walletClient, account };
+  cached = {
+    networkId: net.id,
+    facilitator,
+    pubClient,
+    walletClient,
+    account,
+    domain,
+    caip2: net.caip2,
+    usdc,
+  };
   return facilitator;
 }
 
@@ -184,7 +199,7 @@ export async function signSelfAuthorization(params: {
   };
   const signature = await cached.walletClient.signTypedData({
     account: cached.account,
-    domain: DOMAIN,
+    domain: cached.domain,
     types: TYPES,
     primaryType: "TransferWithAuthorization",
     message: auth,
@@ -192,7 +207,7 @@ export async function signSelfAuthorization(params: {
   return {
     x402Version: 1,
     scheme: "exact",
-    network: "eip155:5042002",
+    network: cached.caip2,
     payload: {
       authorization: {
         from: auth.from,

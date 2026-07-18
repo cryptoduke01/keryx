@@ -11,7 +11,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createPublicClient, http, type Hex } from "viem";
 import { findLedgerEntry, type LedgerEntry } from "@/lib/ledger";
-import { arcTestnet } from "@/lib/chains";
+import { getActiveArcNetwork } from "@/lib/chains";
 
 export const runtime = "nodejs";
 
@@ -50,12 +50,14 @@ function isOnchainHash(txHash: string | undefined): txHash is string {
 
 async function fetchArcReceipt(txHash: string): Promise<OnchainReceipt> {
   try {
+    const net = getActiveArcNetwork();
+    const rpc =
+      net.chain.rpcUrls.default.http[0] ??
+      process.env.NEXT_PUBLIC_ARC_RPC_URL ??
+      "https://rpc.testnet.arc.network";
     const client = createPublicClient({
-      chain: arcTestnet,
-      transport: http(
-        process.env.NEXT_PUBLIC_ARC_RPC_URL ?? "https://rpc.testnet.arc.network",
-        { timeout: 8_000 },
-      ),
+      chain: net.chain,
+      transport: http(rpc, { timeout: 8_000 }),
     });
     const receipt = await client.getTransactionReceipt({
       hash: txHash as Hex,
@@ -182,7 +184,7 @@ export async function POST(req: Request) {
   }
 
   const entry = await findLedgerEntry({ id, txHash });
-  const explorerBase = arcTestnet.blockExplorers?.default.url;
+  const explorerBase = getActiveArcNetwork().chain.blockExplorers?.default.url;
 
   if (!entry) {
     if (txHash && isOnchainHash(txHash)) {

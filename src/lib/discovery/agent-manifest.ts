@@ -4,8 +4,10 @@
  * Does not touch OKX ASP settlement paths.
  */
 
-import { ARC_USDC_ADDRESS, KERYX_TREASURY_ADDRESS } from "@/lib/chains";
-import { ARC_TESTNET_NETWORK } from "@/lib/x402/requirements";
+import {
+  getActiveArcNetwork,
+  KERYX_TREASURY_ADDRESS,
+} from "@/lib/chains";
 import { listTools } from "@/lib/registry/store";
 import type { ToolDefinition } from "@/lib/registry/seed";
 
@@ -26,6 +28,7 @@ function exampleUnpaidCurl(tool: ToolDefinition): string {
 }
 
 export async function buildX402Manifest(origin = KERYX_ORIGIN) {
+  const net = getActiveArcNetwork();
   const tools = await listTools();
   const paid_routes = tools.map((tool) => ({
     route_key: `POST /api/call#${tool.id}`,
@@ -75,10 +78,10 @@ export async function buildX402Manifest(origin = KERYX_ORIGIN) {
     description:
       "Paid tool registry for AI agents. Discover tools, pay per call in USDC on Arc via x402, get results in one round trip.",
     homepage: origin,
-    network: ARC_TESTNET_NETWORK,
-    chain: "arc-testnet",
+    network: net.caip2,
+    chain: net.id === "mainnet" ? "arc-mainnet" : "arc-testnet",
     asset: "USDC",
-    assetAddress: ARC_USDC_ADDRESS,
+    assetAddress: net.usdcAddress,
     callEndpoint: `${origin}/api/call`,
     discovery: `${origin}/api/tools`,
     demo: `${origin}/api/demo`,
@@ -107,12 +110,13 @@ export async function buildX402Manifest(origin = KERYX_ORIGIN) {
 }
 
 export async function buildLlmsTxt(origin = KERYX_ORIGIN): Promise<string> {
+  const net = getActiveArcNetwork();
   const tools = await listTools();
   const lines: string[] = [
     "# Keryx",
     "",
     `> The paid tool registry for AI agents at ${origin}`,
-    "> Discover tools, pay per call in USDC on Arc (eip155:5042002) via x402. No API keys. No accounts.",
+    `> Discover tools, pay per call in USDC on Arc (${net.caip2}) via x402. No API keys. No accounts.`,
     "",
     "## Free endpoints (no payment required)",
     "",
@@ -140,7 +144,7 @@ export async function buildLlmsTxt(origin = KERYX_ORIGIN): Promise<string> {
     "First call without `X-PAYMENT` → HTTP 402 with `accepts[]` and root-level `extensions.bazaar` (input/output).",
     "Retry with signed `X-PAYMENT` → HTTP 200 + result + settlement.",
     "",
-    `Network: \`${ARC_TESTNET_NETWORK}\` · Asset: USDC (\`${ARC_USDC_ADDRESS}\`) · Pay to: tool publisher wallet (see 402 \`payTo\`)`,
+    `Network: \`${net.caip2}\` · Asset: USDC (\`${net.usdcAddress}\`) · Pay to: tool publisher wallet (see 402 \`payTo\`) · Active: ${net.label}`,
     "",
     "## Catalog",
     "",
@@ -160,7 +164,7 @@ export async function buildLlmsTxt(origin = KERYX_ORIGIN): Promise<string> {
       "",
       "```bash",
       exampleUnpaidCurl(sample).replaceAll(KERYX_ORIGIN, origin),
-      "# → HTTP 402 with accepts[0] (scheme exact, network eip155:5042002, USDC amount)",
+      `# → HTTP 402 with accepts[0] (scheme exact, network ${net.caip2}, USDC amount)`,
       "```",
       "",
     );

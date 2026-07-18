@@ -21,6 +21,7 @@
 
 import { BatchFacilitatorClient } from "@circle-fin/x402-batching/server";
 import { tryBuildLocalFacilitator } from "@/lib/x402/local-facilitator";
+import { getActiveArcNetwork } from "@/lib/chains";
 
 export type FacilitatorMode = "gateway" | "local" | "demo";
 
@@ -134,7 +135,7 @@ function buildDemoFacilitator(): KeryxFacilitator {
       return {
         success: true,
         txHash: synthesizedTxHash(),
-        network: "eip155:5042002",
+        network: getActiveArcNetwork().caip2,
         payer: readPayer(payload),
       } as FacilitatorSettleResult;
     },

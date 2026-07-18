@@ -13,7 +13,7 @@
  */
 
 import { createPublicClient, http, keccak256, toBytes, type Address } from "viem";
-import { arcTestnet } from "@/lib/chains";
+import { getActiveArcNetwork } from "@/lib/chains";
 
 const REGISTRY_ADDRESS = (process.env.NEXT_PUBLIC_REGISTRY_ADDRESS ?? "") as Address | "";
 
@@ -62,7 +62,12 @@ let cached: ReturnType<typeof createPublicClient> | null = null;
 
 function client() {
   if (cached) return cached;
-  cached = createPublicClient({ chain: arcTestnet, transport: http() });
+  const net = getActiveArcNetwork();
+  const rpc = net.chain.rpcUrls.default.http[0];
+  cached = createPublicClient({
+    chain: net.chain,
+    transport: http(rpc),
+  });
   return cached;
 }
 
